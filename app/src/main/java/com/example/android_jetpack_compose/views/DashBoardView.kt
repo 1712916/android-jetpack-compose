@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,16 +34,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.android_jetpack_compose.R
 import com.example.android_jetpack_compose.ui.theme.AndroidjetpackcomposeTheme
 
 val primaryColor = Color(0xFF081f68)
+val accentColor = Color(0xFF2b71da)
 val grayColor = Color(0xFFd9dae3)
+val textGrayColor = Color(0xFF61626d)
+val textGreenColor = Color(0xFF4dae15)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,7 +72,9 @@ fun DashBoardView() {
 //                            imageVector = Icons.Filled.Notifications,
                             imageVector = ImageVector.vectorResource(id = R.drawable.ic_notification),
                             contentDescription = "Notifications",
-                            modifier = Modifier.width(24.dp).height(24.dp)
+                            modifier = Modifier
+                                .width(24.dp)
+                                .height(24.dp)
                         )
                     }
                 }
@@ -80,7 +90,36 @@ fun DashBoardView() {
             ) {
 
                 // week tracking
-                WeekTracker()
+
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                ) {
+                    Text(
+                        text = "$689.50",
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 34.sp,
+                        color = accentColor,
+                    )
+                    Row {
+                        Text(
+                            text = "Total spent this week",
+                            color = textGrayColor,
+                        )
+                        Icon(
+                            imageVector = Icons.Filled.ArrowDropDown,
+                            contentDescription = "",
+                            tint = textGreenColor,
+                        )
+                        Text(
+                            text = "12%",
+                            fontWeight = FontWeight.ExtraBold,
+                            color = textGreenColor,
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
+                    WeekTracker()
+                }
+
                 //month budget
             }
         }
@@ -94,9 +133,9 @@ fun WeekTracker() {
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(),
-        horizontalArrangement = Arrangement.SpaceAround,
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        TrackingColum(percent = 1.0)
+        TrackingColum(percent = 1.0, title = "Mon")
         TrackingColum(percent = 0.5)
         TrackingColum(percent = 0.7)
         TrackingColum(percent = 0.3)
@@ -105,28 +144,35 @@ fun WeekTracker() {
 }
 
 @Composable
-private fun TrackingColum(height: Double? = null, width: Double? = null, percent: Double = 0.0) {
+private fun TrackingColum(height: Double? = null, width: Double? = null, percent: Double = 0.0, title: String? = null) {
     val trackColumnHeight: Double = 150.0
     val trackColumnWidth: Double = 40.0
     val finalHeight = height ?: trackColumnHeight
     val finalWidth = width ?: trackColumnWidth
     val borderRadius = 8.0
-    Box(
-        modifier = Modifier
-            .background(color = grayColor, shape = RoundedCornerShape(borderRadius.dp))
-            .height(finalHeight.dp)
-            .width(finalWidth.dp)
-            .clip(RoundedCornerShape(borderRadius.dp))
-
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Box(
             modifier = Modifier
-                .background(color = primaryColor)
-                .height((finalHeight * percent).dp)
+                .background(color = grayColor, shape = RoundedCornerShape(borderRadius.dp))
+                .height(finalHeight.dp)
                 .width(finalWidth.dp)
-                .align(alignment = Alignment.BottomCenter),
-        )
+                .clip(RoundedCornerShape(borderRadius.dp))
+
+        ) {
+
+            Box(
+                modifier = Modifier
+                    .background(color = primaryColor)
+                    .height((finalHeight * percent).dp)
+                    .width(finalWidth.dp)
+                    .align(alignment = Alignment.BottomCenter),
+            )
+        }
+
+        if (title != null)
+            Text(text = title, color = textGrayColor, fontSize = 16.sp, fontWeight = FontWeight.Medium)
     }
 }
 
