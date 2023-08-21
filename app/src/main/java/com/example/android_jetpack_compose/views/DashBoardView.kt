@@ -97,65 +97,40 @@ fun DashBoardView() {
 
                 // week tracking
 
-                Column(
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                ) {
-                    Text(
-                        text = "$689.50",
-                        fontWeight = FontWeight.ExtraBold,
-                        fontSize = 34.sp,
-                        color = accentColor,
-                    )
-                    Row {
-                        Text(
-                            text = "Total spent this week",
-                            color = textGrayColor,
-                        )
-                        Icon(
-                            imageVector = Icons.Filled.ArrowDropDown,
-                            contentDescription = "",
-                            tint = textGreenColor,
-                        )
-                        Text(
-                            text = "12%",
-                            fontWeight = FontWeight.ExtraBold,
-                            color = textGreenColor,
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(10.dp))
-                    //Cần tìm cách lấy thời gian cho mọi SDK
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        WeekTracker(
-                            weekTrackerData = listOf(
-                                WeekTrackerModel(
-                                    date = Calendar.getInstance().time,
-                                    dateBudget = 100.0,
-                                    dateSpend = 50.0
-                                ),
-                                WeekTrackerModel(
-                                    date = Calendar.getInstance().time,
-                                    dateBudget = 100.0,
-                                    dateSpend = 50.0
-                                ),
-                                WeekTrackerModel(
-                                    date = Calendar.getInstance().time,
-                                    dateBudget = 100.0,
-                                    dateSpend = 50.0
-                                ),
-                                WeekTrackerModel(
-                                    date = Calendar.getInstance().time,
-                                    dateBudget = 100.0,
-                                    dateSpend = 50.0
-                                ),
-                                WeekTrackerModel(
-                                    date = Calendar.getInstance().time,
-                                    dateBudget = 100.0,
-                                    dateSpend = 50.0
-                                ),
+                WeekTrackerInfo(
+                    weekTrackerInfoModel = WeekTrackerInfoModel(
+                        differenceNumber = 13.0,
+                        differentEnum = DifferentEnum.Increase,
+                        totalSpend = 689.50,
+                        weekTackers = arrayOf(
+                            WeekTrackerModel(
+                                date = Calendar.getInstance().time,
+                                dateBudget = 100.0,
+                                dateSpend = 50.0
                             ),
-                        )
-                    }
-                }
+                            WeekTrackerModel(
+                                date = Calendar.getInstance().time,
+                                dateBudget = 100.0,
+                                dateSpend = 50.0
+                            ),
+                            WeekTrackerModel(
+                                date = Calendar.getInstance().time,
+                                dateBudget = 100.0,
+                                dateSpend = 50.0
+                            ),
+                            WeekTrackerModel(
+                                date = Calendar.getInstance().time,
+                                dateBudget = 100.0,
+                                dateSpend = 50.0
+                            ),
+                            WeekTrackerModel(
+                                date = Calendar.getInstance().time,
+                                dateBudget = 100.0,
+                                dateSpend = 50.0
+                            ),
+                        ),
+                    )
+                )
 
                 //month budget
             }
@@ -163,12 +138,60 @@ fun DashBoardView() {
     )
 }
 
-data class WeekTrackerModel(val date: Date, val dateBudget: Double, val dateSpend: Double)
-
-
+fun Double.format(digits: Int) = "%.${digits}f".format(this)
 
 @Composable
-fun WeekTracker(weekTrackerData: List<WeekTrackerModel>) {
+private fun WeekTrackerInfo(weekTrackerInfoModel: WeekTrackerInfoModel) {
+    Column(
+        modifier = Modifier.padding(horizontal = 16.dp)
+    ) {
+        Text(
+            text = "$${weekTrackerInfoModel.totalSpend.format(2)}",
+            fontWeight = FontWeight.ExtraBold,
+            fontSize = 34.sp,
+            color = accentColor,
+        )
+        Row {
+            Text(
+                text = "Total spent this week",
+                color = textGrayColor,
+            )
+            Icon(
+                imageVector = Icons.Filled.ArrowDropDown,
+                contentDescription = "",
+                tint = textGreenColor,
+            )
+            Text(
+                text = "${weekTrackerInfoModel.differenceNumber}%",
+                fontWeight = FontWeight.ExtraBold,
+                color = textGreenColor,
+            )
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+        //Cần tìm cách lấy thời gian cho mọi SDK
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            WeekTracker(
+                weekTrackerData = weekTrackerInfoModel.weekTackers,
+            )
+        }
+    }
+}
+
+data class WeekTrackerModel(val date: Date, val dateBudget: Double, val dateSpend: Double)
+
+data class WeekTrackerInfoModel(
+    val totalSpend: Double,
+    val differenceNumber: Double,
+    val differentEnum: DifferentEnum,
+    val weekTackers: Array<WeekTrackerModel>,
+)
+
+enum class DifferentEnum {
+    Increase, Decrease
+}
+
+@Composable
+fun WeekTracker(weekTrackerData: Array<WeekTrackerModel>) {
 
     Row(
         modifier = Modifier
@@ -177,7 +200,10 @@ fun WeekTracker(weekTrackerData: List<WeekTrackerModel>) {
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         weekTrackerData.forEach { item ->
-            TrackingColum(percent = item.dateSpend / item.dateBudget, title = SimpleDateFormat("EEE").format(item.date))
+            TrackingColum(
+                percent = item.dateSpend / item.dateBudget,
+                title = SimpleDateFormat("EEE").format(item.date)
+            )
         }
     }
 }
