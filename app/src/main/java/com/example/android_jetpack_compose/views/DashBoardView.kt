@@ -1,6 +1,8 @@
 package com.example.android_jetpack_compose.views
 
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -44,6 +46,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.android_jetpack_compose.R
 import com.example.android_jetpack_compose.ui.theme.AndroidjetpackcomposeTheme
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
 
 val primaryColor = Color(0xFF081f68)
 val accentColor = Color(0xFF2b71da)
@@ -117,7 +123,38 @@ fun DashBoardView() {
                         )
                     }
                     Spacer(modifier = Modifier.height(10.dp))
-                    WeekTracker()
+                    //Cần tìm cách lấy thời gian cho mọi SDK
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        WeekTracker(
+                            weekTrackerData = listOf(
+                                WeekTrackerModel(
+                                    date = Calendar.getInstance().time,
+                                    dateBudget = 100.0,
+                                    dateSpend = 50.0
+                                ),
+                                WeekTrackerModel(
+                                    date = Calendar.getInstance().time,
+                                    dateBudget = 100.0,
+                                    dateSpend = 50.0
+                                ),
+                                WeekTrackerModel(
+                                    date = Calendar.getInstance().time,
+                                    dateBudget = 100.0,
+                                    dateSpend = 50.0
+                                ),
+                                WeekTrackerModel(
+                                    date = Calendar.getInstance().time,
+                                    dateBudget = 100.0,
+                                    dateSpend = 50.0
+                                ),
+                                WeekTrackerModel(
+                                    date = Calendar.getInstance().time,
+                                    dateBudget = 100.0,
+                                    dateSpend = 50.0
+                                ),
+                            ),
+                        )
+                    }
                 }
 
                 //month budget
@@ -126,8 +163,12 @@ fun DashBoardView() {
     )
 }
 
+data class WeekTrackerModel(val date: Date, val dateBudget: Double, val dateSpend: Double)
+
+
+
 @Composable
-fun WeekTracker() {
+fun WeekTracker(weekTrackerData: List<WeekTrackerModel>) {
 
     Row(
         modifier = Modifier
@@ -135,16 +176,19 @@ fun WeekTracker() {
             .fillMaxHeight(),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        TrackingColum(percent = 1.0, title = "Mon")
-        TrackingColum(percent = 0.5)
-        TrackingColum(percent = 0.7)
-        TrackingColum(percent = 0.3)
-        TrackingColum(percent = 0.2)
+        weekTrackerData.forEach { item ->
+            TrackingColum(percent = item.dateSpend / item.dateBudget, title = SimpleDateFormat("EEE").format(item.date))
+        }
     }
 }
 
 @Composable
-private fun TrackingColum(height: Double? = null, width: Double? = null, percent: Double = 0.0, title: String? = null) {
+private fun TrackingColum(
+    height: Double? = null,
+    width: Double? = null,
+    percent: Double = 0.0,
+    title: String? = null
+) {
     val trackColumnHeight: Double = 150.0
     val trackColumnWidth: Double = 40.0
     val finalHeight = height ?: trackColumnHeight
@@ -172,7 +216,12 @@ private fun TrackingColum(height: Double? = null, width: Double? = null, percent
         }
 
         if (title != null)
-            Text(text = title, color = textGrayColor, fontSize = 16.sp, fontWeight = FontWeight.Medium)
+            Text(
+                text = title,
+                color = textGrayColor,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium
+            )
     }
 }
 
