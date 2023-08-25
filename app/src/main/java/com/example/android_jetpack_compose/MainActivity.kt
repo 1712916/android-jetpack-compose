@@ -21,6 +21,7 @@ import com.example.android_jetpack_compose.ui.theme.AndroidjetpackcomposeTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.example.android_jetpack_compose.views.DashBoardView
+import com.example.android_jetpack_compose.views.MainView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +30,7 @@ class MainActivity : ComponentActivity() {
             AndroidjetpackcomposeTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    DashBoardView()
+                    MainView()
                 }
             }
         }
