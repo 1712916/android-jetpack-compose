@@ -54,7 +54,7 @@ fun MainView() {
                                 .height(24.dp)
                         )
                     },
-                    label = { Text(stringResource(screen.labelId)) },
+                  //  label = { Text(stringResource(screen.labelId)) },
                     selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                     onClick = {
                         navController.navigate(screen.route) {
@@ -84,7 +84,13 @@ fun MainView() {
                 DashBoardView()
             }
             composable(Screen.Calendar.route) {
-                DashBoardView()
+                CalendarHistoryView()
+            }
+            composable(Screen.Chart.route) {
+                ChartView()
+            }
+            composable(Screen.Setting.route) {
+                SettingView()
             }
         }
     }
