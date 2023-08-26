@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">android-jetpack-compose</string>
+    <string name="btn_dashboard">Dashboard</string>
+    <string name="btn_calendar">Calendar</string>
+    <string name="btn_chart">Chart</string>
+    <string name="btn_setting">Setting</string>
 </resources>
