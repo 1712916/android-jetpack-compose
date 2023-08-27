@@ -1,10 +1,19 @@
 package com.example.android_jetpack_compose.views
 
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
@@ -15,7 +24,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -30,19 +42,48 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.android_jetpack_compose.R
+import com.example.android_jetpack_compose.router.Screen
+import kotlinx.coroutines.launch
+
+val items = listOf(
+    Screen.Dashboard,
+    Screen.Calendar,
+    Screen.Chart,
+    Screen.Setting,
+)
 
 @Preview
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun MainView() {
-    val navController = rememberNavController()
+    val pagerState = rememberPagerState(pageCount = {4})
+    // scroll to page
+    val coroutineScope = rememberCoroutineScope()
+
+    suspend fun onBottomNavTap(screen: Screen) {
+        when (screen) {
+            Screen.Dashboard -> pagerState.scrollToPage(0)
+            Screen.Calendar -> pagerState.scrollToPage(1)
+            Screen.Chart -> pagerState.scrollToPage(2)
+            Screen.Setting -> pagerState.scrollToPage(3)
+            else -> {}
+        }
+    }
+
+    LaunchedEffect(pagerState) {
+        // Collect from the a snapshotFlow reading the currentPage
+        snapshotFlow { pagerState.currentPage }.collect { page ->
+            // Do something with each page change, for example:
+            // viewModel.sendPageSelectedEvent(page)
+            Log.d("Page change", "Page changed to $page")
+        }
+    }
+
 
     Scaffold(bottomBar = {
         BottomNavigation(
             backgroundColor = Color.White
         ) {
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentDestination = navBackStackEntry?.destination
             items.forEach { screen ->
                 BottomNavigationItem(
                     icon = {
@@ -55,61 +96,39 @@ fun MainView() {
                         )
                     },
                     //  label = { Text(stringResource(screen.labelId)) },
-                    selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                    selected = true,
                     onClick = {
-                        navController.navigate(screen.route) {
-                            // Pop up to the start destination of the graph to
-                            // avoid building up a large stack of destinations
-                            // on the back stack as users select items
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            // Avoid multiple copies of the same destination when
-                            // reselecting the same item
-                            launchSingleTop = true
-                            // Restore state when reselecting a previously selected item
-                            restoreState = true
+                        coroutineScope.launch {
+                            // Call scroll to on pagerState
+                            onBottomNavTap(screen)
                         }
                     }
                 )
             }
         }
     }) { innerPadding ->
-        NavHost(
-            navController,
-            startDestination = Screen.Dashboard.route,
-            Modifier.padding(innerPadding)
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxWidth()
+                .fillMaxHeight()
         ) {
-            composable(Screen.Dashboard.route) {
-                DashBoardView(navController)
-            }
-            composable(Screen.Calendar.route) {
-                CalendarHistoryView()
-            }
-            composable(Screen.Chart.route) {
-                ChartView()
-            }
-            composable(Screen.Setting.route) {
-                SettingView()
-            }
-            composable(Screen.Notification.route) {
-                NotificationView()
+
+            HorizontalPager(state = pagerState) { page ->
+                // Our page content
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                ) {
+                    when (page){
+                        0 -> DashBoardView( )
+                        1 -> CalendarHistoryView( )
+                        2 -> ChartView( )
+                        3 -> SettingView( )
+                    }
+                }
             }
         }
     }
 }
-
-sealed class Screen(val route: String, @StringRes val labelId: Int, @DrawableRes val iconId: Int) {
-    object Dashboard : Screen("dashboard", R.string.btn_dashboard, R.drawable.ic_dashboard)
-    object Calendar : Screen("calendar", R.string.btn_calendar, R.drawable.ic_calendar)
-    object Chart : Screen("chart", R.string.btn_chart, R.drawable.ic_chart)
-    object Setting : Screen("setting", R.string.btn_setting, R.drawable.ic_setting)
-    object Notification : Screen("notification", -1, -1)
-}
-
-val items = listOf(
-    Screen.Dashboard,
-    Screen.Calendar,
-    Screen.Chart,
-    Screen.Setting,
-)

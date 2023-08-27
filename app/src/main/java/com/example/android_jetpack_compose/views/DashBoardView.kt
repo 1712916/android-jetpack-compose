@@ -48,6 +48,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.android_jetpack_compose.R
+import com.example.android_jetpack_compose.appNavController
+import com.example.android_jetpack_compose.router.Screen
 import com.example.android_jetpack_compose.ui.theme.AndroidjetpackcomposeTheme
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -63,11 +65,11 @@ val orangeColor = Color(0xFFfdaa4a)
 val borderRadius8 = 8.dp
 
 @Composable
-fun heightBox(height: Double) = Spacer(modifier = Modifier.height(height.dp))
+fun HeightBox(height: Double) = Spacer(modifier = Modifier.height(height.dp))
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashBoardView(navController: NavController) {
+fun DashBoardView() {
     val contextForToast = LocalContext.current
 
     Scaffold(
@@ -76,8 +78,7 @@ fun DashBoardView(navController: NavController) {
                 actions = {
                     IconButton(onClick =
                     {
-                        navController.navigate(Screen.Notification.route)
-                          
+                        appNavController?.navigate(Screen.Notification.route)
 //                        Toast.makeText(
 //                            contextForToast,
 //                            "This function is coming soon!",
@@ -190,9 +191,9 @@ private fun MonthBudgetProgress() {
 //                        trackColor = grayColor,
 //                        progress = 0.7f,
 //                    )
-        heightBox(height = 12.0)
+        HeightBox(12.0)
         CustomLinearIndicator(progress = 0.7f)
-        heightBox(height = 6.0)
+        HeightBox(6.0)
         Text(
             buildAnnotatedString {
                 withStyle(style = SpanStyle(color = textGrayColor)) {
@@ -379,6 +380,6 @@ fun AppBar(title: String, actions: @Composable RowScope.() -> Unit = {}) {
 @Composable
 fun GreetingPreview() {
     AndroidjetpackcomposeTheme {
-        DashBoardView(rememberNavController())
+        DashBoardView()
     }
 }
