@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
-
 @Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -18,19 +17,16 @@ fun CalendarHistoryView() {
     Scaffold(
         topBar = {
             AppBar(
-                title = "Calendar",
-
-                )
+                title = "Calendar"
+            )
         },
     ) { contentPadding ->
-
         Column(
             modifier = Modifier
                 .padding(contentPadding)
                 .fillMaxWidth()
                 .fillMaxHeight(),
         ) {
-
         }
     }
 }

@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -26,8 +25,6 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-
-
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -47,6 +44,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.android_jetpack_compose.R
@@ -62,7 +60,6 @@ val textGrayColor = Color(0xFF61626d)
 val textGreenColor = Color(0xFF4dae15)
 val textBlackColor = Color(0xFF101226)
 val orangeColor = Color(0xFFfdaa4a)
-
 val borderRadius8 = 8.dp
 
 @Composable
@@ -70,10 +67,8 @@ fun heightBox(height: Double) = Spacer(modifier = Modifier.height(height.dp))
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashBoardView() {
+fun DashBoardView(navController: NavController) {
     val contextForToast = LocalContext.current
-
-    val navController = rememberNavController()
 
     Scaffold(
         topBar = {
@@ -81,11 +76,13 @@ fun DashBoardView() {
                 actions = {
                     IconButton(onClick =
                     {
-                        Toast.makeText(
-                            contextForToast,
-                            "This function is coming soon!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        navController.navigate(Screen.Notification.route)
+                          
+//                        Toast.makeText(
+//                            contextForToast,
+//                            "This function is coming soon!",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
                     }) {
                         Icon(
 //                            imageVector = Icons.Filled.Notifications,
@@ -100,19 +97,15 @@ fun DashBoardView() {
             )
         },
         content = { contentPadding ->
-
             Column(
                 modifier = Modifier
                     .padding(contentPadding)
                     .fillMaxWidth()
                     .fillMaxHeight(),
             ) {
-
                 TrackingProgressInfo()
-
             }
         },
-
     )
 }
 
@@ -234,7 +227,6 @@ fun CustomLinearIndicator(progress: Float) {
             .height(8.dp)
             .clip(RoundedCornerShape(borderRadius.dp))
             .fillMaxWidth()
-
     ) {
         Box(
             modifier = Modifier
@@ -243,7 +235,6 @@ fun CustomLinearIndicator(progress: Float) {
                 .clip(RoundedCornerShape(borderRadius.dp))
                 .fillMaxWidth(fraction = progress)
         )
-
     }
 }
 
@@ -287,7 +278,6 @@ private fun WeekTrackerInfo(weekTrackerInfoModel: WeekTrackerInfoModel) {
 }
 
 data class WeekTrackerModel(val date: Date, val dateBudget: Double, val dateSpend: Double)
-
 data class WeekTrackerInfoModel(
     val totalSpend: Double,
     val differenceNumber: Double,
@@ -301,7 +291,6 @@ enum class DifferentEnum {
 
 @Composable
 fun WeekTracker(weekTrackerData: Array<WeekTrackerModel>) {
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -322,7 +311,7 @@ private fun TrackingColum(
     height: Double? = null,
     width: Double? = null,
     percent: Double = 0.0,
-    title: String? = null
+    title: String? = null,
 ) {
     val trackColumnHeight: Double = 150.0
     val trackColumnWidth: Double = 40.0
@@ -338,9 +327,7 @@ private fun TrackingColum(
                 .height(finalHeight.dp)
                 .width(finalWidth.dp)
                 .clip(RoundedCornerShape(borderRadius.dp))
-
         ) {
-
             Box(
                 modifier = Modifier
                     .background(color = primaryColor)
@@ -375,7 +362,6 @@ fun SimpleColumn() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(title: String, actions: @Composable RowScope.() -> Unit = {}) {
-
     // TopAppBar Composable
     TopAppBar(
         // Provide Title
@@ -383,8 +369,7 @@ fun AppBar(title: String, actions: @Composable RowScope.() -> Unit = {}) {
             Text(
                 text = title,
                 fontWeight = FontWeight.Bold,
-
-                )
+            )
         },
         actions = actions
     )
@@ -394,6 +379,6 @@ fun AppBar(title: String, actions: @Composable RowScope.() -> Unit = {}) {
 @Composable
 fun GreetingPreview() {
     AndroidjetpackcomposeTheme {
-        DashBoardView()
+        DashBoardView(rememberNavController())
     }
 }

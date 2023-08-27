@@ -13,12 +13,10 @@ import androidx.compose.ui.tooling.preview.Preview
 @Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingView() {
+fun NotificationView() {
     Scaffold(
         topBar = {
-            AppBar(
-                title = "Setting",
-                )
+            AppBar(title = "Notification")
         },
     ) { contentPadding ->
         Column(

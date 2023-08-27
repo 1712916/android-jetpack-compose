@@ -38,9 +38,9 @@ fun MainView() {
     val navController = rememberNavController()
 
     Scaffold(bottomBar = {
-        BottomNavigation (
+        BottomNavigation(
             backgroundColor = Color.White
-                ) {
+        ) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentDestination = navBackStackEntry?.destination
             items.forEach { screen ->
@@ -54,7 +54,7 @@ fun MainView() {
                                 .height(24.dp)
                         )
                     },
-                  //  label = { Text(stringResource(screen.labelId)) },
+                    //  label = { Text(stringResource(screen.labelId)) },
                     selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                     onClick = {
                         navController.navigate(screen.route) {
@@ -81,7 +81,7 @@ fun MainView() {
             Modifier.padding(innerPadding)
         ) {
             composable(Screen.Dashboard.route) {
-                DashBoardView()
+                DashBoardView(navController)
             }
             composable(Screen.Calendar.route) {
                 CalendarHistoryView()
@@ -92,6 +92,9 @@ fun MainView() {
             composable(Screen.Setting.route) {
                 SettingView()
             }
+            composable(Screen.Notification.route) {
+                NotificationView()
+            }
         }
     }
 }
@@ -101,6 +104,7 @@ sealed class Screen(val route: String, @StringRes val labelId: Int, @DrawableRes
     object Calendar : Screen("calendar", R.string.btn_calendar, R.drawable.ic_calendar)
     object Chart : Screen("chart", R.string.btn_chart, R.drawable.ic_chart)
     object Setting : Screen("setting", R.string.btn_setting, R.drawable.ic_setting)
+    object Notification : Screen("notification", -1, -1)
 }
 
 val items = listOf(

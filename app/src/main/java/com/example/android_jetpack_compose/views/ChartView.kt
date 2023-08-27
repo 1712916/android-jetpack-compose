@@ -16,20 +16,15 @@ import androidx.compose.ui.tooling.preview.Preview
 fun ChartView() {
     Scaffold(
         topBar = {
-            AppBar(
-                title = "Chart",
-
-                )
+            AppBar(title = "Chart")
         },
     ) { contentPadding ->
-
         Column(
             modifier = Modifier
                 .padding(contentPadding)
                 .fillMaxWidth()
                 .fillMaxHeight(),
         ) {
-
         }
     }
 }

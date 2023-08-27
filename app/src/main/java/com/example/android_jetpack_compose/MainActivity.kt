@@ -51,13 +51,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AndroidjetpackcomposeTheme {
-        DashBoardView()
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
