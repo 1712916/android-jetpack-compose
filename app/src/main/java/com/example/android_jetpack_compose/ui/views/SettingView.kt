@@ -1,4 +1,4 @@
-package com.example.android_jetpack_compose.views
+package com.example.android_jetpack_compose.ui.views
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -13,10 +13,12 @@ import androidx.compose.ui.tooling.preview.Preview
 @Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotificationView() {
+fun SettingView() {
     Scaffold(
         topBar = {
-            AppBar(title = "Notification")
+            AppBar(
+                title = "Setting",
+                )
         },
     ) { contentPadding ->
         Column(

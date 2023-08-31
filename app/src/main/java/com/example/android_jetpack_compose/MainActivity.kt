@@ -43,15 +43,14 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.android_jetpack_compose.views.DashBoardView
-import com.example.android_jetpack_compose.views.MainView
+import com.example.android_jetpack_compose.ui.views.DashBoardView
+import com.example.android_jetpack_compose.ui.views.MainView
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.android_jetpack_compose.router.Screen
-import com.example.android_jetpack_compose.views.CalendarHistoryView
-import com.example.android_jetpack_compose.views.ChartView
-import com.example.android_jetpack_compose.views.NotificationView
-import com.example.android_jetpack_compose.views.SettingView
+import com.example.android_jetpack_compose.ui.views.CalendarHistoryView
+import com.example.android_jetpack_compose.ui.views.ChartView
+import com.example.android_jetpack_compose.ui.views.NotificationView
+import com.example.android_jetpack_compose.ui.views.SettingView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,29 +76,8 @@ fun NavigateView() {
     appNavController = navController
 
     Scaffold { innerPadding ->
-        NavHost(
-            navController,
-            startDestination = Screen.Main.route,
-            Modifier.padding(innerPadding)
-        ) {
-            composable(Screen.Main.route) {
-                MainView()
-            }
-            composable(Screen.Dashboard.route) {
-                DashBoardView()
-            }
-            composable(Screen.Calendar.route) {
-                CalendarHistoryView()
-            }
-            composable(Screen.Chart.route) {
-                ChartView()
-            }
-            composable(Screen.Setting.route) {
-                SettingView()
-            }
-            composable(Screen.Notification.route) {
-                NotificationView()
-            }
-        }
+        AppNavHost(
+            navController = navController,
+            modifier = Modifier.padding(innerPadding),)
     }
 }

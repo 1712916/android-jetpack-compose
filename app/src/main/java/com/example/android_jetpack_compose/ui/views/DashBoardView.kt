@@ -1,4 +1,4 @@
-package com.example.android_jetpack_compose.views
+package com.example.android_jetpack_compose.ui.views
 
 import android.os.Build
 import android.provider.ContactsContract
@@ -47,9 +47,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.example.android_jetpack_compose.Notification
 import com.example.android_jetpack_compose.R
 import com.example.android_jetpack_compose.appNavController
-import com.example.android_jetpack_compose.router.Screen
 import com.example.android_jetpack_compose.ui.theme.AndroidjetpackcomposeTheme
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -78,7 +78,7 @@ fun DashBoardView() {
                 actions = {
                     IconButton(onClick =
                     {
-                        appNavController?.navigate(Screen.Notification.route)
+                        appNavController?.navigate(Notification.route)
 //                        Toast.makeText(
 //                            contextForToast,
 //                            "This function is coming soon!",

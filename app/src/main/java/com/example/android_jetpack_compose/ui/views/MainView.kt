@@ -1,4 +1,4 @@
-package com.example.android_jetpack_compose.views
+package com.example.android_jetpack_compose.ui.views
 
 import android.util.Log
 import androidx.annotation.DrawableRes
@@ -35,22 +35,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.example.android_jetpack_compose.R
-import com.example.android_jetpack_compose.router.Screen
+import com.example.android_jetpack_compose.*
+import com.example.android_jetpack_compose.bottomNavScreens
 import kotlinx.coroutines.launch
-
-val items = listOf(
-    Screen.Dashboard,
-    Screen.Calendar,
-    Screen.Chart,
-    Screen.Setting,
-)
 
 @Preview
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -60,12 +47,12 @@ fun MainView() {
     // scroll to page
     val coroutineScope = rememberCoroutineScope()
 
-    suspend fun onBottomNavTap(screen: Screen) {
+    suspend fun onBottomNavTap(screen: BottomNavigationItem) {
         when (screen) {
-            Screen.Dashboard -> pagerState.scrollToPage(0)
-            Screen.Calendar -> pagerState.scrollToPage(1)
-            Screen.Chart -> pagerState.scrollToPage(2)
-            Screen.Setting -> pagerState.scrollToPage(3)
+            Dashboard -> pagerState.scrollToPage(0)
+            Calendar -> pagerState.scrollToPage(1)
+            Chart -> pagerState.scrollToPage(2)
+            Setting -> pagerState.scrollToPage(3)
             else -> {}
         }
     }
@@ -84,7 +71,7 @@ fun MainView() {
         BottomNavigation(
             backgroundColor = Color.White
         ) {
-            items.forEach { screen ->
+            bottomNavScreens.forEach { screen ->
                 BottomNavigationItem(
                     icon = {
                         Icon(
