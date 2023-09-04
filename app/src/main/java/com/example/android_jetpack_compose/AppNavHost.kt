@@ -1,6 +1,5 @@
 package com.example.android_jetpack_compose
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -8,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.android_jetpack_compose.ui.views.CalendarHistoryView
 import com.example.android_jetpack_compose.ui.views.ChartView
-import com.example.android_jetpack_compose.ui.views.DashBoardView
+import com.example.android_jetpack_compose.ui.dashboard.DashBoardView
 import com.example.android_jetpack_compose.ui.views.MainView
 import com.example.android_jetpack_compose.ui.views.NotificationView
 import com.example.android_jetpack_compose.ui.views.SettingView

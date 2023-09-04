@@ -1,8 +1,6 @@
-package com.example.android_jetpack_compose.ui.views
+package com.example.android_jetpack_compose.ui.dashboard
 
 import android.os.Build
-import android.provider.ContactsContract
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,8 +10,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,6 +25,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,9 +42,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.NavHost
-import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.android_jetpack_compose.Notification
 import com.example.android_jetpack_compose.R
 import com.example.android_jetpack_compose.appNavController
@@ -69,8 +65,10 @@ fun HeightBox(height: Double) = Spacer(modifier = Modifier.height(height.dp))
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashBoardView() {
-    val contextForToast = LocalContext.current
+fun DashBoardView(
+    viewModel: WeekTrackerInfoViewModel = viewModel()
+) {
+    val weekTrackerInfoState by viewModel.weekTrackerInfoState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -79,14 +77,8 @@ fun DashBoardView() {
                     IconButton(onClick =
                     {
                         appNavController?.navigate(Notification.route)
-//                        Toast.makeText(
-//                            contextForToast,
-//                            "This function is coming soon!",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
                     }) {
                         Icon(
-//                            imageVector = Icons.Filled.Notifications,
                             imageVector = ImageVector.vectorResource(id = R.drawable.ic_notification),
                             contentDescription = "Notifications",
                             modifier = Modifier
@@ -104,14 +96,15 @@ fun DashBoardView() {
                     .fillMaxWidth()
                     .fillMaxHeight(),
             ) {
-                TrackingProgressInfo()
+                TrackingProgressInfo(weekTrackerInfoState)
             }
         },
     )
 }
 
 @Composable
-private fun TrackingProgressInfo() {
+private fun TrackingProgressInfo(weekTrackerInfoModel: WeekTrackerInfoModel) {
+
     Column(
         modifier = Modifier
             .padding(PaddingValues(16.dp))
@@ -119,38 +112,7 @@ private fun TrackingProgressInfo() {
     ) {
         // week tracking
         WeekTrackerInfo(
-            weekTrackerInfoModel = WeekTrackerInfoModel(
-                differenceNumber = 13.0,
-                differentEnum = DifferentEnum.Increase,
-                totalSpend = 689.50,
-                weekTackers = arrayOf(
-                    WeekTrackerModel(
-                        date = Calendar.getInstance().time,
-                        dateBudget = 100.0,
-                        dateSpend = 50.0
-                    ),
-                    WeekTrackerModel(
-                        date = Calendar.getInstance().time,
-                        dateBudget = 100.0,
-                        dateSpend = 50.0
-                    ),
-                    WeekTrackerModel(
-                        date = Calendar.getInstance().time,
-                        dateBudget = 100.0,
-                        dateSpend = 50.0
-                    ),
-                    WeekTrackerModel(
-                        date = Calendar.getInstance().time,
-                        dateBudget = 100.0,
-                        dateSpend = 50.0
-                    ),
-                    WeekTrackerModel(
-                        date = Calendar.getInstance().time,
-                        dateBudget = 100.0,
-                        dateSpend = 50.0
-                    ),
-                ),
-            )
+            weekTrackerInfoModel = weekTrackerInfoModel
         )
         //month budget
         MonthBudgetProgress()
@@ -247,7 +209,7 @@ private fun WeekTrackerInfo(weekTrackerInfoModel: WeekTrackerInfoModel) {
             .height(IntrinsicSize.Min),
     ) {
         Text(
-            text = "$${weekTrackerInfoModel.totalSpend.format(2)}",
+            text = "$${weekTrackerInfoModel.totalSpend?.format(2)}",
             fontWeight = FontWeight.ExtraBold,
             fontSize = 34.sp,
             color = accentColor,
@@ -271,19 +233,21 @@ private fun WeekTrackerInfo(weekTrackerInfoModel: WeekTrackerInfoModel) {
         Spacer(modifier = Modifier.height(10.dp))
         //Cần tìm cách lấy thời gian cho mọi SDK
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            WeekTracker(
-                weekTrackerData = weekTrackerInfoModel.weekTackers,
-            )
+            weekTrackerInfoModel.weekTackers?.let {
+                WeekTracker(
+                    weekTrackerData = it,
+                )
+            }
         }
     }
 }
 
 data class WeekTrackerModel(val date: Date, val dateBudget: Double, val dateSpend: Double)
 data class WeekTrackerInfoModel(
-    val totalSpend: Double,
-    val differenceNumber: Double,
-    val differentEnum: DifferentEnum,
-    val weekTackers: Array<WeekTrackerModel>,
+    val totalSpend: Double? = null,
+    val differenceNumber: Double? = null,
+    val differentEnum: DifferentEnum? = null,
+    val weekTackers: Array<WeekTrackerModel>? = null,
 )
 
 enum class DifferentEnum {
