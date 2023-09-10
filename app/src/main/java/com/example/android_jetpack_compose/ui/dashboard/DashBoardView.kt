@@ -46,6 +46,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.android_jetpack_compose.Notification
 import com.example.android_jetpack_compose.R
 import com.example.android_jetpack_compose.appNavController
+import com.example.android_jetpack_compose.entity.WeekTrackerInfoModel
+import com.example.android_jetpack_compose.entity.WeekTrackerModel
 import com.example.android_jetpack_compose.ui.theme.AndroidjetpackcomposeTheme
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -242,17 +244,6 @@ private fun WeekTrackerInfo(weekTrackerInfoModel: WeekTrackerInfoModel) {
     }
 }
 
-data class WeekTrackerModel(val date: Date, val dateBudget: Double, val dateSpend: Double)
-data class WeekTrackerInfoModel(
-    val totalSpend: Double? = null,
-    val differenceNumber: Double? = null,
-    val differentEnum: DifferentEnum? = null,
-    val weekTackers: Array<WeekTrackerModel>? = null,
-)
-
-enum class DifferentEnum {
-    Increase, Decrease
-}
 
 @Composable
 fun WeekTracker(weekTrackerData: Array<WeekTrackerModel>) {

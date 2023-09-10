@@ -1,7 +1,10 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package com.example.android_jetpack_compose.ui.views
 
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +15,12 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -28,16 +36,16 @@ import androidx.compose.ui.unit.dp
 import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.bottomNavScreens
 import com.example.android_jetpack_compose.ui.dashboard.DashBoardView
+import com.example.android_jetpack_compose.ui.dashboard.accentColor
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun MainView() {
-    val pagerState = rememberPagerState(pageCount = {4})
+    val pagerState = rememberPagerState(pageCount = { 4 })
     // scroll to page
     val coroutineScope = rememberCoroutineScope()
-
     suspend fun onBottomNavTap(screen: BottomNavigationItem) {
         when (screen) {
             Dashboard -> pagerState.scrollToPage(0)
@@ -58,40 +66,54 @@ fun MainView() {
     }
 
 
-    Scaffold(bottomBar = {
-        BottomNavigation(
-            backgroundColor = Color.White
-        ) {
-            bottomNavScreens.forEach { screen ->
-                BottomNavigationItem(
-                    icon = {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(id = screen.iconId),
-                            contentDescription = "Notifications",
-                            modifier = Modifier
-                                .width(24.dp)
-                                .height(24.dp)
-                        )
-                    },
-                    //  label = { Text(stringResource(screen.labelId)) },
-                    selected = true,
-                    onClick = {
-                        coroutineScope.launch {
-                            // Call scroll to on pagerState
-                            onBottomNavTap(screen)
-                        }
-                    }
+    Scaffold(
+        floatingActionButtonPosition = FabPosition.End,
+
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { },
+                containerColor = accentColor,
+                modifier = Modifier.width(100.dp)
+            ) {
+                Icon(
+                    Icons.Outlined.Add, "Floating action button.",
+                    modifier = Modifier.background(color = Color.White)
                 )
             }
-        }
-    }) { innerPadding ->
+        },
+        bottomBar = {
+            BottomNavigation(
+                backgroundColor = Color.White
+            ) {
+                bottomNavScreens.forEach { screen ->
+                    BottomNavigationItem(
+                        icon = {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(id = screen.iconId),
+                                contentDescription = "Notifications",
+                                modifier = Modifier
+                                    .width(24.dp)
+                                    .height(24.dp)
+                            )
+                        },
+                        //  label = { Text(stringResource(screen.labelId)) },
+                        selected = true,
+                        onClick = {
+                            coroutineScope.launch {
+                                // Call scroll to on pagerState
+                                onBottomNavTap(screen)
+                            }
+                        }
+                    )
+                }
+            }
+        }) { innerPadding ->
         Box(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
-
             HorizontalPager(state = pagerState) { page ->
                 // Our page content
                 Box(
@@ -99,11 +121,11 @@ fun MainView() {
                         .fillMaxWidth()
                         .fillMaxHeight()
                 ) {
-                    when (page){
-                        0 -> DashBoardView( )
-                        1 -> CalendarHistoryView( )
-                        2 -> ChartView( )
-                        3 -> SettingView( )
+                    when (page) {
+                        0 -> DashBoardView()
+                        1 -> CalendarHistoryView()
+                        2 -> ChartView()
+                        3 -> SettingView()
                     }
                 }
             }
