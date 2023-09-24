@@ -68,10 +68,11 @@ fun MainView() {
 
     Scaffold(
         floatingActionButtonPosition = FabPosition.End,
-
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { },
+                onClick = {
+                    appNavController?.navigate(DailyExpense.route)
+                },
                 containerColor = accentColor,
                 modifier = Modifier.width(100.dp)
             ) {

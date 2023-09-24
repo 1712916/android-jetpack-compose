@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.android_jetpack_compose.ui.daily_expense.DailyExpenseView
 import com.example.android_jetpack_compose.ui.views.CalendarHistoryView
 import com.example.android_jetpack_compose.ui.views.ChartView
 import com.example.android_jetpack_compose.ui.dashboard.DashBoardView
@@ -40,6 +41,9 @@ fun AppNavHost(
         }
         composable(Notification.route) {
             NotificationView()
+        }
+        composable(DailyExpense.route) {
+            DailyExpenseView()
         }
     }
 }

@@ -2,7 +2,7 @@ package com.example.android_jetpack_compose.entity
 
 import java.util.Date
 
-data class WeekTrackerModel(val date: Date, val dateBudget: Double, val dateSpend: Double)
+data class WeekTrackerModel(val date: Date, val dateBudget: Double, val dateSpend: Long)
 
 data class WeekTrackerInfoModel(
     val totalSpend: Double? = null,

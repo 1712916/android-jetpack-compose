@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -43,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.android_jetpack_compose.Notification
 import com.example.android_jetpack_compose.R
 import com.example.android_jetpack_compose.appNavController
@@ -317,7 +319,7 @@ fun SimpleColumn() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppBar(title: String, actions: @Composable RowScope.() -> Unit = {}) {
+fun AppBar(title: String, actions: @Composable RowScope.() -> Unit = {}, showBackButton: Boolean = false) {
     // TopAppBar Composable
     TopAppBar(
         // Provide Title
@@ -327,7 +329,17 @@ fun AppBar(title: String, actions: @Composable RowScope.() -> Unit = {}) {
                 fontWeight = FontWeight.Bold,
             )
         },
-        actions = actions
+        actions = actions,
+        navigationIcon = {
+            if (showBackButton) {
+                IconButton(onClick = {
+                    appNavController?.popBackStack()
+                }) {
+                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
+                }
+            }
+
+        }
     )
 }
 

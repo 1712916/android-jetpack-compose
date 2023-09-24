@@ -56,3 +56,7 @@ object Setting : AppDestination, BottomNavigationItem {
 
 // Screens to be displayed in the bottom nav
 val bottomNavScreens : List<BottomNavigationItem> = listOf(Dashboard, Calendar,Chart, Setting)
+
+object  DailyExpense: AppDestination {
+    override val route = "daily"
+}
