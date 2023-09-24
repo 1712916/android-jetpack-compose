@@ -62,6 +62,7 @@ fun DailyExpenseView() {
                 item {
                     ExpenseCard(
                         MoneyModel(
+                            id = 1,
                     money = 35000,
                     note = null,
                     expenseCategory = ExpenseCategory.Expense(id = 1, name = "ăn sáng"),
