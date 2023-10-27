@@ -21,7 +21,7 @@ class DailyExpenseViewModel(private val dailyExpenseRepository: DailyExpenseRepo
     ViewModel() {
 
     private val dailyExpenseState = MutableStateFlow(DailyExpenseModel())
-    
+
     val dailyExpenseStateFlow: StateFlow<DailyExpenseModel> = dailyExpenseState.asStateFlow()
 
     fun init() {
@@ -52,13 +52,13 @@ data class DailyExpenseModel(
     val expenses: MutableList<MoneyModel> = arrayListOf(),
 ) {
     fun add(expense: MoneyModel): DailyExpenseModel {
-        expenses.plus(expense)
+        expenses.add(expense)
 
         return refreshData()
     }
 
     fun remove(expense: MoneyModel): DailyExpenseModel {
-        expenses.minus(expense)
+        expenses.remove(expense)
 
         return refreshData()
     }
@@ -70,6 +70,7 @@ data class DailyExpenseModel(
     }
 
     fun refreshData(): DailyExpenseModel {
+        
         return DailyExpenseModel(
             totalSpend = expenses.fold(0) { sum, e -> sum + e.money },
             expenses = expenses
