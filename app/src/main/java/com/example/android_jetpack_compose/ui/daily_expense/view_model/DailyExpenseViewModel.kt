@@ -1,16 +1,11 @@
-package com.example.android_jetpack_compose.ui.daily_expense
+package com.example.android_jetpack_compose.ui.daily_expense.view_model
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.android_jetpack_compose.data.dashboard.DashBoardRepository
-import com.example.android_jetpack_compose.data.dashboard.DashBoardRepositoryImpl
 import com.example.android_jetpack_compose.data.expense.DailyExpenseRepository
 import com.example.android_jetpack_compose.entity.MoneyModel
-import com.example.android_jetpack_compose.entity.WeekTrackerInfoModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.util.Calendar
 import java.util.Date
 
 /*

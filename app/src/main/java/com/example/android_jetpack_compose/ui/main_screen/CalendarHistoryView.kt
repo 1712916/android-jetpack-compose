@@ -1,4 +1,4 @@
-package com.example.android_jetpack_compose.ui.views
+package com.example.android_jetpack_compose.ui.main_screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -14,12 +14,12 @@ import com.example.android_jetpack_compose.ui.dashboard.AppBar
 @Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingView() {
+fun CalendarHistoryView() {
     Scaffold(
         topBar = {
             AppBar(
-                title = "Setting",
-                )
+                title = "Calendar"
+            )
         },
     ) { contentPadding ->
         Column(

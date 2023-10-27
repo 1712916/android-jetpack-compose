@@ -1,5 +1,6 @@
 package com.example.android_jetpack_compose.ui.dashboard
 
+import android.icu.text.ListFormatter.Width
 import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -66,6 +67,15 @@ val borderRadius8 = 8.dp
 
 @Composable
 fun HeightBox(height: Double) = Spacer(modifier = Modifier.height(height.dp))
+@Composable
+fun WidthBox(width: Double) = Spacer(modifier = Modifier.width(width.dp))
+
+@Composable
+fun SizedBox(width: Double = 0.0, height: Double = 0.0) = Spacer(
+    modifier = Modifier
+        .height(height.dp)
+        .width(width.dp)
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
