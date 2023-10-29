@@ -1,4 +1,4 @@
-package com.example.android_jetpack_compose.ui.daily_expense
+package com.example.android_jetpack_compose.ui.daily_expense.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

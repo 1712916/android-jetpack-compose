@@ -2,6 +2,7 @@ package com.example.android_jetpack_compose.ui.daily_expense.view_model
 
 import androidx.lifecycle.ViewModel
 import com.example.android_jetpack_compose.data.expense.DailyExpenseRepository
+import com.example.android_jetpack_compose.data.expense.DailyExpenseRepositoryImpl
 import com.example.android_jetpack_compose.entity.MoneyModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,31 +13,34 @@ import java.util.Date
 * Total:
 * List: MoneyModel
 * */
-class DailyExpenseViewModel(private val dailyExpenseRepository: DailyExpenseRepository) :
+class DailyExpenseViewModel() :
     ViewModel() {
+    private val dailyExpenseRepository: DailyExpenseRepository = DailyExpenseRepositoryImpl()
 
-    private val dailyExpenseState = MutableStateFlow(DailyExpenseModel())
+    private val _uiState = MutableStateFlow(DailyExpenseModel())
+    val uiState: StateFlow<DailyExpenseModel> = _uiState.asStateFlow()
 
-    val dailyExpenseStateFlow: StateFlow<DailyExpenseModel> = dailyExpenseState.asStateFlow()
+
+    val dailyExpenseStateFlow: StateFlow<DailyExpenseModel> = _uiState.asStateFlow()
 
     fun init() {
-        dailyExpenseState.value = DailyExpenseModel(expenses = dailyExpenseRepository.getExpensesByDate(Date()).toMutableList()).refreshData()
+        _uiState.value = DailyExpenseModel(expenses = dailyExpenseRepository.getExpensesByDate(Date()).toMutableList()).refreshData()
     }
 
     fun add(expense: MoneyModel) {
-        dailyExpenseState.value = dailyExpenseState.value.add(expense)
+        _uiState.value = _uiState.value.add(expense)
     }
 
     fun remove(expense: MoneyModel) {
-        dailyExpenseState.value = dailyExpenseState.value.remove(expense)
+        _uiState.value = _uiState.value.remove(expense)
     }
 
     fun update(index: Int, expense: MoneyModel) {
-        dailyExpenseState.value = dailyExpenseState.value.update(index, expense)
+        _uiState.value = _uiState.value.update(index, expense)
     }
 
     fun save() {
-        dailyExpenseState.value.expenses.forEach() {
+        _uiState.value.expenses.forEach() {
             moneyModel ->  dailyExpenseRepository.create(moneyModel)
         }
     }

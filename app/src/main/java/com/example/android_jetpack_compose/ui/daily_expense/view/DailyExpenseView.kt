@@ -1,4 +1,4 @@
-package com.example.android_jetpack_compose.ui.daily_expense
+package com.example.android_jetpack_compose.ui.daily_expense.view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -11,7 +11,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

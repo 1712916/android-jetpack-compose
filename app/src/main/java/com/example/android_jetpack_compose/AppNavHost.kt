@@ -5,8 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.android_jetpack_compose.ui.daily_expense.DailyExpenseView
-import com.example.android_jetpack_compose.ui.daily_expense.InputDailyExpenseView
+import com.example.android_jetpack_compose.ui.daily_expense.view.DailyExpenseView
+import com.example.android_jetpack_compose.ui.daily_expense.view.InputDailyExpenseView
 import com.example.android_jetpack_compose.ui.main_screen.CalendarHistoryView
 import com.example.android_jetpack_compose.ui.main_screen.ChartView
 import com.example.android_jetpack_compose.ui.dashboard.DashBoardView
