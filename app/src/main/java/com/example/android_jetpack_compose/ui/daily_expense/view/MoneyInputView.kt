@@ -17,6 +17,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.android_jetpack_compose.ui.dashboard.WidthBox
+import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.util.Currency
 
 sealed class InputValidateState {
     abstract fun color(): Color
@@ -33,22 +36,18 @@ object EmptyInputState : InputValidateState() {
         return Color.Red
     }
 }
+
 object SameInputState : InputValidateState() {
     override fun color(): Color {
         return Color.Gray
     }
 }
 
-
 @Composable
 fun MoneyInputView(number: String, validateState: InputValidateState) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(80.dp)
-            .background(Color.White)
-            .border(1.dp, validateState.color())
-            .padding(all = 16.dp),
+        modifier = Modifier.fillMaxWidth().height(80.dp).background(Color.White)
+            .border(1.dp, validateState.color()).padding(all = 16.dp),
         contentAlignment = Alignment.CenterStart
     ) {
         Row {
@@ -60,7 +59,7 @@ fun MoneyInputView(number: String, validateState: InputValidateState) {
             )
             WidthBox(width = 16.0)
             Text(
-                number, modifier = Modifier.weight(1f),
+                FormatMoneyInput(number).toString(), modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Start,
                 style = TextStyle(),
             )
@@ -72,4 +71,24 @@ fun MoneyInputView(number: String, validateState: InputValidateState) {
 @Composable
 fun MoneyInputViewPreview() {
     MoneyInputView(number = "35000", validateState = ValidInputState)
+}
+
+class FormatMoneyInput(private val number: String) {
+    private val format: NumberFormat = DecimalFormat("#,###").apply {
+        maximumFractionDigits = 0
+        currency = Currency.getInstance("EUR")
+    }
+
+    override fun toString(): String {
+        return try {
+            format.format(number.toLong()).replace(",", ".")
+        } catch (e: Exception) {
+            number
+        }
+    }
+}
+
+@Composable
+fun SuggestMoneyList(number: String) {
+
 }

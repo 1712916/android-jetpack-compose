@@ -1,6 +1,5 @@
 package com.example.android_jetpack_compose.ui.daily_expense.view
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +14,6 @@ import androidx.compose.material.FilterChip
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.List
@@ -46,53 +44,43 @@ import com.example.android_jetpack_compose.ui.daily_expense.view_model.InputDail
 import com.example.android_jetpack_compose.ui.dashboard.HeightBox
 import com.example.android_jetpack_compose.ui.dashboard.WidthBox
 import com.example.android_jetpack_compose.ui.view.AppNumberBoard
-import com.example.android_jetpack_compose.ui.view.MultipleSelectionFlowView
 import com.example.android_jetpack_compose.ui.view.SingleSelectionFlowView
-import kotlinx.coroutines.launch
 
 val categories = arrayListOf<ExpenseCategory>(
-    ExpenseCategory.Expense(
-        id = 1, name = "Ăn sáng"
-    ),
-    ExpenseCategory.Expense(
-        id = 2, name = "Ăn trưa"
-    ),
-    ExpenseCategory.Expense(
-        id = 3, name = "Ăn tối"
-    ),
-    ExpenseCategory.Expense(
-        id = 4, name = "Cà phê"
-    ),
+    ExpenseCategory.Expense(id = 1, name = "Ăn sáng"),
+    ExpenseCategory.Expense(id = 2, name = "Ăn trưa"),
+    ExpenseCategory.Expense(id = 3, name = "Ăn tối"),
+    ExpenseCategory.Expense(id = 4, name = "Cà phê"),
 )
 val methods = arrayListOf<ExpenseMethod>(
-    ExpenseMethod.Cash(),
-    ExpenseMethod.Bank(name = "TP Bank"),
-    ExpenseMethod.Bank(name = "Vp Bank"),
-    ExpenseMethod.Wallet(name = "Momo"),
+    ExpenseMethod(name = "Tiền mặt", id = 0),
+    ExpenseMethod(name = "TP Bank", id = 1),
+    ExpenseMethod(name = "Vp Bank", id = 2),
+    ExpenseMethod(name = "Momo", id = 3),
 )
-fun Modifier.gesturesDisabled(disabled: Boolean = true) =
-    if (disabled) {
-        pointerInput(Unit) {
-            awaitPointerEventScope {
-                // we should wait for all new pointer events
-                while (true) {
-                    awaitPointerEvent(pass = PointerEventPass.Initial)
-                        .changes
-                        .forEach(PointerInputChange::consume)
-                }
+
+fun Modifier.gesturesDisabled(disabled: Boolean = true) = if (disabled) {
+    pointerInput(Unit) {
+        awaitPointerEventScope {
+            // we should wait for all new pointer events
+            while (true) {
+                awaitPointerEvent(pass = PointerEventPass.Initial).changes.forEach(
+                    PointerInputChange::consume
+                )
             }
         }
-    } else {
-        this
     }
+} else {
+    this
+}
+
 @Preview
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun InputDailyExpenseView() {
     val scope = rememberCoroutineScope()
-    val bottomSheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden
-    )
+    val bottomSheetState =
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val viewModel: InputDailyExpenseViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
 
@@ -100,26 +88,22 @@ fun InputDailyExpenseView() {
 
 
 
-    ModalBottomSheetLayout(
-        sheetState = bottomSheetState, sheetContent = {
-            Text("BottomSheet")
-            Text("BottomSheet")
-            Text("BottomSheet")
-            Text("BottomSheet")
-            Text("BottomSheet")
-            Text("BottomSheet")
-            Text("BottomSheet")
-            Text("BottomSheet")
-            Text("BottomSheet")
-        }
-    ) {
-        Scaffold(
-            modifier = Modifier.pointerInput(Unit) {
-                detectTapGestures(onTap = {
-                    focusManager.clearFocus()
-                })
-            }
-        ) { p ->
+    ModalBottomSheetLayout(sheetState = bottomSheetState, sheetContent = {
+        Text("BottomSheet")
+        Text("BottomSheet")
+        Text("BottomSheet")
+        Text("BottomSheet")
+        Text("BottomSheet")
+        Text("BottomSheet")
+        Text("BottomSheet")
+        Text("BottomSheet")
+        Text("BottomSheet")
+    }) {
+        Scaffold(modifier = Modifier.pointerInput(Unit) {
+            detectTapGestures(onTap = {
+                focusManager.clearFocus()
+            })
+        }) { p ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -133,10 +117,9 @@ fun InputDailyExpenseView() {
                     content = {
                         item {
                             MoneyInputView(
-                                number = uiState.money.toString(),
-                                validateState = InputMoneyValidator(
+                                number = uiState.money, validateState = InputMoneyValidator(
                                     source = "",
-                                    destination = uiState.money.toString(),
+                                    destination = uiState.money,
                                 ).validate()
                             )
                         }
@@ -165,7 +148,7 @@ fun InputDailyExpenseView() {
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
-                                    ) {
+                                ) {
                                     Text("Categories")
                                     IconButton(onClick = { /*TODO*/ }) {
                                         Icon(
@@ -184,26 +167,19 @@ fun InputDailyExpenseView() {
                                             },
                                             itemBuilder = { item, isSelected ->
                                                 Row {
-                                                    FilterChip(
-                                                        onClick = {
-                                                            viewModel.changeCategory(item)
-                                                        },
-                                                        selected = isSelected,
-                                                        leadingIcon = {
-                                                            if (isSelected)
-                                                                Icon(
-                                                                    imageVector = Icons.Default.Check,
-                                                                    contentDescription = ""
-                                                                )
-                                                        },
-                                                        content = {
-                                                            Text(item.name)
-                                                        }
-                                                    )
+                                                    FilterChip(onClick = {
+                                                        viewModel.changeCategory(item)
+                                                    }, selected = isSelected, leadingIcon = {
+                                                        if (isSelected) Icon(
+                                                            imageVector = Icons.Default.Check,
+                                                            contentDescription = ""
+                                                        )
+                                                    }, content = {
+                                                        Text(item.name)
+                                                    })
                                                     WidthBox(width = 8.0)
                                                 }
-                                            }
-                                        )
+                                            })
                                     }
                                 }
                             }
@@ -216,8 +192,8 @@ fun InputDailyExpenseView() {
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text("Methods")
-                                    IconButton(onClick = {                                            
-                                        
+                                    IconButton(onClick = {
+
                                     }) {
                                         Icon(
                                             imageVector = Icons.Default.List,
@@ -235,27 +211,19 @@ fun InputDailyExpenseView() {
                                             },
                                             itemBuilder = { item, isSelected ->
                                                 Row {
-
-                                                    FilterChip(
-                                                        onClick = {
-                                                            viewModel.changeMethod(item)
-                                                        },
-                                                        selected = isSelected,
-                                                        leadingIcon = {
-                                                            if (isSelected)
-                                                                Icon(
-                                                                    imageVector = Icons.Default.Check,
-                                                                    contentDescription = ""
-                                                                )
-                                                        },
-                                                        content = {
-                                                            Text(item.name)
-                                                        }
-                                                    )
+                                                    FilterChip(onClick = {
+                                                        viewModel.changeMethod(item)
+                                                    }, selected = isSelected, leadingIcon = {
+                                                        if (isSelected) Icon(
+                                                            imageVector = Icons.Default.Check,
+                                                            contentDescription = ""
+                                                        )
+                                                    }, content = {
+                                                        Text(item.name)
+                                                    })
                                                     WidthBox(width = 8.0)
                                                 }
-                                            }
-                                        )
+                                            })
                                     }
                                 }
                             }
@@ -270,17 +238,14 @@ fun InputDailyExpenseView() {
 //                            }
 //                        }
 
-                              viewModel.onSave()
+                        viewModel.onSave()
                     }, modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
                     Text("Save")
                 }
-                AppNumberBoard(
-                    onChanged = { viewModel.changeMoney(it) },
-                    text = uiState.money.toString()
-                )
+                AppNumberBoard(onChanged = { viewModel.changeMoney(it) }, text = uiState.money)
             }
         }
     }
