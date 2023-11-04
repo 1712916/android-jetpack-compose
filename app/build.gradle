@@ -4,6 +4,7 @@ plugins {
     id 'com.google.dagger.hilt.android'
     id 'kotlin-kapt'
     id("com.google.gms.google-services")
+    id 'kotlinx-serialization'
 }
 
 android {
@@ -50,12 +51,16 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 kapt {
     correctErrorTypes = true
 }
 
 dependencies {
+    testImplementation 'org.json:json:20180813'
 
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
@@ -96,4 +101,5 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx:20.1.0")
     implementation("com.google.firebase:firebase-database:20.1.0")
 
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 }
