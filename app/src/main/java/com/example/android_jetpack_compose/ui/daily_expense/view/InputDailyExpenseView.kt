@@ -47,10 +47,10 @@ import com.example.android_jetpack_compose.ui.view.AppNumberBoard
 import com.example.android_jetpack_compose.ui.view.SingleSelectionFlowView
 
 val categories = arrayListOf<ExpenseCategory>(
-    ExpenseCategory.Expense(id = 1, name = "Ăn sáng"),
-    ExpenseCategory.Expense(id = 2, name = "Ăn trưa"),
-    ExpenseCategory.Expense(id = 3, name = "Ăn tối"),
-    ExpenseCategory.Expense(id = 4, name = "Cà phê"),
+    ExpenseCategory(id = 1, name = "Ăn sáng"),
+    ExpenseCategory(id = 2, name = "Ăn trưa"),
+    ExpenseCategory(id = 3, name = "Ăn tối"),
+    ExpenseCategory(id = 4, name = "Cà phê"),
 )
 val methods = arrayListOf<ExpenseMethod>(
     ExpenseMethod(name = "Tiền mặt", id = 0),
@@ -83,6 +83,7 @@ fun InputDailyExpenseView() {
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val viewModel: InputDailyExpenseViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
+    val validateState by viewModel.validateState.collectAsState()
 
     val focusManager = LocalFocusManager.current
 
@@ -117,9 +118,9 @@ fun InputDailyExpenseView() {
                     content = {
                         item {
                             MoneyInputView(
-                                number = uiState.money, validateState = InputMoneyValidator(
+                                number = uiState.money ?: "", validateState = InputMoneyValidator(
                                     source = "",
-                                    destination = uiState.money,
+                                    destination = uiState.money ?: "",
                                 ).validate()
                             )
                         }
@@ -232,20 +233,27 @@ fun InputDailyExpenseView() {
                 )
                 Button(
                     onClick = {
+                        if (validateState) {
+                            viewModel.onSave()
+                        }
 //                        scope.launch {
 //                            scope.launch {
 //                                bottomSheetState.show()
 //                            }
 //                        }
 
-                        viewModel.onSave()
-                    }, modifier = Modifier
+                    },
+                    modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
+                        .padding(16.dp),
+                    enabled = validateState,
                 ) {
                     Text("Save")
                 }
-                AppNumberBoard(onChanged = { viewModel.changeMoney(it) }, text = uiState.money)
+                AppNumberBoard(
+                    onChanged = { viewModel.changeMoney(it) },
+                    text = uiState.money ?: ""
+                )
             }
         }
     }

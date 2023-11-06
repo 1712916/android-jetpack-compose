@@ -26,11 +26,11 @@ class DailyExpenseRepositoryImpl : DailyExpenseRepository() {
     }
 
     override fun create(item: MoneyModel) {
-        expenseList.postValue(expenseList.value?.plus(item.copy(id = id++)))
+        expenseList.postValue(expenseList.value?.plus(item.copy(id = (id++).toString())))
     }
 
     override fun read(id: Long): MoneyModel? {
-        return expenseList.value?.find { moneyModel -> moneyModel.id == id }
+        return expenseList.value?.find { moneyModel -> moneyModel.id == id.toString() }
     }
 
     override fun update(id: Long, newItem: MoneyModel) {

@@ -6,8 +6,13 @@ import kotlinx.serialization.Serializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.buildClassSerialDescriptor
+import kotlinx.serialization.descriptors.element
+import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.encoding.decodeStructure
+import kotlinx.serialization.encoding.encodeStructure
 
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -15,7 +20,7 @@ import java.util.Date
 
 @Serializable
 data class MoneyModel(
-    val id: Long? = null,
+    val id: String,
     val money: Long,
     val note: String?,
     val expenseCategory: ExpenseCategory,
@@ -25,22 +30,6 @@ data class MoneyModel(
     @Serializable(with = DateSerializer::class)
     val updateDate: Date,
 )
-
-
-//@Serializer(forClass = DateSerializer::class)
-//object DateSerializer : KSerializer<Date> {
-//    override val descriptor: SerialDescriptor =
-//        StringDescriptor.withName("DateSerializer")
-//
-//    override fun serialize(output: Encoder, obj: Date) {
-//        output.encodeString(obj.time.toString())
-//    }
-//
-//    override fun deserialize(input: Decoder): Date {
-//        return Date(input.decodeString().toLong())
-//    }
-//}
-//
 
 @Serializer(forClass = Date::class)
 object DateSerializer : KSerializer<Date> {
