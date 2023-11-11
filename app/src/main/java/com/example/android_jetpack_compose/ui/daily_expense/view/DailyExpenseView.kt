@@ -24,10 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.android_jetpack_compose.InputDailyExpense
-import com.example.android_jetpack_compose.Notification
+import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.R
-import com.example.android_jetpack_compose.appNavController
 import com.example.android_jetpack_compose.entity.ExpenseCategory
 import com.example.android_jetpack_compose.entity.ExpenseMethod
 import com.example.android_jetpack_compose.entity.MoneyModel
@@ -46,7 +44,7 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DailyExpenseView() {
-    val viewModel: DailyExpenseViewModel = viewModel()
+    val viewModel: DailyExpenseViewModel = DailyExpenseViewModel(date = Date())
     val expenseListState = viewModel.expenseList.observeAsState()
     val totalExpenseState = viewModel.totalMoney.observeAsState()
     val coroutineScope = rememberCoroutineScope()
@@ -100,9 +98,21 @@ fun DailyExpenseView() {
                     .weight(1f)
                     .padding(horizontal = 16.dp),
                 content = {
-                    items(expenseListState.value?.count() ?: 0) {
+                    items(expenseListState.value?.count() ?: 0) { index ->
+                        val it = expenseListState.value!![index]
                         ExpenseCard(
-                            expenseListState.value!![it]
+                            it,
+                            onClick = {
+                                appNavController?.navigate(
+                                    UpdateDailyExpense.route.replace(
+                                        oldValue = "{id}",
+                                        newValue = it.id,
+                                    ).replace(
+                                        oldValue = "{date}",
+                                        newValue = viewModel.date.time.toString(),
+                                    )
+                                )
+                            }
                         )
                         Divider()
                     }

@@ -1,5 +1,6 @@
 package com.example.android_jetpack_compose.ui.daily_expense.view
 
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -12,10 +13,13 @@ import com.example.android_jetpack_compose.util.*
 import java.util.*
 
 @Composable
-fun ExpenseCard(expense: MoneyModel) {
+fun ExpenseCard(expense: MoneyModel, onClick: (() -> Unit)? = null) {
     Box(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable {
+                onClick?.invoke()
+            },
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
             Row(
@@ -34,8 +38,10 @@ fun ExpenseCard(expense: MoneyModel) {
             //            Text(text = expense.expenseMethod.name)
             if (!expense.note.isNullOrEmpty())
                 Text(
-                    text = "${expense.money}",
-                    style = MaterialTheme.typography.labelLarge
+                    text = "Note: ${expense.note}",
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        fontSize = 14.sp
+                    )
                 )
         }
     }

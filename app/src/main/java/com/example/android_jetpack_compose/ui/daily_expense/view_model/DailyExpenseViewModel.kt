@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
-import androidx.lifecycle.viewModelScope
 import com.example.android_jetpack_compose.data.expense.DailyExpenseRepository
 import com.example.android_jetpack_compose.data.expense.DailyExpenseRepositoryImpl
 import com.example.android_jetpack_compose.entity.ExpenseCategory
@@ -13,32 +12,25 @@ import com.example.android_jetpack_compose.entity.MoneyModel
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.serialization.json.*
-import org.json.*
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Timer
-import kotlin.concurrent.schedule
 
 /*
 * Total:
 * List: MoneyModel
 * */
-class DailyExpenseViewModel :
+class DailyExpenseViewModel(val date: Date) :
     ViewModel() {
     private val dailyExpenseRepository: DailyExpenseRepository = DailyExpenseRepositoryImpl()
     lateinit var expenseList: ListExpenseLiveData
     lateinit var totalMoney: LiveData<Long>
     val fireStore = Firebase.firestore
-    val now = Date()
 
     init {
         expenseList = ListExpenseLiveData(
             fireStore.collection("smile.vinhnt@gmail.com")
-                .document(SimpleDateFormat("MM-yyyy").format(now))
-                .collection(SimpleDateFormat("dd-MM-yyyy").format(now)),
+                .document(SimpleDateFormat("MM-yyyy").format(date))
+                .collection(SimpleDateFormat("dd-MM-yyyy").format(date)),
         )
         totalMoney = expenseList.map { it ->
             it.fold(0) { sum, e -> sum + e.money }

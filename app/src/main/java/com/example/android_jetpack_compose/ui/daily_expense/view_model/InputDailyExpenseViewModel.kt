@@ -11,6 +11,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
+import java.security.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -68,11 +69,11 @@ abstract class BaseViewModel : ViewModel() {
     }
 }
 
-class InputDailyExpenseViewModel : BaseViewModel() {
-    private val _toastState = MutableStateFlow<ShowToastMessage?>(null)
+open class InputDailyExpenseViewModel : BaseViewModel() {
+    val _toastState = MutableStateFlow<ShowToastMessage?>(null)
     val toastState = _toastState.asStateFlow()
     // Game UI state
-    private val _uiState = MutableStateFlow(
+    val _uiState = MutableStateFlow(
         InputDailyExpenseState(
         )
     )
@@ -97,7 +98,7 @@ class InputDailyExpenseViewModel : BaseViewModel() {
         }
     }
 
-    fun onSave() {
+    open fun onSave() {
         //validate
         ///check required fields
         ///
@@ -147,6 +148,88 @@ class InputDailyExpenseViewModel : BaseViewModel() {
                 category = category
             )
         }
+    }
+}
+
+class UpdateDailyExpenseViewModel : InputDailyExpenseViewModel() {
+    private var id: String? = null
+    fun loadById(id: String?, dateTimeStamp: Long?) {
+        if (id == null || dateTimeStamp == null) {
+            return
+        }
+        this.id = id
+        val date = Date(dateTimeStamp!!)
+        val fireStore = Firebase.firestore
+        fireStore.collection("smile.vinhnt@gmail.com")
+            .document(SimpleDateFormat("MM-yyyy").format(date))
+            .collection(SimpleDateFormat("dd-MM-yyyy").format(date))
+            .document(id!!)
+            .get().addOnSuccessListener {
+                if (it != null && it.exists()) {
+                    val data = it.data!!
+                    val expense = MoneyModel(
+                        id = data.getValue("id") as String,
+                        note = data.getValue("note") as String?,
+                        expenseCategory = ExpenseCategory(
+                            id = ((data.getValue("expenseCategory") as Map<*, *>)["id"] as Long).toInt(),
+                            name = (data.getValue("expenseCategory") as Map<*, *>)["name"] as String
+                        ),
+                        money = data.getValue("money") as Long,
+                        updateDate = Date(),
+                        createDate = Date(),
+                        expenseMethod = ExpenseMethod(
+                            id = ((data.getValue("expenseMethod") as Map<*, *>)["id"] as Long).toInt(),
+                            name = (data.getValue("expenseMethod") as Map<*, *>)["name"] as String
+                        ),
+                    )
+
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            money = expense.money.toString(),
+                            note = expense.note,
+                            method = expense.expenseMethod,
+                            category = expense.expenseCategory,
+                        )
+                    }
+                }
+            }
+
+    }
+
+    override fun onSave() {
+        //validate
+        ///check required fields
+        ///
+        _uiState.value.let {
+            if (!InputDailyExpenseStateValidator(it).validate()) {
+                return
+            }
+            val fireStore = Firebase.firestore
+            val now = Date()
+            val ref = fireStore.collection("smile.vinhnt@gmail.com")
+                .document(SimpleDateFormat("MM-yyyy").format(now))
+                .collection(SimpleDateFormat("dd-MM-yyyy").format(now))
+                .document(id!!)
+            val model = MoneyModel(
+                id = ref.id,
+                money = it.money!!.toLong(),
+                expenseMethod = it.method!!,
+                expenseCategory = it.category!!,
+                note = it.note,
+                createDate = Date(),
+                updateDate = Date()
+            )
+
+
+            ref.set(model)
+                .addOnSuccessListener {
+                    _toastState.value = SuccessToastMessage("Update expense successfully")
+                }.addOnFailureListener {
+                    _toastState.value = FailureToastMessage("Update expense failed")
+                }
+        }
+        ///create date
+        ///update date
     }
 }
 

@@ -2,10 +2,10 @@ package com.example.android_jetpack_compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
+import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.android_jetpack_compose.ui.daily_expense.view.DailyExpenseView
+import com.example.android_jetpack_compose.ui.daily_expense.view.*
 import com.example.android_jetpack_compose.ui.daily_expense.view.InputDailyExpenseView
 import com.example.android_jetpack_compose.ui.main_screen.CalendarHistoryView
 import com.example.android_jetpack_compose.ui.main_screen.ChartView
@@ -47,6 +47,12 @@ fun AppNavHost(
         }
         composable(InputDailyExpense.route) {
             InputDailyExpenseView()
+        }
+        composable(
+            UpdateDailyExpense.route,
+            arguments = listOf(navArgument("id") { defaultValue = "" }, navArgument("date") { defaultValue = "" })
+        ) { backStackEntry ->
+            UpdateDailyExpenseView(backStackEntry.arguments?.getString("id"), backStackEntry.arguments?.getString("date")?.toLong())
         }
     }
 }
