@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.android_jetpack_compose.ui.dashboard.WidthBox
+import com.example.android_jetpack_compose.util.*
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.Currency
@@ -73,20 +74,7 @@ fun MoneyInputViewPreview() {
     MoneyInputView(number = "35000", validateState = ValidInputState)
 }
 
-class FormatMoneyInput(private val number: String) {
-    private val format: NumberFormat = DecimalFormat("#,###").apply {
-        maximumFractionDigits = 0
-        currency = Currency.getInstance("EUR")
-    }
 
-    override fun toString(): String {
-        return try {
-            format.format(number.toLong()).replace(",", ".")
-        } catch (e: Exception) {
-            number
-        }
-    }
-}
 
 @Composable
 fun SuggestMoneyList(number: String) {

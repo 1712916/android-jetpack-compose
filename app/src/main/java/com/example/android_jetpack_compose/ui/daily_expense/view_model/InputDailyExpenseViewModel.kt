@@ -1,5 +1,7 @@
 package com.example.android_jetpack_compose.ui.daily_expense.view_model
 
+import android.content.*
+import android.widget.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android_jetpack_compose.entity.ExpenseCategory
@@ -8,15 +10,9 @@ import com.example.android_jetpack_compose.entity.MoneyModel
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.mapLatest
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
 
 /*
 * requires: money, category, method,
@@ -73,19 +69,17 @@ abstract class BaseViewModel : ViewModel() {
 }
 
 class InputDailyExpenseViewModel : BaseViewModel() {
+    private val _toastState = MutableStateFlow<ShowToastMessage?>(null)
+    val toastState = _toastState.asStateFlow()
     // Game UI state
     private val _uiState = MutableStateFlow(
         InputDailyExpenseState(
-
         )
     )
     val uiState: StateFlow<InputDailyExpenseState> = _uiState.asStateFlow()
-
-
     val validateState: StateFlow<Boolean> = _uiState.mapState {
         InputDailyExpenseStateValidator(it).validate()
     }
-
 
     fun changeMoney(moneyString: String) {
         _uiState.update { currentState ->
@@ -108,21 +102,15 @@ class InputDailyExpenseViewModel : BaseViewModel() {
         ///check required fields
         ///
         _uiState.value.let {
-
             if (!InputDailyExpenseStateValidator(it).validate()) {
                 return
             }
-
-
             val fireStore = Firebase.firestore
-
             val now = Date()
             val ref = fireStore.collection("smile.vinhnt@gmail.com")
                 .document(SimpleDateFormat("MM-yyyy").format(now))
                 .collection(SimpleDateFormat("dd-MM-yyyy").format(now))
                 .document()
-
-
             val model = MoneyModel(
                 id = ref.id,
                 money = it.money!!.toLong(),
@@ -136,13 +124,11 @@ class InputDailyExpenseViewModel : BaseViewModel() {
 
             ref.set(model)
                 .addOnSuccessListener {
-
+                    _toastState.value = SuccessToastMessage("Add expense successfully")
                 }.addOnFailureListener {
-
+                    _toastState.value = FailureToastMessage("Add expense failed")
                 }
         }
-
-
         ///create date
         ///update date
     }
@@ -171,6 +157,19 @@ data class InputDailyExpenseState(
 
 class InputDailyExpenseStateValidator(private val inputDailyExpenseState: InputDailyExpenseState) {
     fun validate(): Boolean {
-        return inputDailyExpenseState.money != null && inputDailyExpenseState.method != null && inputDailyExpenseState.category != null
+        return !inputDailyExpenseState.money.isNullOrEmpty() && inputDailyExpenseState.method != null && inputDailyExpenseState.category != null
     }
 }
+
+open class ShowToastMessage(private val message: String) {
+    fun show(context: Context) {
+        Toast.makeText(
+            context,
+            message,
+            Toast.LENGTH_SHORT,
+        ).show()
+    }
+}
+
+class SuccessToastMessage(message: String) : ShowToastMessage(message) {}
+class FailureToastMessage(message: String) : ShowToastMessage(message) {}

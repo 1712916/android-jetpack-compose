@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -35,6 +34,7 @@ import com.example.android_jetpack_compose.entity.MoneyModel
 import com.example.android_jetpack_compose.firebase_util.GetExpenseMethod
 import com.example.android_jetpack_compose.ui.daily_expense.view_model.DailyExpenseViewModel
 import com.example.android_jetpack_compose.ui.dashboard.AppBar
+import com.example.android_jetpack_compose.util.*
 import com.google.firebase.database.database
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ktx.firestore
@@ -47,17 +47,8 @@ import java.util.*
 @Composable
 fun DailyExpenseView() {
     val viewModel: DailyExpenseViewModel = viewModel()
-
     val expenseListState = viewModel.expenseList.observeAsState()
-
     val totalExpenseState = viewModel.totalMoney.observeAsState()
-
-    val database = Firebase.firestore
-
-    database.collection("smile.vinhnt@gmail.com/11-2023/03-11-2023").addSnapshotListener({ n, a ->
-        Log.d("addSnapshotListener", "${n?.documents}")
-    })
-
     val coroutineScope = rememberCoroutineScope()
 
 
@@ -71,30 +62,29 @@ fun DailyExpenseView() {
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 appNavController?.navigate(InputDailyExpense.route)
-//                try {
-//
-////                    database.collection("smile.vinhnt@gmail.com").document("11-2023")
-////                        .collection("03-11-2023")
-////                        .get().addOnSuccessListener { result ->
-////                            Log.d("firebase-read", "${result.documents}")
-////
-////                        }
-////                        .addOnFailureListener { exception ->
-////                            Log.w("firebase-read", "Error getting documents.", exception)
-////                        }
-//
-////                    database.collection("smile.vinhnt@gmail.com").document("11-2023")
-////                        .collection("03-11-2023").add(mapOf("money" to 100000))
-//                    coroutineScope.launch {
-//                        Log.d(
-//                            " GetExpenseMethod().getList()",
-//                            GetExpenseMethod().getList().toString()
-//                        )
-//                    }
-//                } catch (e: Exception) {
-//                    Log.i("firestore", e.toString())
-//                }
-
+                //                try {
+                //
+                ////                    database.collection("smile.vinhnt@gmail.com").document("11-2023")
+                ////                        .collection("03-11-2023")
+                ////                        .get().addOnSuccessListener { result ->
+                ////                            Log.d("firebase-read", "${result.documents}")
+                ////
+                ////                        }
+                ////                        .addOnFailureListener { exception ->
+                ////                            Log.w("firebase-read", "Error getting documents.", exception)
+                ////                        }
+                //
+                ////                    database.collection("smile.vinhnt@gmail.com").document("11-2023")
+                ////                        .collection("03-11-2023").add(mapOf("money" to 100000))
+                //                    coroutineScope.launch {
+                //                        Log.d(
+                //                            " GetExpenseMethod().getList()",
+                //                            GetExpenseMethod().getList().toString()
+                //                        )
+                //                    }
+                //                } catch (e: Exception) {
+                //                    Log.i("firestore", e.toString())
+                //                }
             }) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -106,34 +96,21 @@ fun DailyExpenseView() {
         Column(modifier = Modifier.padding(p)) {
             TotalExpenseView(totalExpenseState.value ?: 0)
             LazyColumn(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 16.dp),
                 content = {
-                    item {
-                        ExpenseCard(
-                            MoneyModel(
-                                id = "1",
-                                money = 35000,
-                                note = null,
-                                expenseCategory = ExpenseCategory(id = 1, name = "ăn sáng"),
-                                expenseMethod = ExpenseMethod(name = "Tien mat", id = 0),
-                                createDate = Date(),
-                                updateDate = Date(),
-                            )
-                        )
-                    }
-
                     items(expenseListState.value?.count() ?: 0) {
                         ExpenseCard(
                             expenseListState.value!![it]
                         )
+                        Divider()
                     }
-
                 },
             )
         }
     }
 }
-
 @Composable
 fun TotalExpenseView(totalExpense: Long) {
     Box(
@@ -142,7 +119,6 @@ fun TotalExpenseView(totalExpense: Long) {
             .height(100.dp)
             .padding(16.dp)
             .drawBehind {
-
                 val strokeWidth = 10f
                 val y = size.height - strokeWidth / 2
 
@@ -154,48 +130,12 @@ fun TotalExpenseView(totalExpense: Long) {
                 )
             },
         contentAlignment = Alignment.Center,
-
-        ) {
+    ) {
         Text(
-            text = "$totalExpense",
+            text = "${totalExpense.money()} VND",
             style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center,
         )
-
     }
 
-
-}
-
-@Composable
-fun ExpenseCard(expense: MoneyModel) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth(),
-        shape = RectangleShape
-
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = expense.expenseCategory.name.uppercase(Locale.ROOT),
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Text(
-                    text = "${expense.money}",
-                    style = MaterialTheme.typography.titleLarge
-                )
-            }
-            Text(text = expense.expenseMethod.name)
-
-            if (!expense.note.isNullOrEmpty())
-                Text(
-                    text = "${expense.money}",
-                    style = MaterialTheme.typography.labelLarge
-                )
-        }
-    }
 }
