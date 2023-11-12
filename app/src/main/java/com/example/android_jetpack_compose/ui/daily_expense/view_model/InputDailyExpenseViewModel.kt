@@ -153,6 +153,7 @@ open class InputDailyExpenseViewModel : BaseViewModel() {
 
 class UpdateDailyExpenseViewModel : InputDailyExpenseViewModel() {
     private var id: String? = null
+    private var currentExpense: MoneyModel? = null
     fun loadById(id: String?, dateTimeStamp: Long?) {
         if (id == null || dateTimeStamp == null) {
             return
@@ -167,7 +168,7 @@ class UpdateDailyExpenseViewModel : InputDailyExpenseViewModel() {
             .get().addOnSuccessListener {
                 if (it != null && it.exists()) {
                     val data = it.data!!
-                    val expense = MoneyModel(
+                    currentExpense = MoneyModel(
                         id = data.getValue("id") as String,
                         note = data.getValue("note") as String?,
                         expenseCategory = ExpenseCategory(
@@ -185,10 +186,10 @@ class UpdateDailyExpenseViewModel : InputDailyExpenseViewModel() {
 
                     _uiState.update { currentState ->
                         currentState.copy(
-                            money = expense.money.toString(),
-                            note = expense.note,
-                            method = expense.expenseMethod,
-                            category = expense.expenseCategory,
+                            money = currentExpense!!.money.toString(),
+                            note = currentExpense!!.note,
+                            method = currentExpense!!.expenseMethod,
+                            category = currentExpense!!.expenseCategory,
                         )
                     }
                 }
@@ -210,13 +211,11 @@ class UpdateDailyExpenseViewModel : InputDailyExpenseViewModel() {
                 .document(SimpleDateFormat("MM-yyyy").format(now))
                 .collection(SimpleDateFormat("dd-MM-yyyy").format(now))
                 .document(id!!)
-            val model = MoneyModel(
-                id = ref.id,
+            val model = currentExpense!!.copy(
                 money = it.money!!.toLong(),
                 expenseMethod = it.method!!,
                 expenseCategory = it.category!!,
                 note = it.note,
-                createDate = Date(),
                 updateDate = Date()
             )
 
