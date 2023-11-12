@@ -35,29 +35,6 @@ class DailyExpenseViewModel(val date: Date) :
         totalMoney = expenseList.map { it ->
             it.fold(0) { sum, e -> sum + e.money }
         }
-        //        viewModelScope.launch {
-        //            fireStore.collection("smile.vinhnt@gmail.com")
-        //                .document(SimpleDateFormat("MM-yyyy").format(now))
-        //                .collection(SimpleDateFormat("dd-MM-yyyy").format(now))
-        //                .addSnapshotListener { s, e ->
-        //                    Log.d(
-        //                        "Log firebase",
-        //                        s?.documents.toString()
-        //                    )
-        //
-        //                    s?.documents?.forEach {
-        //                        it.data?.let { it1 ->
-        //                            Log.d(
-        //                                "firebase document",
-        //                                it1.getValue("createDate").toString(),
-        //                                //                                        Json.decodeFromString<MoneyModel>(JSONObject(it1).toString())
-        //                                //                                    .toString()
-        //                            )
-        //                        }
-        //                    }
-        //                }
-        //        }
-
     }
 
     fun add(expense: MoneyModel) {
@@ -66,14 +43,7 @@ class DailyExpenseViewModel(val date: Date) :
         )
     }
 
-    fun remove(expense: MoneyModel) {
-    }
-
-    fun update(index: Int, expense: MoneyModel) {
-    }
-
-    fun save() {
-    }
+    fun remove(expense: MoneyModel) {}
 }
 
 class ListExpenseLiveData(private val collectionReference: CollectionReference) :
@@ -93,27 +63,22 @@ class ListExpenseLiveData(private val collectionReference: CollectionReference) 
 
             snapshot.forEach {
                 val data = it.data
-                Log.i("document", it.data.toString())
 
                 moneyModels.add(
                     MoneyModel(
                         id = data.getValue("id") as String,
                         note = data.getValue("note") as String?,
+                        money = data.getValue("money") as Long,
+                        updateDate = it.getTimestamp("updateDate")?.toDate(),
+                        createDate = it.getTimestamp("createDate")?.toDate(),
                         expenseCategory = ExpenseCategory(
                             id = ((data.getValue("expenseCategory") as Map<*, *>)["id"] as Long).toInt(),
                             name = (data.getValue("expenseCategory") as Map<*, *>)["name"] as String
                         ),
-                        money = data.getValue("money") as Long,
-                        updateDate = Date(),
-                        createDate = Date(),
                         expenseMethod = ExpenseMethod(
-                            id = 1,
-                            name = "",
+                            id = ((data.getValue("expenseMethod") as Map<*, *>)["id"] as Long).toInt(),
+                            name = (data.getValue("expenseMethod") as Map<*, *>)["name"] as String
                         ),
-                        //                        expenseMethod = ExpenseMethod(
-                        //                            id = (data.getValue("expenseMethod") as Map<*, *>)["id"] as Int,
-                        //                            name = (data.getValue("expenseMethod") as Map<*, *>)["name"] as String
-                        //                        ),
                     )
                 )
             }
