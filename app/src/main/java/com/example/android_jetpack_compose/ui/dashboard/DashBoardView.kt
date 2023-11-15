@@ -67,6 +67,7 @@ val borderRadius8 = 8.dp
 
 @Composable
 fun HeightBox(height: Double) = Spacer(modifier = Modifier.height(height.dp))
+
 @Composable
 fun WidthBox(width: Double) = Spacer(modifier = Modifier.width(width.dp))
 
@@ -329,7 +330,11 @@ fun SimpleColumn() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppBar(title: String, actions: @Composable RowScope.() -> Unit = {}, showBackButton: Boolean = false) {
+fun AppBar(
+    title: String,
+    actions: @Composable RowScope.() -> Unit = {},
+    showBackButton: Boolean = false
+) {
     // TopAppBar Composable
     TopAppBar(
         // Provide Title

@@ -44,10 +44,10 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DailyExpenseView() {
-    val viewModel: DailyExpenseViewModel = DailyExpenseViewModel(date = Date())
+    val viewModel: DailyExpenseViewModel =
+        DailyExpenseViewModel(date = Date())
     val expenseListState = viewModel.expenseList.observeAsState()
     val totalExpenseState = viewModel.totalMoney.observeAsState()
-    val coroutineScope = rememberCoroutineScope()
 
 
     Scaffold(
@@ -59,30 +59,12 @@ fun DailyExpenseView() {
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                appNavController?.navigate(InputDailyExpense.route)
-                //                try {
-                //
-                ////                    database.collection("smile.vinhnt@gmail.com").document("11-2023")
-                ////                        .collection("03-11-2023")
-                ////                        .get().addOnSuccessListener { result ->
-                ////                            Log.d("firebase-read", "${result.documents}")
-                ////
-                ////                        }
-                ////                        .addOnFailureListener { exception ->
-                ////                            Log.w("firebase-read", "Error getting documents.", exception)
-                ////                        }
-                //
-                ////                    database.collection("smile.vinhnt@gmail.com").document("11-2023")
-                ////                        .collection("03-11-2023").add(mapOf("money" to 100000))
-                //                    coroutineScope.launch {
-                //                        Log.d(
-                //                            " GetExpenseMethod().getList()",
-                //                            GetExpenseMethod().getList().toString()
-                //                        )
-                //                    }
-                //                } catch (e: Exception) {
-                //                    Log.i("firestore", e.toString())
-                //                }
+                appNavController?.navigate(
+                    InputDailyExpense.route.replace(
+                        oldValue = "{date}",
+                        newValue = viewModel.date.time.toString(),
+                    )
+                )
             }) {
                 Icon(
                     imageVector = Icons.Default.Add,

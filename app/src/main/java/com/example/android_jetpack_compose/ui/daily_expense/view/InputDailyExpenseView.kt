@@ -32,10 +32,11 @@ import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.*
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.android_jetpack_compose.*
+import com.example.android_jetpack_compose.data.category.*
+import com.example.android_jetpack_compose.data.method.*
 import com.example.android_jetpack_compose.entity.ExpenseCategory
 import com.example.android_jetpack_compose.entity.ExpenseMethod
 import com.example.android_jetpack_compose.ui.daily_expense.view_model.*
@@ -43,19 +44,8 @@ import com.example.android_jetpack_compose.ui.dashboard.HeightBox
 import com.example.android_jetpack_compose.ui.dashboard.WidthBox
 import com.example.android_jetpack_compose.ui.view.AppNumberBoard
 import com.example.android_jetpack_compose.ui.view.SingleSelectionFlowView
-
-val categories = arrayListOf<ExpenseCategory>(
-    ExpenseCategory(id = 1, name = "Ăn sáng"),
-    ExpenseCategory(id = 2, name = "Ăn trưa"),
-    ExpenseCategory(id = 3, name = "Ăn tối"),
-    ExpenseCategory(id = 4, name = "Cà phê"),
-)
-val methods = arrayListOf<ExpenseMethod>(
-    ExpenseMethod(name = "Tiền mặt", id = 0),
-    ExpenseMethod(name = "TP Bank", id = 1),
-    ExpenseMethod(name = "Vp Bank", id = 2),
-    ExpenseMethod(name = "Momo", id = 3),
-)
+import com.example.android_jetpack_compose.util.*
+import java.util.*
 
 fun Modifier.gesturesDisabled(disabled: Boolean = true) = if (disabled) {
     pointerInput(Unit) {
@@ -71,14 +61,14 @@ fun Modifier.gesturesDisabled(disabled: Boolean = true) = if (disabled) {
 } else {
     this
 }
-@Preview
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun InputDailyExpenseView() {
+fun InputDailyExpenseView(date: Date) {
     val scope = rememberCoroutineScope()
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-    val viewModel: InputDailyExpenseViewModel = viewModel()
+    val viewModel: InputDailyExpenseViewModel =
+        viewModel(factory = InputDailyExpenseViewModelFactory(date = date))
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
@@ -95,8 +85,6 @@ fun InputDailyExpenseView() {
     }
     val validateState by viewModel.validateState.collectAsState()
     val focusManager = LocalFocusManager.current
-
-
 
     ModalBottomSheetLayout(sheetState = bottomSheetState, sheetContent = {
         Text("BottomSheet")
@@ -244,11 +232,6 @@ fun InputDailyExpenseView() {
                         if (validateState) {
                             viewModel.onSave()
                         }
-                        //                        scope.launch {
-                        //                            scope.launch {
-                        //                                bottomSheetState.show()
-                        //                            }
-                        //                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()

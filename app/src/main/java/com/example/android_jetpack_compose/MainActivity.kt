@@ -13,13 +13,26 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.*
 import com.example.android_jetpack_compose.ui.theme.AndroidjetpackcomposeTheme
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.android_jetpack_compose.data.category.*
+import com.example.android_jetpack_compose.data.method.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+       CategoryRepositoryImpl().getLiveDataList().observeForever {
+           categories = it
+       }
+
+        MethodRepositoryImpl().getLiveDataList().observeForever {
+           methods = it
+       }
+
+
         setContent {
             AndroidjetpackcomposeTheme {
                 // A surface container using the 'background' color from the theme

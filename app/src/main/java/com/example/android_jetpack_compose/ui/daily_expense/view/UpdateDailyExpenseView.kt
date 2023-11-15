@@ -36,6 +36,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.android_jetpack_compose.*
+import com.example.android_jetpack_compose.data.category.*
+import com.example.android_jetpack_compose.data.method.*
 import com.example.android_jetpack_compose.entity.ExpenseCategory
 import com.example.android_jetpack_compose.entity.ExpenseMethod
 import com.example.android_jetpack_compose.ui.daily_expense.view_model.*
@@ -43,25 +45,25 @@ import com.example.android_jetpack_compose.ui.dashboard.HeightBox
 import com.example.android_jetpack_compose.ui.dashboard.WidthBox
 import com.example.android_jetpack_compose.ui.view.AppNumberBoard
 import com.example.android_jetpack_compose.ui.view.SingleSelectionFlowView
+import com.example.android_jetpack_compose.util.*
+import kotlinx.coroutines.*
 import java.security.*
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun UpdateDailyExpenseView(id: String?, date: Long?) {
+fun UpdateDailyExpenseView(id: String?, date: Date) {
     val scope = rememberCoroutineScope()
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-    val viewModel: UpdateDailyExpenseViewModel = viewModel()
-
-
-
-    viewModel.loadById(id, date)
+    val viewModel: UpdateDailyExpenseViewModel =
+        viewModel(factory = InputDailyExpenseViewModelFactory(date = date))
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
-
     LaunchedEffect(Unit) {
+        viewModel.loadById(id)
+
         viewModel
             .toastState
             .collect { message ->
@@ -74,8 +76,6 @@ fun UpdateDailyExpenseView(id: String?, date: Long?) {
     }
     val validateState by viewModel.validateState.collectAsState()
     val focusManager = LocalFocusManager.current
-
-
 
     ModalBottomSheetLayout(sheetState = bottomSheetState, sheetContent = {
         Text("BottomSheet")
@@ -222,6 +222,7 @@ fun UpdateDailyExpenseView(id: String?, date: Long?) {
                     onClick = {
                         if (validateState) {
                             viewModel.onSave()
+
                         }
                         //                        scope.launch {
                         //                            scope.launch {

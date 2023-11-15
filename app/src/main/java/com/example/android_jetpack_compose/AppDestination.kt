@@ -55,7 +55,7 @@ object DailyExpense : AppDestination {
 }
 
 object InputDailyExpense : AppDestination {
-    override val route = "daily-input"
+    override val route = "daily-input?date={date}"
 }
 
 object UpdateDailyExpense : AppDestination {

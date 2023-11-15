@@ -13,6 +13,7 @@ import com.example.android_jetpack_compose.ui.dashboard.DashBoardView
 import com.example.android_jetpack_compose.ui.main_screen.MainView
 import com.example.android_jetpack_compose.ui.main_screen.NotificationView
 import com.example.android_jetpack_compose.ui.main_screen.SettingView
+import java.util.*
 
 @Composable
 fun AppNavHost(
@@ -45,14 +46,24 @@ fun AppNavHost(
         composable(DailyExpense.route) {
             DailyExpenseView()
         }
-        composable(InputDailyExpense.route) {
-            InputDailyExpenseView()
+        composable(
+            InputDailyExpense.route,
+            arguments = listOf(navArgument("date") { defaultValue = "" })
+        ) { backStackEntry ->
+            InputDailyExpenseView(
+                Date(backStackEntry.arguments?.getString("date")!!.toLong())
+            )
         }
         composable(
             UpdateDailyExpense.route,
-            arguments = listOf(navArgument("id") { defaultValue = "" }, navArgument("date") { defaultValue = "" })
+            arguments = listOf(
+                navArgument("id") { defaultValue = "" },
+                navArgument("date") { defaultValue = "" })
         ) { backStackEntry ->
-            UpdateDailyExpenseView(backStackEntry.arguments?.getString("id"), backStackEntry.arguments?.getString("date")?.toLong())
+            UpdateDailyExpenseView(
+                backStackEntry.arguments?.getString("id"),
+                Date(backStackEntry.arguments?.getString("date")!!.toLong())
+            )
         }
     }
 }

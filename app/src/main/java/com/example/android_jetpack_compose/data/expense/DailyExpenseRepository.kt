@@ -1,54 +1,89 @@
 package com.example.android_jetpack_compose.data.expense
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.example.android_jetpack_compose.data.CRUDRepository
-import com.example.android_jetpack_compose.entity.MoneyModel
+import com.example.android_jetpack_compose.data.*
+import com.example.android_jetpack_compose.data.user.*
+import com.example.android_jetpack_compose.entity.*
+import com.example.android_jetpack_compose.firebase_util.*
+import com.google.firebase.firestore.CollectionReference
+import kotlinx.coroutines.tasks.*
+import java.text.*
 import java.util.Date
 
-abstract class DailyExpenseRepository : CRUDRepository<MoneyModel, Long>() {
-    abstract fun getExpensesByDate(date: Date): List<MoneyModel>?
+abstract class DailyExpenseRepository(date: Date) :
+    CRUDRepository<MoneyModel, String>,
+    LiveDataList<MoneyModel>
 
-    abstract fun getList(): LiveData<List<MoneyModel>>
-}
+class DailyExpenseRepositoryImpl(date: Date) : DailyExpenseRepository(date), FirebaseUtil {
+    private var collection: CollectionReference =
+        fireStore.collection(AppUser.getInstance().getEmail())
+            .document(SimpleDateFormat("MM-yyyy").format(date))
+            .collection(SimpleDateFormat("dd-MM-yyyy").format(date))
 
-class DailyExpenseRepositoryImpl : DailyExpenseRepository() {
-
-    companion object {
-        var id: Long = 0
-        private val expenseList: MutableLiveData<List<MoneyModel>> by lazy {
-            MutableLiveData<List<MoneyModel>>(arrayListOf())
-        }
+    override fun getLiveDataList(): LiveData<List<MoneyModel>> {
+        return ListExpenseLiveData(
+            collection
+        )
     }
 
-    override fun getList(): LiveData<List<MoneyModel>> {
-        return expenseList
-    }
-
-    override fun create(item: MoneyModel) {
-        expenseList.postValue(expenseList.value?.plus(item.copy(id = (id++).toString())))
-    }
-
-    override fun read(id: Long): MoneyModel? {
-        return expenseList.value?.find { moneyModel -> moneyModel.id == id.toString() }
-    }
-
-    override fun update(id: Long, newItem: MoneyModel) {
-        val index = expenseList.value?.indexOfFirst { moneyModel -> moneyModel.id == newItem.id }
-
-        if (index == -1) {
-            throw IllegalStateException("Can not find expense id = $id")
+    override suspend fun create(item: MoneyModel): Result<MoneyModel> {
+        val ref = collection.document()
+        val storageItem = item.copy(id = ref.id)
+        ref.set(storageItem).addOnSuccessListener { }.addOnFailureListener {
+            throw Exception("Could not create item")
         }
 
-//        expenseList.value.toList().iu = newItem
+        return Result.success(storageItem)
     }
 
-    override fun delete(id: Long): Boolean {
-        return false
-//        return expenseList.value.removeIf { it.id == id }
+    override suspend fun read(id: String): Result<MoneyModel?> {
+        val it = collection.document(id).get().await()
+
+        if (it == null || !it.exists()) {
+            throw Exception("Unable to get expense by id")
+        }
+        val data = it.data!!
+
+        return Result.success(
+            MoneyModel(
+                id = data.getValue("id") as String,
+                note = data.getValue("note") as String?,
+                expenseCategory = ExpenseCategory(
+                    id = ((data.getValue("expenseCategory") as Map<*, *>)["id"] as Long).toInt(),
+                    name = (data.getValue("expenseCategory") as Map<*, *>)["name"] as String
+                ),
+                money = data.getValue("money") as Long,
+                updateDate = Date(),
+                createDate = Date(),
+                expenseMethod = ExpenseMethod(
+                    id = ((data.getValue("expenseMethod") as Map<*, *>)["id"] as Long).toInt(),
+                    name = (data.getValue("expenseMethod") as Map<*, *>)["name"] as String
+                ),
+            )
+        )
+
     }
 
-    override fun getExpensesByDate(date: Date): List<MoneyModel>? {
-        return expenseList.value?.filter { moneyModel -> moneyModel.createDate == date }
+    override suspend fun update(id: String, newItem: MoneyModel): Result<MoneyModel> {
+        val ref = collection.document(id)
+        val storageItem = newItem.copy(id = ref.id)
+
+        ref.set(storageItem).addOnFailureListener {
+            throw Exception("Could not update item")
+        }
+
+        return Result.success(storageItem)
     }
+
+    override suspend fun delete(id: String): Result<MoneyModel?> {
+        val ref = collection.document(id)
+        TODO("Get this item")
+
+        ref.delete().addOnFailureListener {
+            throw Exception("Could not delete item")
+        }
+
+        return Result.success(null)
+    }
+
 }
