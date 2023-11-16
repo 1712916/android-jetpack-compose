@@ -147,7 +147,7 @@ class UpdateDailyExpenseViewModel(date: Date) : InputDailyExpenseViewModel(date)
                 note = it.note,
                 updateDate = Date()
             )
-            runBlocking {
+            viewModelScope.launch {
                 repository.update(currentExpense!!.id, model).onSuccess {
                     _toastState.emit(SuccessToastMessage("Update expense successfully"))
                 }.onFailure {
