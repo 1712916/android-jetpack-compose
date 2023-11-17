@@ -102,4 +102,8 @@ dependencies {
     implementation("com.google.firebase:firebase-database:20.1.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
+    implementation "io.github.boguszpawlowski.composecalendar:composecalendar:1.1.0"
+    // separate artifact with utilities for working with kotlinx-datetime
+    implementation "io.github.boguszpawlowski.composecalendar:kotlinx-datetime:1.1.0"
 }

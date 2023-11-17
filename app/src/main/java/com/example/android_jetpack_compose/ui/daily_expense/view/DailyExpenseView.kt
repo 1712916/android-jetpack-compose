@@ -38,22 +38,22 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
+import java.text.*
 import java.util.*
 
-@Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DailyExpenseView() {
+fun DailyExpenseView(date: Date) {
     val viewModel: DailyExpenseViewModel =
-        DailyExpenseViewModel(date = Date())
+        DailyExpenseViewModel(date = date)
     val expenseListState = viewModel.expenseList.observeAsState()
     val totalExpenseState = viewModel.totalMoney.observeAsState()
-
-
+    val now = Date()
+    val title = SimpleDateFormat("dd-MM-yyyy").format(date)
     Scaffold(
         topBar = {
             AppBar(
-                title = "Today",
+                title = if (title == SimpleDateFormat("dd-MM-yyyy").format(now)) "Today" else title,
                 showBackButton = true,
             )
         },

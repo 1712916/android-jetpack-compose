@@ -2,7 +2,9 @@
 
 package com.example.android_jetpack_compose.ui.main_screen
 
+import android.os.*
 import android.util.Log
+import androidx.annotation.*
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -33,11 +35,15 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.android_jetpack_compose.*
+import com.example.android_jetpack_compose.Calendar
 import com.example.android_jetpack_compose.bottomNavScreens
 import com.example.android_jetpack_compose.ui.dashboard.DashBoardView
 import com.example.android_jetpack_compose.ui.dashboard.accentColor
 import kotlinx.coroutines.launch
+import java.time.*
+import java.util.*
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
@@ -70,7 +76,13 @@ fun MainView() {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    appNavController?.navigate(DailyExpense.route)
+
+                    appNavController?.navigate(
+                        DailyExpense.route .replace(
+                            oldValue = "{date}",
+                            newValue = Date().time.toString(),
+                        )
+                    )
                 },
                 containerColor = accentColor,
                 modifier = Modifier.width(100.dp)

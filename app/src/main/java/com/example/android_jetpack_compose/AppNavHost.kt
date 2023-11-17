@@ -1,5 +1,7 @@
 package com.example.android_jetpack_compose
 
+import android.os.*
+import androidx.annotation.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.*
@@ -15,6 +17,7 @@ import com.example.android_jetpack_compose.ui.main_screen.NotificationView
 import com.example.android_jetpack_compose.ui.main_screen.SettingView
 import java.util.*
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavHost(
     navController: NavHostController,
@@ -43,8 +46,11 @@ fun AppNavHost(
         composable(Notification.route) {
             NotificationView()
         }
-        composable(DailyExpense.route) {
-            DailyExpenseView()
+        composable(
+            DailyExpense.route,
+            arguments = listOf(navArgument("date") { defaultValue = "" })
+        ) { backStackEntry ->
+            DailyExpenseView(Date(backStackEntry.arguments?.getString("date")!!.toLong()))
         }
         composable(
             InputDailyExpense.route,

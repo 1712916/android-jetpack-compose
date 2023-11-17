@@ -51,7 +51,7 @@ object Setting : AppDestination, BottomNavigationItem {
 val bottomNavScreens: List<BottomNavigationItem> = listOf(Dashboard, Calendar, Chart, Setting)
 
 object DailyExpense : AppDestination {
-    override val route = "daily"
+    override val route = "daily?date={date}"
 }
 
 object InputDailyExpense : AppDestination {
