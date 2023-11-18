@@ -8,8 +8,6 @@ import com.example.android_jetpack_compose.firebase_util.*
 import com.google.firebase.firestore.*
 import kotlinx.coroutines.tasks.*
 
-var methods: List<ExpenseMethod> = emptyList()
-
 abstract class MethodRepository : CRUDRepository<ExpenseMethod, Int>,
     LiveDataList<ExpenseMethod>
 

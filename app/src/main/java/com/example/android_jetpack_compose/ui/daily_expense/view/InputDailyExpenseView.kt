@@ -26,6 +26,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
@@ -37,6 +38,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.data.category.*
 import com.example.android_jetpack_compose.data.method.*
+import com.example.android_jetpack_compose.data.share_data.*
 import com.example.android_jetpack_compose.entity.ExpenseCategory
 import com.example.android_jetpack_compose.entity.ExpenseMethod
 import com.example.android_jetpack_compose.ui.daily_expense.view_model.*
@@ -71,6 +73,8 @@ fun InputDailyExpenseView(date: Date) {
         viewModel(factory = InputDailyExpenseViewModelFactory(date = date))
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val categories = CategoryAndMethodData.instance().categoryListLiveData.observeAsState()
+    val methods = CategoryAndMethodData.instance().methodListLiveData.observeAsState()
 
     LaunchedEffect(Unit) {
         viewModel
@@ -148,7 +152,11 @@ fun InputDailyExpenseView(date: Date) {
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text("Categories")
-                                    IconButton(onClick = { /*TODO*/ }) {
+                                    IconButton(onClick = {
+                                        appNavController?.navigate(
+                                            ManagementCategoryExpense.route
+                                        )
+                                    }) {
                                         Icon(
                                             imageVector = Icons.Default.Add,
                                             contentDescription = "See All"
@@ -158,7 +166,7 @@ fun InputDailyExpenseView(date: Date) {
                                 Row {
                                     Box(modifier = Modifier.weight(1f)) {
                                         SingleSelectionFlowView<ExpenseCategory>(
-                                            data = categories,
+                                            data = categories.value ?: emptyList(),
                                             selected = uiState.category,
                                             onChange = {
                                                 viewModel.changeCategory(it)
@@ -191,6 +199,9 @@ fun InputDailyExpenseView(date: Date) {
                                 ) {
                                     Text("Methods")
                                     IconButton(onClick = {
+                                        appNavController?.navigate(
+                                            ManagementMethodExpense.route
+                                        )
                                     }) {
                                         Icon(
                                             imageVector = Icons.Default.List,
@@ -201,7 +212,7 @@ fun InputDailyExpenseView(date: Date) {
                                 Row {
                                     Box(modifier = Modifier.weight(1f)) {
                                         SingleSelectionFlowView<ExpenseMethod>(
-                                            data = methods,
+                                            data = methods.value ?: emptyList(),
                                             selected = uiState.method,
                                             onChange = {
                                                 viewModel.changeMethod(it)

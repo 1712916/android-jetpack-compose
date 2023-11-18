@@ -41,7 +41,7 @@ class InputDailyExpenseViewModelFactory(
 
 }
 
-open class InputDailyExpenseViewModel(date: Date) : BaseViewModel() {
+open class InputDailyExpenseViewModel(date: Date) : MapStateViewModel() {
     val repository: DailyExpenseRepository = DailyExpenseRepositoryImpl(date)
     val _toastState = MutableSharedFlow<ShowToastMessage?>()
     val toastState = _toastState.asSharedFlow()

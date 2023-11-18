@@ -8,8 +8,6 @@ import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import kotlinx.coroutines.tasks.*
 
-var categories: List<ExpenseCategory> = emptyList()
-
 abstract class CategoryRepository : CRUDRepository<ExpenseCategory, Int>,
     LiveDataList<ExpenseCategory>
 

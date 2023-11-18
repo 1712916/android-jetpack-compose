@@ -61,3 +61,11 @@ object InputDailyExpense : AppDestination {
 object UpdateDailyExpense : AppDestination {
     override val route = "daily-update?id={id}&date={date}"
 }
+
+object ManagementMethodExpense : AppDestination {
+    override val route = "expense-method"
+}
+
+object ManagementCategoryExpense : AppDestination {
+    override val route = "expense-category"
+}

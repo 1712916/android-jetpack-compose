@@ -1,8 +1,9 @@
 package com.example.android_jetpack_compose
 
-import android.os.Bundle
+import android.os.*
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.*
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -24,19 +25,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-       CategoryRepositoryImpl().getLiveDataList().observeForever {
-           categories = it
-       }
-
-        MethodRepositoryImpl().getLiveDataList().observeForever {
-           methods = it
-       }
-
-
         setContent {
             AndroidjetpackcomposeTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
                     NavigateView()
                 }
             }
@@ -44,8 +39,8 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-var appNavController : NavHostController? = null
-
+var appNavController: NavHostController? = null
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -56,6 +51,7 @@ fun NavigateView() {
     Scaffold { innerPadding ->
         AppNavHost(
             navController = navController,
-            modifier = Modifier.padding(innerPadding),)
+            modifier = Modifier.padding(innerPadding),
+        )
     }
 }

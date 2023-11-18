@@ -12,9 +12,11 @@ import com.example.android_jetpack_compose.ui.daily_expense.view.InputDailyExpen
 import com.example.android_jetpack_compose.ui.main_screen.CalendarHistoryView
 import com.example.android_jetpack_compose.ui.main_screen.ChartView
 import com.example.android_jetpack_compose.ui.dashboard.DashBoardView
+import com.example.android_jetpack_compose.ui.expense.view.*
 import com.example.android_jetpack_compose.ui.main_screen.MainView
 import com.example.android_jetpack_compose.ui.main_screen.NotificationView
 import com.example.android_jetpack_compose.ui.main_screen.SettingView
+import com.example.android_jetpack_compose.ui.method.view.*
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -70,6 +72,16 @@ fun AppNavHost(
                 backStackEntry.arguments?.getString("id"),
                 Date(backStackEntry.arguments?.getString("date")!!.toLong())
             )
+        }
+        composable(
+            ManagementMethodExpense.route,
+        ) {
+            MethodScreen()
+        }
+        composable(
+            ManagementCategoryExpense.route,
+        ) {
+            CategoryScreen()
         }
     }
 }
