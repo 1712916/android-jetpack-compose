@@ -67,7 +67,7 @@ open class InputDailyExpenseViewModel(date: Date) : MapStateViewModel() {
         }
     }
 
-    open fun onSave() {
+    open fun onSave(saveAnBack: Boolean = true) {
         _uiState.value.let {
             if (!InputDailyExpenseStateValidator(it).validate()) {
                 return
@@ -84,7 +84,20 @@ open class InputDailyExpenseViewModel(date: Date) : MapStateViewModel() {
 
             viewModelScope.launch {
                 repository.create(model).onSuccess {
-                    _toastState.emit(SuccessToastMessage("Add expense successfully"))
+                    if (saveAnBack) {
+                        _toastState.emit(SuccessAndBackToastMessage("Add expense successfully"))
+
+                    } else {
+                        _toastState.emit(SuccessToastMessage("Add expense successfully"))
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                money = "",
+                                method = null,
+                                category = null,
+                                note = null,
+                            )
+                        }
+                    }
                 }.onFailure {
                     _toastState.emit(FailureToastMessage("Add expense failed"))
                 }
@@ -132,7 +145,7 @@ class UpdateDailyExpenseViewModel(date: Date) : InputDailyExpenseViewModel(date)
         }
     }
 
-    override fun onSave() {
+    override fun onSave(saveAnBack: Boolean) {
         //validate
         ///check required fields
         ///

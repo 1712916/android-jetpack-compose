@@ -1,13 +1,7 @@
 package com.example.android_jetpack_compose.ui.daily_expense.view
 
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FilterChip
@@ -33,6 +27,7 @@ import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.*
+import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.android_jetpack_compose.*
@@ -63,6 +58,11 @@ fun Modifier.gesturesDisabled(disabled: Boolean = true) = if (disabled) {
 } else {
     this
 }
+@Preview
+@Composable
+fun InputDailyExpensePreView() {
+    InputDailyExpenseView(Date())
+}
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun InputDailyExpenseView(date: Date) {
@@ -82,7 +82,7 @@ fun InputDailyExpenseView(date: Date) {
             .collect { message ->
                 message?.show(context = context)
 
-                if (message is SuccessToastMessage) {
+                if (message is SuccessAndBackToastMessage) {
                     appNavController!!.popBackStack()
                 }
             }
@@ -238,18 +238,35 @@ fun InputDailyExpenseView(date: Date) {
                         }
                     },
                 )
-                Button(
-                    onClick = {
-                        if (validateState) {
-                            viewModel.onSave()
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    enabled = validateState,
-                ) {
-                    Text("Save")
+                Row() {
+                    WidthBox(width = 16.0)
+
+                    Button(
+                        onClick = {
+                            if (validateState) {
+                                viewModel.onSave()
+                            }
+                        },
+                        modifier = Modifier
+                            .weight(1f),
+                        enabled = validateState,
+                    ) {
+                        Text("Save")
+                    }
+                    WidthBox(width = 8.0)
+                    Button(
+                        onClick = {
+                            if (validateState) {
+                                viewModel.onSave(saveAnBack = false)
+                            }
+                        },
+                        modifier = Modifier
+                            .weight(1f),
+                        enabled = validateState,
+                    ) {
+                        Text("Save & Continue")
+                    }
+                    WidthBox(width = 16.0)
                 }
                 AppNumberBoard(
                     onChanged = { viewModel.changeMoney(it) },

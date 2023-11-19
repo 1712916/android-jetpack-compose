@@ -14,4 +14,5 @@ open class ShowToastMessage(private val message: String) {
 }
 
 class SuccessToastMessage(message: String) : ShowToastMessage(message) {}
+class SuccessAndBackToastMessage(message: String) : ShowToastMessage(message) {}
 class FailureToastMessage(message: String) : ShowToastMessage(message) {}
