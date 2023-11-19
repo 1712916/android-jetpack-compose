@@ -50,8 +50,12 @@ open class InputDailyExpenseViewModel(date: Date) : MapStateViewModel() {
     val validateState: StateFlow<Boolean> = _uiState.mapState {
         InputDailyExpenseStateValidator(it).validate()
     }
-
+    private val maximumMoneyNumber = 13
     fun changeMoney(moneyString: String) {
+        if (moneyString.length > maximumMoneyNumber) {
+            return
+        }
+
         _uiState.update { currentState ->
             currentState.copy(
                 money = moneyString

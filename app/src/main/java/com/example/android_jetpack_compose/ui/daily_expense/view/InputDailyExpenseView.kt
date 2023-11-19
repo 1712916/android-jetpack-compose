@@ -1,8 +1,9 @@
 package com.example.android_jetpack_compose.ui.daily_expense.view
 
+import android.util.*
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FilterChip
 import androidx.compose.material.ModalBottomSheetLayout
@@ -75,8 +76,15 @@ fun InputDailyExpenseView(date: Date) {
     val context = LocalContext.current
     val categories = CategoryAndMethodData.instance().categoryListLiveData.observeAsState()
     val methods = CategoryAndMethodData.instance().methodListLiveData.observeAsState()
-
+    val lazyState = rememberLazyListState()
+    val validateState by viewModel.validateState.collectAsState()
+    val focusManager = LocalFocusManager.current
     LaunchedEffect(Unit) {
+        snapshotFlow { lazyState.isScrollInProgress }
+            .collect {
+                focusManager.clearFocus()
+            }
+
         viewModel
             .toastState
             .collect { message ->
@@ -87,8 +95,6 @@ fun InputDailyExpenseView(date: Date) {
                 }
             }
     }
-    val validateState by viewModel.validateState.collectAsState()
-    val focusManager = LocalFocusManager.current
 
     ModalBottomSheetLayout(sheetState = bottomSheetState, sheetContent = {
         Text("BottomSheet")
@@ -116,6 +122,7 @@ fun InputDailyExpenseView(date: Date) {
                     modifier = Modifier
                         .weight(1f)
                         .padding(16.dp),
+                    state = lazyState,
                     content = {
                         item {
                             MoneyInputView(
@@ -124,6 +131,11 @@ fun InputDailyExpenseView(date: Date) {
                                     destination = uiState.money ?: "",
                                 ).validate()
                             )
+                        }
+                        item {
+                            SuggestMoneyInputView(uiState.money ?: "", output = {
+                                viewModel.changeMoney(it)
+                            })
                         }
                         item {
                             HeightBox(height = 16.0)
