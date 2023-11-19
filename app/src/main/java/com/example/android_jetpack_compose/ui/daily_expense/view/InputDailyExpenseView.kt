@@ -67,11 +67,10 @@ fun InputDailyExpensePreView() {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun InputDailyExpenseView(date: Date) {
-    val scope = rememberCoroutineScope()
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-    val viewModel: InputDailyExpenseViewModel =
-        viewModel(factory = InputDailyExpenseViewModelFactory(date = date))
+    val viewModel: DailyExpenseViewModel =
+        viewModel(factory = DailyExpenseViewModelFactory(date = date))
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     val categories = CategoryAndMethodData.instance().categoryListLiveData.observeAsState()
@@ -84,7 +83,9 @@ fun InputDailyExpenseView(date: Date) {
             .collect {
                 focusManager.clearFocus()
             }
+    }
 
+    LaunchedEffect(Unit) {
         viewModel
             .toastState
             .collect { message ->

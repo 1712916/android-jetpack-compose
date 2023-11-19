@@ -13,65 +13,9 @@ import kotlinx.coroutines.flow.*
 import java.security.*
 import java.util.*
 
-/*
-* requires: money, category, method,
-* optional: note
-*
-* Format number:
-*  example: 001 -> 1
-*  example: 1002 -> 1.002
-*
-* Suggest:
-*  example: 15 -> 15.000, 150.000, 1.500.000
-* */
-
-class InputDailyExpenseViewModelFactory(
-    private val date: Date
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(InputDailyExpenseViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return InputDailyExpenseViewModel(date) as T
-        } else if (modelClass.isAssignableFrom(UpdateDailyExpenseViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return UpdateDailyExpenseViewModel(date) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel Class")
-    }
-
-}
-
-open class InputDailyExpenseViewModel(date: Date) : MapStateViewModel() {
-    val repository: DailyExpenseRepository = DailyExpenseRepositoryImpl(date)
-    val _toastState = MutableSharedFlow<ShowToastMessage?>()
-    val toastState = _toastState.asSharedFlow()
-    val _uiState = MutableStateFlow(InputDailyExpenseState())
-    val uiState: StateFlow<InputDailyExpenseState> = _uiState.asStateFlow()
-    val validateState: StateFlow<Boolean> = _uiState.mapState {
-        InputDailyExpenseStateValidator(it).validate()
-    }
-    private val maximumMoneyNumber = 13
-    fun changeMoney(moneyString: String) {
-        if (moneyString.length > maximumMoneyNumber) {
-            return
-        }
-
-        _uiState.update { currentState ->
-            currentState.copy(
-                money = moneyString
-            )
-        }
-    }
-
-    fun changeNote(note: String) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                note = note
-            )
-        }
-    }
-
-    open fun onSave(saveAnBack: Boolean = true) {
+open class InputDailyExpenseViewModel(date: Date) :
+    DailyExpenseViewModel(InputDailyExpenseRepositoryImpl(date)) {
+    override fun onSave(saveAnBack: Boolean) {
         _uiState.value.let {
             if (!InputDailyExpenseStateValidator(it).validate()) {
                 return
@@ -89,10 +33,9 @@ open class InputDailyExpenseViewModel(date: Date) : MapStateViewModel() {
             viewModelScope.launch {
                 repository.create(model).onSuccess {
                     if (saveAnBack) {
-                        _toastState.emit(SuccessAndBackToastMessage("Add expense successfully"))
-
+                        emitToast(SuccessAndBackToastMessage("Add expense successfully"))
                     } else {
-                        _toastState.emit(SuccessToastMessage("Add expense successfully"))
+                        emitToast(SuccessToastMessage("Add expense successfully"))
                         _uiState.update { currentState ->
                             currentState.copy(
                                 money = "",
@@ -103,52 +46,37 @@ open class InputDailyExpenseViewModel(date: Date) : MapStateViewModel() {
                         }
                     }
                 }.onFailure {
-                    _toastState.emit(FailureToastMessage("Add expense failed"))
+                    emitToast(FailureToastMessage("Add expense failed"))
                 }
             }
         }
     }
 
-    fun changeMethod(method: ExpenseMethod) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                method = method
-            )
-        }
-    }
-
-    fun changeCategory(category: ExpenseCategory) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                category = category
-            )
-        }
-    }
 }
 
-class UpdateDailyExpenseViewModel(date: Date) : InputDailyExpenseViewModel(date) {
-    private var id: String? = null
-    private var currentExpense: MoneyModel? = null
-    suspend fun loadById(id: String?) {
-        if (id == null) {
-            return
-        }
+class UpdateDailyExpenseViewModel(date: Date, id: String?) :
+    DailyExpenseViewModel(InputDailyExpenseRepositoryImpl(date)) {
+    init {
+        viewModelScope.launch {
+            if (id == null) {
+                return@launch
+            }
+            repository.read(id).onSuccess {
+                currentExpense = it
 
-        this.id = id
-        repository.read(id).onSuccess {
-            currentExpense = it
-
-            _uiState.update { currentState ->
-                currentState.copy(
-                    money = currentExpense!!.money.toString(),
-                    note = currentExpense!!.note,
-                    method = currentExpense!!.expenseMethod,
-                    category = currentExpense!!.expenseCategory,
-                )
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        money = currentExpense!!.money.toString(),
+                        note = currentExpense!!.note,
+                        method = currentExpense!!.expenseMethod,
+                        category = currentExpense!!.expenseCategory,
+                    )
+                }
             }
         }
     }
 
+    private var currentExpense: MoneyModel? = null
     override fun onSave(saveAnBack: Boolean) {
         //validate
         ///check required fields
@@ -166,13 +94,11 @@ class UpdateDailyExpenseViewModel(date: Date) : InputDailyExpenseViewModel(date)
             )
             viewModelScope.launch {
                 repository.update(currentExpense!!.id, model).onSuccess {
-                    _toastState.emit(SuccessToastMessage("Update expense successfully"))
+                    emitToast(SuccessAndBackToastMessage("Update expense successfully"))
                 }.onFailure {
-                    _toastState.emit(FailureToastMessage("Update expense failed"))
+                    emitToast(FailureToastMessage("Update expense failed"))
                 }
             }
         }
-        ///create date
-        ///update date
     }
 }

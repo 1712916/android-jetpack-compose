@@ -10,11 +10,11 @@ import kotlinx.coroutines.tasks.*
 import java.text.*
 import java.util.Date
 
-abstract class DailyExpenseRepository(date: Date) :
+abstract class DailyExpenseRepository() :
     CRUDRepository<MoneyModel, String>,
     LiveDataList<MoneyModel>
 
-class DailyExpenseRepositoryImpl(date: Date) : DailyExpenseRepository(date), FirebaseUtil {
+class InputDailyExpenseRepositoryImpl(date: Date) : DailyExpenseRepository(), FirebaseUtil {
     private var collection: CollectionReference =
         fireStore.collection(AppUser.getInstance().getEmail())
             .document(SimpleDateFormat("MM-yyyy").format(date))

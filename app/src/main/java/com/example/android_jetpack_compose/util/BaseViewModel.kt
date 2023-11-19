@@ -4,12 +4,10 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
-abstract class BaseViewModel : ViewModel() {
+abstract class BaseViewModel : MapStateViewModel() {
     private val _toastState = MutableSharedFlow<ShowToastMessage?>()
     val toastState = _toastState.asSharedFlow()
-    fun emitToast(message: ShowToastMessage) {
-        viewModelScope.launch {
-            _toastState.emit(message)
-        }
+    suspend fun emitToast(message: ShowToastMessage) {
+        _toastState.emit(message)
     }
 }

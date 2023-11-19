@@ -58,8 +58,8 @@ fun UpdateDailyExpenseView(id: String?, date: Date) {
     val scope = rememberCoroutineScope()
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-    val viewModel: UpdateDailyExpenseViewModel =
-        viewModel(factory = InputDailyExpenseViewModelFactory(date = date))
+    val viewModel: DailyExpenseViewModel =
+        viewModel(factory = DailyExpenseViewModelFactory(date = date, id = id))
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     val categories = CategoryAndMethodData.instance().categoryListLiveData.observeAsState()
@@ -72,8 +72,9 @@ fun UpdateDailyExpenseView(id: String?, date: Date) {
             .collect {
                 focusManager.clearFocus()
             }
-        viewModel.loadById(id)
+    }
 
+    LaunchedEffect(Unit) {
         viewModel
             .toastState
             .collect { message ->
