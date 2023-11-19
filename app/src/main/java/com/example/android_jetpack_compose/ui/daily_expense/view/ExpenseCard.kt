@@ -2,6 +2,8 @@ package com.example.android_jetpack_compose.ui.daily_expense.view
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.*
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -13,7 +15,12 @@ import com.example.android_jetpack_compose.util.*
 import java.util.*
 
 @Composable
-fun ExpenseCard(expense: MoneyModel, onClick: (() -> Unit)? = null) {
+fun ExpenseCard(
+    expense: MoneyModel,
+    onClick: (() -> Unit)? = null,
+    showDelete: Boolean = false,
+    onDelete: (() -> Unit)? = null,
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -23,17 +30,29 @@ fun ExpenseCard(expense: MoneyModel, onClick: (() -> Unit)? = null) {
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
             Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = expense.expenseCategory.name.uppercase(Locale.ROOT),
                     style = MaterialTheme.typography.bodySmall
                 )
+                Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = "${expense.money.money()}",
                     style = MaterialTheme.typography.bodySmall
                 )
+                if (showDelete)
+                    IconButton(
+                        onClick = onDelete ?: {},
+                        modifier = Modifier
+                            .width(16.dp)
+                            .height(16.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "delete expense"
+                        )
+                    }
             }
             //            Text(text = expense.expenseMethod.name)
             if (!expense.note.isNullOrEmpty())

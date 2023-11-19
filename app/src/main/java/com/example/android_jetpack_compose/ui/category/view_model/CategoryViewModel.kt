@@ -37,4 +37,17 @@ class CategoryViewModel : BaseViewModel() {
             }
         }
     }
+
+    fun deleteCategory(selectedCategory: ExpenseCategory) {
+
+        viewModelScope.launch {
+            categoryRepository.delete(
+                selectedCategory.id
+            ).onSuccess {
+                 emitToast(SuccessToastMessage("Delete category successfully"))
+            }.onFailure {
+                emitToast(FailureToastMessage("Delete category failed"))
+            }
+        }
+    }
 }

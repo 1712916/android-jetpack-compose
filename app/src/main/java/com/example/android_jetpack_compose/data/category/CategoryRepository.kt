@@ -60,7 +60,7 @@ class CategoryRepositoryImpl : CategoryRepository(), FirebaseUtil {
         val rs = collection.whereEqualTo("id", id).limit(1).get().await()
         if (rs != null && !rs.isEmpty) {
             val item = ExpenseCategory(
-                id = rs.first().data["id"] as Int,
+                id = (rs.first().data["id"] as Long).toInt(),
                 name = rs.first().data["name"] as String,
             )
             rs.first().reference.delete()

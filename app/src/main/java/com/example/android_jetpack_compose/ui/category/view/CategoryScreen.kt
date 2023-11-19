@@ -31,6 +31,10 @@ fun CategoryScreen() {
     val expenseList = viewModel.categoryList.observeAsState()
     val context = LocalContext.current
 
+    val openAlertDialog = remember { mutableStateOf(false) }
+    val selectedCategory = remember { mutableStateOf<ExpenseCategory?>( null)}
+
+
     LaunchedEffect(Unit) {
         viewModel
             .toastState
@@ -39,61 +43,129 @@ fun CategoryScreen() {
             }
     }
 
-    Scaffold(
-        topBar = {
-            AppBar(
-                title = "Category Screen",
-                showBackButton = true,
-            )
-        },
-    ) { it ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(it)
-                .padding(
-                    horizontal = 16.dp
+    Box {
+        Scaffold(
+            topBar = {
+                AppBar(
+                    title = "Category Screen",
+                    showBackButton = true,
                 )
-        ) {
-            item {
-                Row {
-                    OutlinedTextField(
-                        value = inputState.value,
-                        onValueChange = {
-                            viewModel.updateInput(it)
-                        },
-                        modifier = Modifier.weight(1f),
+            },
+        ) { it ->
+            LazyColumn(
+                modifier = Modifier
+                    .padding(it)
+                    .padding(
+                        horizontal = 16.dp
                     )
-                    TextButton(onClick = {
-                        viewModel.addCategory()
-                    }) {
-                        Text(text = "Save")
+            ) {
+                item {
+                    Row {
+                        OutlinedTextField(
+                            value = inputState.value,
+                            onValueChange = {
+                                viewModel.updateInput(it)
+                            },
+                            modifier = Modifier.weight(1f),
+                        )
+                        TextButton(onClick = {
+                            viewModel.addCategory()
+                        }) {
+                            Text(text = "Save")
+                        }
                     }
                 }
-            }
-            item {
-                Row {
-                    Box(modifier = Modifier.weight(1f)) {
-                        SingleSelectionFlowView<ExpenseCategory>(
-                            data = expenseList.value ?: emptyList<ExpenseCategory>(),
-                            onChange = {},
-                            selected = null,
-                            itemBuilder = { item, isSelected ->
-                                Row {
-                                    FilterChip(onClick = {
-                                    }, selected = isSelected, leadingIcon = {
-                                        if (isSelected) Icon(
-                                            imageVector = Icons.Default.Check,
-                                            contentDescription = ""
+                item {
+                    Row {
+                        Box(modifier = Modifier.weight(1f)) {
+                            SingleSelectionFlowView<ExpenseCategory>(
+                                data = expenseList.value ?: emptyList<ExpenseCategory>(),
+                                onChange = {},
+                                selected = null,
+                                itemBuilder = { item, isSelected ->
+                                    Row {
+                                        FilterChip(onClick = {
+                                        }, selected = isSelected, leadingIcon = {
+                                            if (isSelected) Icon(
+                                                imageVector = Icons.Default.Check,
+                                                contentDescription = ""
+                                            )
+                                        }, label = {
+                                            Text(item.name)
+                                        },
+                                            trailingIcon = {
+                                                IconButton(onClick = {
+                                                    selectedCategory.value = item
+                                                    openAlertDialog.value = true
+                                                }) {
+                                                    Icon(
+                                                        imageVector = Icons.Default.Delete,
+                                                        contentDescription = "delete category"
+                                                    )
+                                                }
+                                            }
                                         )
-                                    }, label = {
-                                        Text(item.name)
-                                    })
-                                    WidthBox(width = 8.0)
-                                }
-                            })
+                                        WidthBox(width = 8.0)
+                                    }
+                                })
+                        }
                     }
                 }
             }
         }
+        if (openAlertDialog.value)
+            AlertDialogExample(
+                dialogTitle = "Remove Category",
+                dialogText = "Are you want to remove ${selectedCategory.value!!.name}",
+                onConfirmation = {
+                    openAlertDialog.value = false
+                    viewModel.deleteCategory(selectedCategory.value!!)
+                    selectedCategory.value = null
+                },
+                onDismissRequest = {
+                    openAlertDialog.value = false
+                    selectedCategory.value = null
+                }
+            )
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AlertDialogExample(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+    dialogTitle: String,
+    dialogText: String,
+ ) {
+    AlertDialog(
+
+        title = {
+            Text(text = dialogTitle)
+        },
+        text = {
+            Text(text = dialogText)
+        },
+        onDismissRequest = {
+            onDismissRequest()
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation()
+                }
+            ) {
+                Text("Confirm")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismissRequest()
+                }
+            ) {
+                Text("Dismiss")
+            }
+        }
+    )
 }
