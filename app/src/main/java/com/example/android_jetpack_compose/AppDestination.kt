@@ -69,3 +69,11 @@ object ManagementMethodExpense : AppDestination {
 object ManagementCategoryExpense : AppDestination {
     override val route = "expense-category"
 }
+
+object SettingDefaultExpense : AppDestination {
+    override val route = "setting/default-expense"
+}
+
+object SettingInputDefaultExpense : AppDestination {
+    override val route = "setting/default-expense/input"
+}

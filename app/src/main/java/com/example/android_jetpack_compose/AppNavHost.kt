@@ -17,6 +17,7 @@ import com.example.android_jetpack_compose.ui.main_screen.MainView
 import com.example.android_jetpack_compose.ui.main_screen.NotificationView
 import com.example.android_jetpack_compose.ui.main_screen.SettingView
 import com.example.android_jetpack_compose.ui.method.view.*
+import com.example.android_jetpack_compose.ui.setting_default_expense.view.*
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -82,6 +83,16 @@ fun AppNavHost(
             ManagementCategoryExpense.route,
         ) {
             CategoryScreen()
+        }
+        composable(
+            SettingDefaultExpense.route,
+        ) {
+            SettingDefaultExpenseView()
+        }
+        composable(
+            SettingInputDefaultExpense.route,
+        ) {
+            InputDefaultDailyExpenseView()
         }
     }
 }
