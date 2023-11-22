@@ -16,7 +16,7 @@ class ListExpenseLiveData(private val collectionReference: CollectionReference) 
     }
 
     override fun onEvent(snapshot: QuerySnapshot?, error: FirebaseFirestoreException?) {
-        if (snapshot != null && !snapshot.isEmpty) {
+        if (snapshot != null) {
             val moneyModels: MutableList<MoneyModel> = mutableListOf()
 
             snapshot.forEach {
