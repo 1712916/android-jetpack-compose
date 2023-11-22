@@ -49,9 +49,10 @@ import androidx.navigation.*
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.android_jetpack_compose.Notification
 import com.example.android_jetpack_compose.R
- import com.example.android_jetpack_compose.entity.WeekTrackerInfoModel
+import com.example.android_jetpack_compose.entity.WeekTrackerInfoModel
 import com.example.android_jetpack_compose.entity.WeekTrackerModel
 import com.example.android_jetpack_compose.ui.theme.AndroidjetpackcomposeTheme
+import com.example.android_jetpack_compose.util.*
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -218,7 +219,7 @@ private fun WeekTrackerInfo(weekTrackerInfoModel: WeekTrackerInfoModel) {
             .height(IntrinsicSize.Min),
     ) {
         Text(
-            text = "$${weekTrackerInfoModel.totalSpend?.format(2)}",
+            text = weekTrackerInfoModel.totalSpend.money(),
             fontWeight = FontWeight.ExtraBold,
             fontSize = 34.sp,
             color = accentColor,

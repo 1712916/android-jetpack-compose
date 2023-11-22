@@ -4,28 +4,28 @@ import com.example.android_jetpack_compose.entity.DateExpense
 import com.example.android_jetpack_compose.entity.DifferentEnum
 import com.example.android_jetpack_compose.entity.WeekTrackerInfoModel
 import com.example.android_jetpack_compose.entity.WeekTrackerModel
-import com.example.android_jetpack_compose.util.DifferentExpenseUtil
+import com.example.android_jetpack_compose.util.*
 import java.util.Calendar
 import java.util.Date
 
 abstract class DashBoardRepository {
-    abstract fun getWeekProgressData(date: Date): WeekTrackerInfoModel
-    protected abstract fun getWeekExpenseByDate(date: Date): List<DateExpense>
-    fun getTotalExpense(expenses: List<DateExpense>): Double {
-        return expenses.fold(0.0) { sum, element -> sum + element.money }
+    abstract suspend fun getWeekProgressData(date: Date): WeekTrackerInfoModel
+    protected abstract suspend fun getWeekExpenseByDate(date: Date): List<DateExpense>
+    suspend fun getTotalExpense(expenses: List<DateExpense>): Long {
+        return expenses.fold(0) { sum, element -> sum + element.money }
     }
 }
 
 class DashBoardRepositoryImpl : DashBoardRepository() {
-    override fun getWeekProgressData(date: Date): WeekTrackerInfoModel {
+    override suspend fun getWeekProgressData(date: Date): WeekTrackerInfoModel {
         //list of total expense each date
-        val expenses = getWeekExpenseByDate(Calendar.getInstance().time)
+        val expenses = getWeekExpenseByDate(date)
         //get list of period week
-        val periodWeekExpenses = getWeekExpenseByDate(Calendar.getInstance().time)
+        val periodWeekExpenses = getWeekExpenseByDate(date)
         val totalSpend = getTotalExpense(expenses)
         val totalPeriodSpend = getTotalExpense(periodWeekExpenses)
-        val dateBudget: Double = GetDayBudgetRepository().getBudget()
-
+        val dateBudget: Double = 1000000.0
+        //        val dateBudget: Double = GetDayBudgetRepository().getBudget()
         return WeekTrackerInfoModel(
             totalSpend = totalSpend,
             differenceNumber = DifferentExpenseUtil(
@@ -43,16 +43,9 @@ class DashBoardRepositoryImpl : DashBoardRepository() {
         )
     }
 
-    override fun getWeekExpenseByDate(date: Date): List<DateExpense> {
+    override suspend fun getWeekExpenseByDate(date: Date): List<DateExpense> {
         //tính ra tuần hiện tại
-        val calendar = Calendar.getInstance()
-        calendar.firstDayOfWeek = Calendar.MONDAY
-        val days = mutableListOf<Date>()
-
-        for (i in 0..6) {
-            days.add(calendar.time)
-            calendar.add(Calendar.DAY_OF_MONTH, 1)
-        }
+        val days = WeekByDate(date).getWeekDates()
         val getExpenseRepository: GetExpenseRepository = GetExpenseRepositoryImpl()
 
         return days.map { day -> getExpenseRepository.getExpense(day) }

@@ -2,10 +2,10 @@ package com.example.android_jetpack_compose.util
 
 import com.example.android_jetpack_compose.entity.DifferentEnum
 
-class DifferentExpenseUtil(val preExpense: Double, val curExpense: Double) {
+class DifferentExpenseUtil(val preExpense: Long, val curExpense: Long) {
     fun differenceNumber(): Double {
         if (curExpense > 0) {
-            return preExpense / curExpense
+            return (preExpense / curExpense).toDouble()
         }
         return 1.0
     }

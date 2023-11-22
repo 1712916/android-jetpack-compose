@@ -3,9 +3,8 @@ package com.example.android_jetpack_compose.entity
 import java.util.Date
 
 data class WeekTrackerModel(val date: Date, val dateBudget: Double, val dateSpend: Long)
-
 data class WeekTrackerInfoModel(
-    val totalSpend: Double? = null,
+    val totalSpend: Long = 0,
     val differenceNumber: Double? = null,
     val differentEnum: DifferentEnum? = null,
     val weekTackers: Array<WeekTrackerModel>? = null,
@@ -23,8 +22,9 @@ data class WeekTrackerInfoModel(
 
         return true
     }
+
     override fun hashCode(): Int {
-        var result = totalSpend?.hashCode() ?: 0
+        var result = totalSpend.hashCode()
         result = 31 * result + (differenceNumber?.hashCode() ?: 0)
         result = 31 * result + (differentEnum?.hashCode() ?: 0)
         result = 31 * result + weekTackers.contentHashCode()
