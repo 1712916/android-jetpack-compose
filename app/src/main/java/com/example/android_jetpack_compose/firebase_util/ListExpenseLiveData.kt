@@ -17,31 +17,7 @@ class ListExpenseLiveData(private val collectionReference: CollectionReference) 
 
     override fun onEvent(snapshot: QuerySnapshot?, error: FirebaseFirestoreException?) {
         if (snapshot != null) {
-            val moneyModels: MutableList<MoneyModel> = mutableListOf()
-
-            snapshot.forEach {
-                val data = it.data
-
-                moneyModels.add(
-                    MoneyModel(
-                        id = data.getValue("id") as String,
-                        note = data.getValue("note") as String?,
-                        money = data.getValue("money") as Long,
-                        updateDate = it.getTimestamp("updateDate")?.toDate(),
-                        createDate = it.getTimestamp("createDate")?.toDate(),
-                        expenseCategory = ExpenseCategory(
-                            id = ((data.getValue("expenseCategory") as Map<*, *>)["id"] as Long).toInt(),
-                            name = (data.getValue("expenseCategory") as Map<*, *>)["name"] as String
-                        ),
-                        expenseMethod = ExpenseMethod(
-                            id = ((data.getValue("expenseMethod") as Map<*, *>)["id"] as Long).toInt(),
-                            name = (data.getValue("expenseMethod") as Map<*, *>)["name"] as String
-                        ),
-                    )
-                )
-            }
-
-            value = moneyModels
+            value = snapshot.map { it.toObject() }
         } else if (error != null) {
             TODO("Should handle errors")
         }

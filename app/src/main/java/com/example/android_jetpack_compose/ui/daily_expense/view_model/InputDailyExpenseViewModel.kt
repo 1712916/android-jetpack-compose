@@ -58,19 +58,18 @@ class UpdateDailyExpenseViewModel(date: Date, id: String?) :
     DailyExpenseViewModel(InputDailyExpenseRepositoryImpl(date)) {
     init {
         viewModelScope.launch {
-            if (id == null) {
-                return@launch
-            }
-            repository.read(id).onSuccess {
-                currentExpense = it
+            if (id != null) {
+                repository.read(id).onSuccess {
+                    currentExpense = it
 
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        money = currentExpense!!.money.toString(),
-                        note = currentExpense!!.note,
-                        method = currentExpense!!.expenseMethod,
-                        category = currentExpense!!.expenseCategory,
-                    )
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            money = currentExpense!!.money.toString(),
+                            note = currentExpense!!.note,
+                            method = currentExpense!!.expenseMethod,
+                            category = currentExpense!!.expenseCategory,
+                        )
+                    }
                 }
             }
         }

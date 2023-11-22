@@ -6,4 +6,4 @@ import kotlinx.serialization.Serializable
 //thẻ (Thẻ thì có tên thẻ)
 //khác (Người khác trả)
 @Serializable
-data class ExpenseMethod(override val name: String, override val id: Int) : Category
+data class ExpenseMethod(override val name: String = "", override val id: Int = -1) : Category

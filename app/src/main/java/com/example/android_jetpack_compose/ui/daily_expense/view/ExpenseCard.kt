@@ -33,7 +33,7 @@ fun ExpenseCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = expense.expenseCategory.name.uppercase(Locale.ROOT),
+                    text = (expense.expenseCategory?.name ?: "").uppercase(Locale.ROOT),
                     style = MaterialTheme.typography.bodySmall
                 )
                 Spacer(modifier = Modifier.weight(1f))

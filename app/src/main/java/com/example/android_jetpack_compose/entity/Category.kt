@@ -7,7 +7,5 @@ interface Category {
     val name: String
     val id: Int
 }
-
-
 @Serializable
-data class ExpenseCategory(override val name: String, override val id: Int) : Category
+data class ExpenseCategory(override val name: String = "", override val id: Int = -1) : Category

@@ -91,21 +91,10 @@ class ListCategoryLiveData(private val collectionReference: CollectionReference)
     }
 
     override fun onEvent(snapshot: QuerySnapshot?, error: FirebaseFirestoreException?) {
-        if (snapshot != null && !snapshot.isEmpty) {
-            val categories: MutableList<ExpenseCategory> = mutableListOf()
-
-            snapshot.forEach {
-                val data = it.data
-
-                categories.add(
-                    ExpenseCategory(
-                        id = (data.getValue("id") as Long).toInt(),
-                        name = data.getValue("name") as String,
-                    )
-                )
+        if (snapshot != null) {
+            value = snapshot.map {
+                it.toObject()
             }
-
-            value = categories
         } else if (error != null) {
             TODO("Should handle errors")
         }

@@ -18,23 +18,13 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 
-@Serializable
 data class MoneyModel(
-    @PropertyName("id")
-    val id: String,
-    @PropertyName("money")
-    val money: Long,
-    @PropertyName("note")
-    val note: String?,
-    @PropertyName("expenseCategory")
-    val expenseCategory: ExpenseCategory,
-    @PropertyName("expenseMethod")
-    val expenseMethod: ExpenseMethod,
-    @PropertyName("createDate")
-    @Serializable(with = DateSerializer::class)
+    val id: String = "",
+    val money: Long = 0,
+    val note: String? = null,
+    val expenseCategory: ExpenseCategory? = null,
+    val expenseMethod: ExpenseMethod? = null,
     val createDate: Date? = null,
-    @PropertyName("updateDate")
-    @Serializable(with = DateSerializer::class)
     val updateDate: Date? = null,
 )
 @Serializer(forClass = Date::class)

@@ -55,11 +55,11 @@ import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun UpdateDailyExpenseView(navController: NavController,id: String?, date: Date) {
+fun UpdateDailyExpenseView(navController: NavController, id: String?, date: Date) {
     val scope = rememberCoroutineScope()
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-    val viewModel: DailyExpenseViewModel =
+    val viewModel: UpdateDailyExpenseViewModel =
         viewModel(factory = DailyExpenseViewModelFactory(date = date, id = id))
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
