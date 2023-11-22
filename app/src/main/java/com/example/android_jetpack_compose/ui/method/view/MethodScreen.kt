@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.*
+import androidx.navigation.*
 import com.example.android_jetpack_compose.data.category.*
 import com.example.android_jetpack_compose.data.method.*
 import com.example.android_jetpack_compose.data.share_data.*
@@ -24,9 +25,8 @@ import com.example.android_jetpack_compose.ui.view.*
 import java.text.*
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun MethodScreen() {
+fun MethodScreen(navController: NavController) {
     val viewModel: MethodViewModel = viewModel()
     val inputState = viewModel.inputState.collectAsState()
     val methods = CategoryAndMethodData.instance().methodListLiveData.observeAsState()
@@ -42,6 +42,7 @@ fun MethodScreen() {
     Scaffold(
         topBar = {
             AppBar(
+                navController,
                 title = "Method Screen",
                 showBackButton = true,
             )

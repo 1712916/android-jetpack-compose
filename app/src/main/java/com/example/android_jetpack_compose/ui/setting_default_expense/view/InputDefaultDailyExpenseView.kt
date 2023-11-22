@@ -2,6 +2,7 @@
 
 package com.example.android_jetpack_compose.ui.setting_default_expense.view
 
+import android.util.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
@@ -16,6 +17,7 @@ import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.*
+import androidx.navigation.*
 import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.data.share_data.*
 import com.example.android_jetpack_compose.entity.*
@@ -27,7 +29,7 @@ import com.example.android_jetpack_compose.ui.view.*
 import com.example.android_jetpack_compose.util.*
 
 @Composable
-fun InputDefaultDailyExpenseView() {
+fun InputDefaultDailyExpenseView(navController: NavController) {
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val viewModel: SettingDefaultInputExpenseViewModel =
@@ -39,6 +41,11 @@ fun InputDefaultDailyExpenseView() {
     val lazyState = rememberLazyListState()
     val validateState by viewModel.validateState.collectAsState()
     val focusManager = LocalFocusManager.current
+
+    LaunchedEffect(Unit) {
+        Log.i("LaunchedEffect", "V Test")
+    }
+
     LaunchedEffect(Unit) {
         snapshotFlow { lazyState.isScrollInProgress }
             .collect {
@@ -53,7 +60,7 @@ fun InputDefaultDailyExpenseView() {
                 message?.show(context = context)
 
                 if (message is SuccessAndBackToastMessage) {
-                    appNavController!!.popBackStack()
+                    navController.popBackStack()
                 }
             }
     }
@@ -127,7 +134,7 @@ fun InputDefaultDailyExpenseView() {
                                 ) {
                                     Text("Categories")
                                     androidx.compose.material3.IconButton(onClick = {
-                                        appNavController?.navigate(
+                                        navController.navigate(
                                             ManagementCategoryExpense.route
                                         )
                                     }) {
@@ -173,7 +180,7 @@ fun InputDefaultDailyExpenseView() {
                                 ) {
                                     Text("Methods")
                                     androidx.compose.material3.IconButton(onClick = {
-                                        appNavController?.navigate(
+                                        navController.navigate(
                                             ManagementMethodExpense.route
                                         )
                                     }) {

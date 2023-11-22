@@ -9,15 +9,19 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.*
 import com.example.android_jetpack_compose.ui.dashboard.AppBar
 
 @Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotificationView() {
+fun NotificationView(navController: NavController) {
     Scaffold(
         topBar = {
-            AppBar(title = "Notification")
+            AppBar(
+                navController,
+                title = "Notification"
+            )
         },
     ) { contentPadding ->
         Column(

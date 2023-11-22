@@ -36,6 +36,7 @@ import androidx.compose.ui.platform.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.*
 import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.data.category.*
 import com.example.android_jetpack_compose.data.method.*
@@ -54,7 +55,7 @@ import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun UpdateDailyExpenseView(id: String?, date: Date) {
+fun UpdateDailyExpenseView(navController: NavController,id: String?, date: Date) {
     val scope = rememberCoroutineScope()
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -81,7 +82,7 @@ fun UpdateDailyExpenseView(id: String?, date: Date) {
                 message?.show(context = context)
 
                 if (message is SuccessToastMessage) {
-                    appNavController!!.popBackStack()
+                    navController.popBackStack()
                 }
             }
     }

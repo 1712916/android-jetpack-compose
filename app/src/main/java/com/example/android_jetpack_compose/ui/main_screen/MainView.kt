@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.*
 import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.Calendar
 import com.example.android_jetpack_compose.bottomNavScreens
@@ -45,9 +46,8 @@ import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun MainView() {
+fun MainView(navController: NavController) {
     val pagerState = rememberPagerState(pageCount = { 4 })
     // scroll to page
     val coroutineScope = rememberCoroutineScope()
@@ -76,9 +76,8 @@ fun MainView() {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-
-                    appNavController?.navigate(
-                        DailyExpense.route .replace(
+                    navController.navigate(
+                        DailyExpense.route.replace(
                             oldValue = "{date}",
                             newValue = Date().time.toString(),
                         )
@@ -134,10 +133,10 @@ fun MainView() {
                         .fillMaxHeight()
                 ) {
                     when (page) {
-                        0 -> DashBoardView()
-                        1 -> CalendarHistoryView()
-                        2 -> ChartView()
-                        3 -> SettingView()
+                        0 -> DashBoardView(navController)
+                        1 -> CalendarHistoryView(navController)
+                        2 -> ChartView(navController)
+                        3 -> SettingView(navController)
                     }
                 }
             }

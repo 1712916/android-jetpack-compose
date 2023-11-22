@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.*
+import androidx.navigation.*
 import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.data.method.*
 import com.example.android_jetpack_compose.entity.*
@@ -25,14 +26,13 @@ import java.text.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun CategoryScreen() {
+fun CategoryScreen(navController: NavController) {
     val viewModel: CategoryViewModel = viewModel()
     val inputState = viewModel.inputState.collectAsState()
     val expenseList = viewModel.categoryList.observeAsState()
     val context = LocalContext.current
-
     val openAlertDialog = remember { mutableStateOf(false) }
-    val selectedCategory = remember { mutableStateOf<ExpenseCategory?>( null)}
+    val selectedCategory = remember { mutableStateOf<ExpenseCategory?>(null) }
 
 
     LaunchedEffect(Unit) {
@@ -47,6 +47,7 @@ fun CategoryScreen() {
         Scaffold(
             topBar = {
                 AppBar(
+                    navController,
                     title = "Category Screen",
                     showBackButton = true,
                 )
@@ -129,7 +130,6 @@ fun CategoryScreen() {
             )
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlertDialogExample(
@@ -137,9 +137,8 @@ fun AlertDialogExample(
     onConfirmation: () -> Unit,
     dialogTitle: String,
     dialogText: String,
- ) {
+) {
     AlertDialog(
-
         title = {
             Text(text = dialogTitle)
         },

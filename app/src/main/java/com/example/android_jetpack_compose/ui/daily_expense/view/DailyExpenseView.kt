@@ -15,31 +15,37 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.*
 import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.ui.daily_expense.view_model.*
 import com.example.android_jetpack_compose.ui.dashboard.AppBar
 import com.example.android_jetpack_compose.util.*
+import kotlinx.coroutines.flow.*
 import java.text.*
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DailyExpenseView(date: Date) {
-    val viewModel: DailyExpenseListViewModel =
-        DailyExpenseListViewModelImpl(date = date)
+fun DailyExpenseView(
+    navController: NavController,
+    date: Date,
+    viewModel: DailyExpenseListViewModel
+) {
     val expenseListState = viewModel.expenseList.observeAsState()
     val totalExpenseState = viewModel.totalMoney.observeAsState()
     val now = Date()
     val title = SimpleDateFormat("dd-MM-yyyy").format(date)
-    val deleteMode = remember { mutableStateOf(false) }
+    val deleteMode = viewModel.deleteMode.observeAsState()
+
     Scaffold(
         topBar = {
             AppBar(
+                navController,
                 title = if (title == SimpleDateFormat("dd-MM-yyyy").format(now)) "Today" else title,
                 showBackButton = true,
                 actions = {
                     IconButton(onClick = {
-                        deleteMode.value = !deleteMode.value
+                        viewModel.deleteMode.value = !viewModel.deleteMode.value!!
                     }) {
                         Icon(
                             imageVector = Icons.Default.Delete,
@@ -51,7 +57,7 @@ fun DailyExpenseView(date: Date) {
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                appNavController?.navigate(
+                navController.navigate(
                     InputDailyExpense.route.replace(
                         oldValue = "{date}",
                         newValue = date.time.toString(),
@@ -77,7 +83,7 @@ fun DailyExpenseView(date: Date) {
                         ExpenseCard(
                             it,
                             onClick = {
-                                appNavController?.navigate(
+                                navController.navigate(
                                     UpdateDailyExpense.route.replace(
                                         oldValue = "{id}",
                                         newValue = it.id,
@@ -87,7 +93,7 @@ fun DailyExpenseView(date: Date) {
                                     )
                                 )
                             },
-                            showDelete = deleteMode.value,
+                            showDelete = deleteMode.value!!,
                             onDelete = {
                                 viewModel.remove(it)
                             }

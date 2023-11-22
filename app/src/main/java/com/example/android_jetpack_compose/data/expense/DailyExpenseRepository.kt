@@ -12,7 +12,8 @@ import java.util.Date
 
 abstract class DailyExpenseRepository() :
     CRUDRepository<MoneyModel, String>,
-    LiveDataList<MoneyModel>
+    LiveDataList<MoneyModel>,
+    ListRepository<MoneyModel>
 
 class InputDailyExpenseRepositoryImpl(date: Date) : DailyExpenseRepository(), FirebaseUtil {
     private var collection: CollectionReference =
@@ -24,6 +25,40 @@ class InputDailyExpenseRepositoryImpl(date: Date) : DailyExpenseRepository(), Fi
         return ListExpenseLiveData(
             collection
         )
+    }
+
+    override suspend fun getList(): Result<List<MoneyModel>> {
+        val response = collection.get().await()
+
+        if (response != null && !response.isEmpty) {
+            val list = mutableListOf<MoneyModel>()
+
+            response.documents.forEach { document ->
+                val data = document.data!!
+                list.add(
+                    MoneyModel(
+                        id = data.getValue("id") as String,
+                        note = data.getValue("note") as String?,
+                        money = data.getValue("money") as Long,
+                        updateDate = document.getTimestamp("updateDate")?.toDate(),
+                        createDate = document.getTimestamp("createDate")?.toDate(),
+                        expenseCategory = ExpenseCategory(
+                            id = ((data.getValue("expenseCategory") as Map<*, *>)["id"] as Long).toInt(),
+                            name = (data.getValue("expenseCategory") as Map<*, *>)["name"] as String
+                        ),
+                        expenseMethod = ExpenseMethod(
+                            id = ((data.getValue("expenseMethod") as Map<*, *>)["id"] as Long).toInt(),
+                            name = (data.getValue("expenseMethod") as Map<*, *>)["name"] as String
+                        ),
+                    )
+                )
+            }
+
+            return Result.success(list)
+        }
+
+
+        return Result.success(emptyList())
     }
 
     override suspend fun create(item: MoneyModel): Result<MoneyModel> {

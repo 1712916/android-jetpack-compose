@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.*
+import androidx.navigation.*
 import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.ui.dashboard.AppBar
 import io.github.boguszpawlowski.composecalendar.*
@@ -24,18 +25,19 @@ import java.time.*
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
-@Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalendarHistoryView() {
+fun CalendarHistoryView(navController: NavController) {
     val calendarState = rememberSelectableCalendarState(
         initialSelectionMode = SelectionMode.Single,
         confirmSelectionChange = {
-             if (it.isNotEmpty()) {
-                appNavController?.navigate(
-                   DailyExpense.route .replace(
+            if (it.isNotEmpty()) {
+                navController.navigate(
+                    DailyExpense.route.replace(
                         oldValue = "{date}",
-                        newValue = Date.from( it[0].atStartOfDay(ZoneId.systemDefault()).toInstant()).time.toString(),
+                        newValue = Date.from(
+                            it[0].atStartOfDay(ZoneId.systemDefault()).toInstant()
+                        ).time.toString(),
                     )
                 )
             }
@@ -49,6 +51,7 @@ fun CalendarHistoryView() {
     Scaffold(
         topBar = {
             AppBar(
+                navController,
                 title = "Calendar"
             )
         },

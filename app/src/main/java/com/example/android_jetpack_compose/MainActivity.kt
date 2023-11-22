@@ -22,35 +22,31 @@ import com.example.android_jetpack_compose.data.category.*
 import com.example.android_jetpack_compose.data.method.*
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
+            val navController = rememberNavController()
             AndroidjetpackcomposeTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    NavigateView()
+                    NavigateView(navController)
                 }
             }
         }
     }
 }
-
-var appNavController: NavHostController? = null
 @RequiresApi(Build.VERSION_CODES.O)
-@Preview
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun NavigateView() {
-    val navController = rememberNavController()
-    appNavController = navController
-
+fun NavigateView(navHostController: NavHostController) {
     Scaffold { innerPadding ->
         AppNavHost(
-            navController = navController,
+            navController = navHostController,
             modifier = Modifier.padding(innerPadding),
         )
     }

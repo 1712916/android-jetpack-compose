@@ -9,9 +9,7 @@ import androidx.compose.material.FilterChip
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,6 +29,7 @@ import androidx.compose.ui.platform.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.*
 import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.data.category.*
 import com.example.android_jetpack_compose.data.method.*
@@ -38,11 +37,11 @@ import com.example.android_jetpack_compose.data.share_data.*
 import com.example.android_jetpack_compose.entity.ExpenseCategory
 import com.example.android_jetpack_compose.entity.ExpenseMethod
 import com.example.android_jetpack_compose.ui.daily_expense.view_model.*
-import com.example.android_jetpack_compose.ui.dashboard.HeightBox
-import com.example.android_jetpack_compose.ui.dashboard.WidthBox
+import com.example.android_jetpack_compose.ui.dashboard.*
 import com.example.android_jetpack_compose.ui.view.AppNumberBoard
 import com.example.android_jetpack_compose.ui.view.SingleSelectionFlowView
 import com.example.android_jetpack_compose.util.*
+import java.text.*
 import java.util.*
 
 fun Modifier.gesturesDisabled(disabled: Boolean = true) = if (disabled) {
@@ -59,14 +58,9 @@ fun Modifier.gesturesDisabled(disabled: Boolean = true) = if (disabled) {
 } else {
     this
 }
-@Preview
-@Composable
-fun InputDailyExpensePreView() {
-    InputDailyExpenseView(Date())
-}
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun InputDailyExpenseView(date: Date) {
+fun InputDailyExpenseView(navController: NavController, date: Date) {
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val viewModel: DailyExpenseViewModel =
@@ -92,7 +86,7 @@ fun InputDailyExpenseView(date: Date) {
                 message?.show(context = context)
 
                 if (message is SuccessAndBackToastMessage) {
-                    appNavController!!.popBackStack()
+                    navController.popBackStack()
                 }
             }
     }
@@ -108,11 +102,19 @@ fun InputDailyExpenseView(date: Date) {
         Text("BottomSheet")
         Text("BottomSheet")
     }) {
-        Scaffold(modifier = Modifier.pointerInput(Unit) {
-            detectTapGestures(onTap = {
-                focusManager.clearFocus()
-            })
-        }) { p ->
+        Scaffold(
+            topBar = {
+                AppBar(
+                    navController,
+                    title = "",
+                    showBackButton = true,
+                )
+            },
+            modifier = Modifier.pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    focusManager.clearFocus()
+                })
+            }) { p ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -166,7 +168,7 @@ fun InputDailyExpenseView(date: Date) {
                                 ) {
                                     Text("Categories")
                                     IconButton(onClick = {
-                                        appNavController?.navigate(
+                                        navController.navigate(
                                             ManagementCategoryExpense.route
                                         )
                                     }) {
@@ -212,7 +214,7 @@ fun InputDailyExpenseView(date: Date) {
                                 ) {
                                     Text("Methods")
                                     IconButton(onClick = {
-                                        appNavController?.navigate(
+                                        navController.navigate(
                                             ManagementMethodExpense.route
                                         )
                                     }) {

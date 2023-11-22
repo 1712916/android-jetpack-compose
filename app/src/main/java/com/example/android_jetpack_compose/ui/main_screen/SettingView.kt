@@ -8,16 +8,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
+import androidx.navigation.*
 import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.ui.dashboard.AppBar
 
-@Preview
-@OptIn(ExperimentalMaterial3Api::class)
+ @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingView() {
+fun SettingView(navController: NavController) {
     Scaffold(
         topBar = {
             AppBar(
+                navController,
                 title = "Setting",
             )
         },
@@ -33,7 +34,7 @@ fun SettingView() {
             ) {
                 item {
                     SettingCard(title = "Default Daily", onClick = {
-                        appNavController?.navigate(SettingDefaultExpense.route)
+                        navController.navigate(SettingDefaultExpense.route)
                     })
                 }
             }
@@ -44,16 +45,18 @@ fun SettingView() {
 fun SettingCard(title: String, onClick: () -> Unit) {
     Card(modifier = Modifier
         .fillMaxWidth()
-        .height(70.dp).clickable {
+        .height(70.dp)
+        .clickable {
             onClick()
         }
-         ) {
-        Box(modifier = Modifier.padding(16.dp).align(Alignment.Start)) {
+    ) {
+        Box(modifier = Modifier
+            .padding(16.dp)
+            .align(Alignment.Start)) {
             Text(
                 title,
                 style = MaterialTheme.typography.titleLarge,
             )
         }
-
     }
 }

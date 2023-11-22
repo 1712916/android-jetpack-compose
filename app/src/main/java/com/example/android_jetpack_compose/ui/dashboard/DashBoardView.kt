@@ -45,11 +45,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.*
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.android_jetpack_compose.Notification
 import com.example.android_jetpack_compose.R
-import com.example.android_jetpack_compose.appNavController
-import com.example.android_jetpack_compose.entity.WeekTrackerInfoModel
+ import com.example.android_jetpack_compose.entity.WeekTrackerInfoModel
 import com.example.android_jetpack_compose.entity.WeekTrackerModel
 import com.example.android_jetpack_compose.ui.theme.AndroidjetpackcomposeTheme
 import java.text.SimpleDateFormat
@@ -64,34 +64,33 @@ val textGreenColor = Color(0xFF4dae15)
 val textBlackColor = Color(0xFF101226)
 val orangeColor = Color(0xFFfdaa4a)
 val borderRadius8 = 8.dp
-
 @Composable
 fun HeightBox(height: Double) = Spacer(modifier = Modifier.height(height.dp))
-
 @Composable
 fun WidthBox(width: Double) = Spacer(modifier = Modifier.width(width.dp))
-
 @Composable
 fun SizedBox(width: Double = 0.0, height: Double = 0.0) = Spacer(
     modifier = Modifier
         .height(height.dp)
         .width(width.dp)
 )
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashBoardView(
+    navController: NavController,
     viewModel: WeekTrackerInfoViewModel = viewModel()
 ) {
     val weekTrackerInfoState by viewModel.weekTrackerInfoState.collectAsState()
 
     Scaffold(
         topBar = {
-            AppBar(title = "Overview",
+            AppBar(
+                navController = navController,
+                title = "Overview",
                 actions = {
                     IconButton(onClick =
                     {
-                        appNavController?.navigate(Notification.route)
+                        navController.navigate(Notification.route)
                     }) {
                         Icon(
                             imageVector = ImageVector.vectorResource(id = R.drawable.ic_notification),
@@ -116,10 +115,8 @@ fun DashBoardView(
         },
     )
 }
-
 @Composable
 private fun TrackingProgressInfo(weekTrackerInfoModel: WeekTrackerInfoModel) {
-
     Column(
         modifier = Modifier
             .padding(PaddingValues(16.dp))
@@ -133,7 +130,6 @@ private fun TrackingProgressInfo(weekTrackerInfoModel: WeekTrackerInfoModel) {
         MonthBudgetProgress()
     }
 }
-
 @Composable
 private fun MonthBudgetProgress() {
     Column(
@@ -163,11 +159,11 @@ private fun MonthBudgetProgress() {
                 color = accentColor,
             )
         }
-//                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth().height(height = 8.dp).clip(RoundedCornerShape(borderRadius8)),
-//                        color = orangeColor,
-//                        trackColor = grayColor,
-//                        progress = 0.7f,
-//                    )
+        //                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth().height(height = 8.dp).clip(RoundedCornerShape(borderRadius8)),
+        //                        color = orangeColor,
+        //                        trackColor = grayColor,
+        //                        progress = 0.7f,
+        //                    )
         HeightBox(12.0)
         CustomLinearIndicator(progress = 0.7f)
         HeightBox(6.0)
@@ -194,7 +190,6 @@ private fun MonthBudgetProgress() {
 }
 
 fun Double.format(digits: Int) = "%.${digits}f".format(this)
-
 @Composable
 fun CustomLinearIndicator(progress: Float) {
     val borderRadius = 8.0
@@ -215,7 +210,6 @@ fun CustomLinearIndicator(progress: Float) {
         )
     }
 }
-
 @Composable
 private fun WeekTrackerInfo(weekTrackerInfoModel: WeekTrackerInfoModel) {
     Column(
@@ -256,8 +250,6 @@ private fun WeekTrackerInfo(weekTrackerInfoModel: WeekTrackerInfoModel) {
         }
     }
 }
-
-
 @Composable
 fun WeekTracker(weekTrackerData: Array<WeekTrackerModel>) {
     Row(
@@ -274,7 +266,6 @@ fun WeekTracker(weekTrackerData: Array<WeekTrackerModel>) {
         }
     }
 }
-
 @Composable
 private fun TrackingColum(
     height: Double? = null,
@@ -315,7 +306,6 @@ private fun TrackingColum(
             )
     }
 }
-
 @Composable
 fun SimpleColumn() {
     Column {
@@ -327,10 +317,10 @@ fun SimpleColumn() {
         Text(text = "Column Text 3", Modifier.background(Color.Green))
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
+    navController: NavController,
     title: String,
     actions: @Composable RowScope.() -> Unit = {},
     showBackButton: Boolean = false
@@ -348,20 +338,11 @@ fun AppBar(
         navigationIcon = {
             if (showBackButton) {
                 IconButton(onClick = {
-                    appNavController?.popBackStack()
+                    navController.popBackStack()
                 }) {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
                 }
             }
-
         }
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AndroidjetpackcomposeTheme {
-        DashBoardView()
-    }
 }

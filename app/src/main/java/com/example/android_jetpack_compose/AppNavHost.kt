@@ -4,11 +4,13 @@ import android.os.*
 import androidx.annotation.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.*
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.android_jetpack_compose.ui.daily_expense.view.*
 import com.example.android_jetpack_compose.ui.daily_expense.view.InputDailyExpenseView
+import com.example.android_jetpack_compose.ui.daily_expense.view_model.*
 import com.example.android_jetpack_compose.ui.main_screen.CalendarHistoryView
 import com.example.android_jetpack_compose.ui.main_screen.ChartView
 import com.example.android_jetpack_compose.ui.dashboard.DashBoardView
@@ -32,34 +34,39 @@ fun AppNavHost(
         modifier = modifier,
     ) {
         composable(Main.route) {
-            MainView()
+            MainView(navController)
         }
         composable(Dashboard.route) {
-            DashBoardView()
+            DashBoardView(navController)
         }
         composable(Calendar.route) {
-            CalendarHistoryView()
+            CalendarHistoryView(navController)
         }
         composable(Chart.route) {
-            ChartView()
+            ChartView(navController)
         }
         composable(Setting.route) {
-            SettingView()
+            SettingView(navController)
         }
         composable(Notification.route) {
-            NotificationView()
+            NotificationView(navController)
         }
         composable(
             DailyExpense.route,
             arguments = listOf(navArgument("date") { defaultValue = "" })
         ) { backStackEntry ->
-            DailyExpenseView(Date(backStackEntry.arguments?.getString("date")!!.toLong()))
+            val date = Date(backStackEntry.arguments?.getString("date")!!.toLong())
+            val viewModel: DailyExpenseListViewModel =
+                viewModel(factory = DailyExpenseListViewModelFactory(date))
+            //                DailyExpenseListViewModelImpl(date = date)
+            DailyExpenseView(navController, date, viewModel)
         }
         composable(
             InputDailyExpense.route,
             arguments = listOf(navArgument("date") { defaultValue = "" })
         ) { backStackEntry ->
             InputDailyExpenseView(
+                navController,
                 Date(backStackEntry.arguments?.getString("date")!!.toLong())
             )
         }
@@ -70,6 +77,7 @@ fun AppNavHost(
                 navArgument("date") { defaultValue = "" })
         ) { backStackEntry ->
             UpdateDailyExpenseView(
+                navController,
                 backStackEntry.arguments?.getString("id"),
                 Date(backStackEntry.arguments?.getString("date")!!.toLong())
             )
@@ -77,22 +85,25 @@ fun AppNavHost(
         composable(
             ManagementMethodExpense.route,
         ) {
-            MethodScreen()
+            MethodScreen(navController)
         }
         composable(
             ManagementCategoryExpense.route,
         ) {
-            CategoryScreen()
+            CategoryScreen(navController)
         }
         composable(
             SettingDefaultExpense.route,
         ) {
-            SettingDefaultExpenseView()
+            SettingDefaultExpenseView(navController)
         }
         composable(
             SettingInputDefaultExpense.route,
         ) {
-            InputDefaultDailyExpenseView()
+            InputDefaultDailyExpenseView(navController)
         }
     }
+}
+@Composable
+fun Test() {
 }

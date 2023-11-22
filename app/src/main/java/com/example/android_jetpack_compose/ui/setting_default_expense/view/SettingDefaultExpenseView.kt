@@ -1,5 +1,6 @@
 package com.example.android_jetpack_compose.ui.setting_default_expense.view
 
+import android.util.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material.icons.*
@@ -11,6 +12,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.*
+import androidx.navigation.*
 import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.ui.daily_expense.view.*
 import com.example.android_jetpack_compose.ui.daily_expense.view_model.*
@@ -20,16 +22,21 @@ import java.text.*
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun SettingDefaultExpenseView() {
+fun SettingDefaultExpenseView(navController: NavController) {
     val viewModel: SettingDefaultExpenseViewModel = viewModel()
     val expenseListState = viewModel.expenseList.observeAsState()
     val totalExpenseState = viewModel.totalMoney.observeAsState()
     val deleteMode = remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        Log.i("LaunchedEffect", "V Test")
+    }
+
     Scaffold(
         topBar = {
             AppBar(
+                navController,
                 title = "Default Expense",
                 showBackButton = true,
                 actions = {
@@ -46,7 +53,7 @@ fun SettingDefaultExpenseView() {
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                appNavController?.navigate(
+                navController.navigate(
                     SettingInputDefaultExpense.route
                 )
             }) {
@@ -69,7 +76,7 @@ fun SettingDefaultExpenseView() {
                         ExpenseCard(
                             it,
                             onClick = {
-                                //                                appNavController?.navigate(
+                                //                                navController.navigate(
                                 //                                    UpdateDailyExpense.route.replace(
                                 //                                        oldValue = "{id}",
                                 //                                        newValue = it.id,
