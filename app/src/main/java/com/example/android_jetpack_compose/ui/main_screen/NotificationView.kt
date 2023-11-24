@@ -10,9 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.*
-import com.example.android_jetpack_compose.ui.dashboard.AppBar
+import com.example.android_jetpack_compose.ui.view.*
 
-@Preview
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationView(navController: NavController) {

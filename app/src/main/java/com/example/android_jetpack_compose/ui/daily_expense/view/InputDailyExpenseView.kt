@@ -1,6 +1,5 @@
 package com.example.android_jetpack_compose.ui.daily_expense.view
 
-import android.util.*
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
@@ -26,22 +25,17 @@ import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.*
-import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.*
 import com.example.android_jetpack_compose.*
-import com.example.android_jetpack_compose.data.category.*
-import com.example.android_jetpack_compose.data.method.*
 import com.example.android_jetpack_compose.data.share_data.*
 import com.example.android_jetpack_compose.entity.ExpenseCategory
 import com.example.android_jetpack_compose.entity.ExpenseMethod
 import com.example.android_jetpack_compose.ui.daily_expense.view_model.*
-import com.example.android_jetpack_compose.ui.dashboard.*
-import com.example.android_jetpack_compose.ui.view.AppNumberBoard
-import com.example.android_jetpack_compose.ui.view.SingleSelectionFlowView
+import com.example.android_jetpack_compose.ui.dashboard.view.*
+import com.example.android_jetpack_compose.ui.view.*
 import com.example.android_jetpack_compose.util.*
-import java.text.*
 import java.util.*
 
 fun Modifier.gesturesDisabled(disabled: Boolean = true) = if (disabled) {

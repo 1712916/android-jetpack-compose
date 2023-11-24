@@ -11,7 +11,7 @@ import java.util.Date
 abstract class DashBoardRepository {
     abstract suspend fun getWeekProgressData(date: Date): WeekTrackerInfoModel
     protected abstract suspend fun getWeekExpenseByDate(date: Date): List<DateExpense>
-    suspend fun getTotalExpense(expenses: List<DateExpense>): Long {
+    fun getTotalExpense(expenses: List<DateExpense>): Long {
         return expenses.fold(0) { sum, element -> sum + element.money }
     }
 }
@@ -21,25 +21,25 @@ class DashBoardRepositoryImpl : DashBoardRepository() {
         //list of total expense each date
         val expenses = getWeekExpenseByDate(date)
         //get list of period week
-        val periodWeekExpenses = getWeekExpenseByDate(date)
+        val periodWeekExpenses = getWeekExpenseByDate(Date(date.time - 7 * 86400 * 1000))
         val totalSpend = getTotalExpense(expenses)
         val totalPeriodSpend = getTotalExpense(periodWeekExpenses)
-        val dateBudget: Double = 1000000.0
-        //        val dateBudget: Double = GetDayBudgetRepository().getBudget()
+        val differentExpenseUtil: DifferentExpenseUtil = DifferentExpenseUtil(
+            totalPeriodSpend,
+            totalSpend
+        )
+
         return WeekTrackerInfoModel(
             totalSpend = totalSpend,
-            differenceNumber = DifferentExpenseUtil(
-                totalPeriodSpend,
-                totalSpend
-            ).differenceNumber(),
-            differentEnum = DifferentExpenseUtil(totalPeriodSpend, totalSpend).differentEnum(),
+            differenceNumber = differentExpenseUtil.differenceNumber(),
+            differentEnum = differentExpenseUtil.differentEnum(),
             weekTackers = expenses.map { dateData ->
                 WeekTrackerModel(
                     date = dateData.date,
                     dateSpend = dateData.money,
-                    dateBudget = dateBudget,
                 )
             }.toTypedArray(),
+            dayBudget = 200000,
         )
     }
 

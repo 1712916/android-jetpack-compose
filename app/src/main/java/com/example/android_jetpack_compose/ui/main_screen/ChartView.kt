@@ -8,18 +8,18 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.*
-import com.example.android_jetpack_compose.ui.dashboard.AppBar
+ import com.example.android_jetpack_compose.ui.view.*
 
- @OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChartView(navController: NavController) {
     Scaffold(
         topBar = {
             AppBar(
                 navController,
-                title = "Chart")
+                title = "Chart"
+            )
         },
     ) { contentPadding ->
         Column(

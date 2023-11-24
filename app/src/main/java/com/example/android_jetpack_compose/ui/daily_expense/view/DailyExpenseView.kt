@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.*
 import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.ui.daily_expense.view_model.*
-import com.example.android_jetpack_compose.ui.dashboard.AppBar
+import com.example.android_jetpack_compose.ui.view.*
 import com.example.android_jetpack_compose.util.*
 import kotlinx.coroutines.flow.*
 import java.text.*

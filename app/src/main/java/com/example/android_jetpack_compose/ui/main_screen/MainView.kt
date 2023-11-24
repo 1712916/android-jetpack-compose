@@ -32,14 +32,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.*
 import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.Calendar
 import com.example.android_jetpack_compose.bottomNavScreens
-import com.example.android_jetpack_compose.ui.dashboard.DashBoardView
-import com.example.android_jetpack_compose.ui.dashboard.accentColor
+import com.example.android_jetpack_compose.ui.dashboard.view.DashBoardView
+import com.example.android_jetpack_compose.ui.theme.*
 import kotlinx.coroutines.launch
 import java.time.*
 import java.util.*

@@ -16,11 +16,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.android_jetpack_compose.ui.dashboard.WidthBox
+import com.example.android_jetpack_compose.ui.view.*
 import com.example.android_jetpack_compose.util.*
-import java.text.DecimalFormat
-import java.text.NumberFormat
-import java.util.Currency
 
 sealed class InputValidateState {
     abstract fun color(): Color
@@ -43,12 +40,15 @@ object SameInputState : InputValidateState() {
         return Color.Gray
     }
 }
-
 @Composable
 fun MoneyInputView(number: String, validateState: InputValidateState) {
     Box(
-        modifier = Modifier.fillMaxWidth().height(80.dp).background(Color.White)
-            .border(1.dp, validateState.color()).padding(all = 16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(80.dp)
+            .background(Color.White)
+            .border(1.dp, validateState.color())
+            .padding(all = 16.dp),
         contentAlignment = Alignment.CenterStart
     ) {
         Row {
@@ -67,15 +67,11 @@ fun MoneyInputView(number: String, validateState: InputValidateState) {
         }
     }
 }
-
 @Preview
 @Composable
 fun MoneyInputViewPreview() {
     MoneyInputView(number = "35000", validateState = ValidInputState)
 }
-
-
-
 @Composable
 fun SuggestMoneyList(number: String) {
 

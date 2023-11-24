@@ -6,13 +6,14 @@ import androidx.compose.foundation.lazy.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.*
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
 import androidx.navigation.*
 import com.example.android_jetpack_compose.*
-import com.example.android_jetpack_compose.ui.dashboard.AppBar
+import com.example.android_jetpack_compose.ui.dashboard.*
+import com.example.android_jetpack_compose.ui.dashboard.view.*
+import com.example.android_jetpack_compose.ui.view.*
 
- @OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingView(navController: NavController) {
     Scaffold(
@@ -37,6 +38,14 @@ fun SettingView(navController: NavController) {
                         navController.navigate(SettingDefaultExpense.route)
                     })
                 }
+                item {
+                    HeightBox(height = 16.0)
+                }
+                item {
+                    SettingCard(title = "Budget", onClick = {
+                        navController.navigate(SettingBudgetExpense.route)
+                    })
+                }
             }
         }
     }
@@ -50,9 +59,11 @@ fun SettingCard(title: String, onClick: () -> Unit) {
             onClick()
         }
     ) {
-        Box(modifier = Modifier
-            .padding(16.dp)
-            .align(Alignment.Start)) {
+        Box(
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.Start)
+        ) {
             Text(
                 title,
                 style = MaterialTheme.typography.titleLarge,

@@ -24,6 +24,7 @@ import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.ui.daily_expense.view.*
 import com.example.android_jetpack_compose.ui.daily_expense.view_model.*
 import com.example.android_jetpack_compose.ui.dashboard.*
+import com.example.android_jetpack_compose.ui.dashboard.view.*
 import com.example.android_jetpack_compose.ui.setting_default_expense.view_model.*
 import com.example.android_jetpack_compose.ui.view.*
 import com.example.android_jetpack_compose.util.*

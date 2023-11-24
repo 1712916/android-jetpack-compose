@@ -103,7 +103,9 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
+    //Calendar
     implementation "io.github.boguszpawlowski.composecalendar:composecalendar:1.1.0"
-    // separate artifact with utilities for working with kotlinx-datetime
     implementation "io.github.boguszpawlowski.composecalendar:kotlinx-datetime:1.1.0"
+
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0-alpha02")
 }

@@ -2,8 +2,6 @@ package com.example.android_jetpack_compose.ui.main_screen
 
 import android.os.*
 import android.util.*
-import android.widget.CalendarView
-import android.widget.DatePicker
 import androidx.annotation.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -13,11 +11,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.*
 import androidx.navigation.*
 import com.example.android_jetpack_compose.*
-import com.example.android_jetpack_compose.ui.dashboard.AppBar
+ import com.example.android_jetpack_compose.ui.view.*
 import io.github.boguszpawlowski.composecalendar.*
 import io.github.boguszpawlowski.composecalendar.selection.*
 import kotlinx.datetime.*

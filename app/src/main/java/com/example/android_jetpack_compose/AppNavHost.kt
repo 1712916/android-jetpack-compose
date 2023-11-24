@@ -13,12 +13,13 @@ import com.example.android_jetpack_compose.ui.daily_expense.view.InputDailyExpen
 import com.example.android_jetpack_compose.ui.daily_expense.view_model.*
 import com.example.android_jetpack_compose.ui.main_screen.CalendarHistoryView
 import com.example.android_jetpack_compose.ui.main_screen.ChartView
-import com.example.android_jetpack_compose.ui.dashboard.DashBoardView
+import com.example.android_jetpack_compose.ui.dashboard.view.DashBoardView
 import com.example.android_jetpack_compose.ui.expense.view.*
 import com.example.android_jetpack_compose.ui.main_screen.MainView
 import com.example.android_jetpack_compose.ui.main_screen.NotificationView
 import com.example.android_jetpack_compose.ui.main_screen.SettingView
 import com.example.android_jetpack_compose.ui.method.view.*
+import com.example.android_jetpack_compose.ui.setting_budget.*
 import com.example.android_jetpack_compose.ui.setting_default_expense.view.*
 import java.util.*
 
@@ -101,6 +102,11 @@ fun AppNavHost(
             SettingInputDefaultExpense.route,
         ) {
             InputDefaultDailyExpenseView(navController)
+        }
+        composable(
+            SettingBudgetExpense.route,
+        ) {
+            SettingBudgetView()
         }
     }
 }

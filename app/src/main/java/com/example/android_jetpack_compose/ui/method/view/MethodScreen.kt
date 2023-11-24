@@ -18,8 +18,8 @@ import com.example.android_jetpack_compose.data.method.*
 import com.example.android_jetpack_compose.data.share_data.*
 import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.ui.dashboard.*
+import com.example.android_jetpack_compose.ui.dashboard.view.*
 import com.example.android_jetpack_compose.ui.expense.view_model.*
-import com.example.android_jetpack_compose.ui.expense.view_model.CategoryViewModel
 import com.example.android_jetpack_compose.ui.method.view_model.*
 import com.example.android_jetpack_compose.ui.view.*
 import java.text.*

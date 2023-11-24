@@ -77,3 +77,7 @@ object SettingDefaultExpense : AppDestination {
 object SettingInputDefaultExpense : AppDestination {
     override val route = "setting/default-expense/input"
 }
+
+object SettingBudgetExpense : AppDestination {
+    override val route = "setting/budget"
+}

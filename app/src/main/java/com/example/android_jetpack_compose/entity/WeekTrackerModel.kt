@@ -2,12 +2,13 @@ package com.example.android_jetpack_compose.entity
 
 import java.util.Date
 
-data class WeekTrackerModel(val date: Date, val dateBudget: Double, val dateSpend: Long)
+data class WeekTrackerModel(val date: Date, val dateSpend: Long)
 data class WeekTrackerInfoModel(
     val totalSpend: Long = 0,
-    val differenceNumber: Double? = null,
-    val differentEnum: DifferentEnum? = null,
+    val differenceNumber: Double = 0.0,
+    val differentEnum: DifferentEnum = DifferentEnum.BALANCE,
     val weekTackers: Array<WeekTrackerModel>? = null,
+    val dayBudget: Long = 0,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -25,8 +26,8 @@ data class WeekTrackerInfoModel(
 
     override fun hashCode(): Int {
         var result = totalSpend.hashCode()
-        result = 31 * result + (differenceNumber?.hashCode() ?: 0)
-        result = 31 * result + (differentEnum?.hashCode() ?: 0)
+        result = 31 * result + (differenceNumber.hashCode())
+        result = 31 * result + (differentEnum.hashCode())
         result = 31 * result + weekTackers.contentHashCode()
         return result
     }

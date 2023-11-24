@@ -17,6 +17,7 @@ import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.data.method.*
 import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.ui.dashboard.*
+import com.example.android_jetpack_compose.ui.dashboard.view.*
 import com.example.android_jetpack_compose.ui.expense.view_model.*
 import com.example.android_jetpack_compose.ui.method.view_model.*
 import com.example.android_jetpack_compose.ui.view.*
