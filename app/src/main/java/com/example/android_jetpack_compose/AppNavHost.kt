@@ -20,6 +20,7 @@ import com.example.android_jetpack_compose.ui.main_screen.NotificationView
 import com.example.android_jetpack_compose.ui.main_screen.SettingView
 import com.example.android_jetpack_compose.ui.method.view.*
 import com.example.android_jetpack_compose.ui.setting_budget.*
+import com.example.android_jetpack_compose.ui.setting_budget.view.*
 import com.example.android_jetpack_compose.ui.setting_default_expense.view.*
 import java.util.*
 
@@ -106,7 +107,7 @@ fun AppNavHost(
         composable(
             SettingBudgetExpense.route,
         ) {
-            SettingBudgetView()
+            SettingBudgetView(navController)
         }
     }
 }
