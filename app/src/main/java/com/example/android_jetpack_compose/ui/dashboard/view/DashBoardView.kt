@@ -57,26 +57,7 @@ import java.text.SimpleDateFormat
 @Composable
 fun DashBoardView(
     navController: NavController,
-    viewModel: WeekTrackerInfoViewModel = viewModel()
 ) {
-    val weekTrackerInfoState by viewModel.weekTrackerInfoState.collectAsState()
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val lifecycleState by lifecycleOwner.lifecycle.currentStateFlow.collectAsState()
-
-    LaunchedEffect(lifecycleState) {
-        // Do something with your state
-        // You may want to use DisposableEffect or other alternatives
-        // instead of LaunchedEffect
-        when (lifecycleState) {
-            Lifecycle.State.DESTROYED -> {}
-            Lifecycle.State.INITIALIZED -> {}
-            Lifecycle.State.CREATED -> {}
-            Lifecycle.State.STARTED -> {}
-            Lifecycle.State.RESUMED -> {
-                viewModel.loadData()
-            }
-        }
-    }
     Scaffold(
         topBar = {
             AppBar(
@@ -106,7 +87,6 @@ fun DashBoardView(
                     .fillMaxHeight(),
             ) {
                 TrackingProgressInfo(
-                    weekTrackerInfoState,
                     { date ->
                         navController.navigate(
                             DailyExpense.route.replace(

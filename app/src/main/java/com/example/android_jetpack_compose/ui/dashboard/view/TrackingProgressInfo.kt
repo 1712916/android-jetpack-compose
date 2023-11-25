@@ -6,13 +6,16 @@ import androidx.compose.foundation.shape.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
+import androidx.lifecycle.*
+import androidx.lifecycle.viewmodel.compose.*
 import com.example.android_jetpack_compose.entity.*
+import com.example.android_jetpack_compose.ui.dashboard.view_model.*
 import java.util.*
 
 @Composable
 fun TrackingProgressInfo(
-    weekTrackerInfoModel: WeekTrackerInfoModel,
     onTrackColumnTap: (Date) -> Unit,
 ) {
     Column(
@@ -22,8 +25,7 @@ fun TrackingProgressInfo(
     ) {
         // week tracking
         WeekTrackerInfo(
-            weekTrackerInfoModel = weekTrackerInfoModel,
-            onTrackColumnTap = onTrackColumnTap,
+            onTrackColumnTap = onTrackColumnTap
         )
         //month budget
         MonthBudgetProgress()
