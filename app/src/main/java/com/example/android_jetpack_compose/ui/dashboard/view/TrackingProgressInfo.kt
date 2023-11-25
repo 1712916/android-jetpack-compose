@@ -8,9 +8,13 @@ import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.unit.*
 import com.example.android_jetpack_compose.entity.*
+import java.util.*
 
 @Composable
-fun TrackingProgressInfo(weekTrackerInfoModel: WeekTrackerInfoModel) {
+fun TrackingProgressInfo(
+    weekTrackerInfoModel: WeekTrackerInfoModel,
+    onTrackColumnTap: (Date) -> Unit,
+) {
     Column(
         modifier = Modifier
             .padding(PaddingValues(16.dp))
@@ -19,6 +23,7 @@ fun TrackingProgressInfo(weekTrackerInfoModel: WeekTrackerInfoModel) {
         // week tracking
         WeekTrackerInfo(
             weekTrackerInfoModel = weekTrackerInfoModel,
+            onTrackColumnTap = onTrackColumnTap,
         )
         //month budget
         MonthBudgetProgress()

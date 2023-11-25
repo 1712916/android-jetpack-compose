@@ -44,7 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.*
-import com.example.android_jetpack_compose.Notification
+import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.R
 import com.example.android_jetpack_compose.entity.WeekTrackerInfoModel
 import com.example.android_jetpack_compose.entity.WeekTrackerModel
@@ -105,7 +105,17 @@ fun DashBoardView(
                     .fillMaxWidth()
                     .fillMaxHeight(),
             ) {
-                TrackingProgressInfo(weekTrackerInfoState)
+                TrackingProgressInfo(
+                    weekTrackerInfoState,
+                    { date ->
+                        navController.navigate(
+                            DailyExpense.route.replace(
+                                oldValue = "{date}",
+                                newValue = date.time.toString(),
+                            )
+                        )
+                    }
+                )
             }
         },
     )
