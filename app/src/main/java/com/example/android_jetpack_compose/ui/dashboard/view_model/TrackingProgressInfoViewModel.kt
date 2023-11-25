@@ -15,7 +15,7 @@ class WeekTrackerInfoViewModel : ViewModel() {
     private val _isLoading = mutableStateOf(true)
     private val _weekTrackerInfoState = MutableStateFlow(WeekTrackerInfoModel())
     val weekTrackerInfoState: StateFlow<WeekTrackerInfoModel> = _weekTrackerInfoState.asStateFlow()
-    private val dashBoardRepository: DashBoardRepository = DashBoardRepositoryImpl()
+    private val dashBoardRepository: DashBoardRepository = DashBoardRepositoryImpl(Date())
 
     init {
         _weekTrackerInfoState.value = WeekTrackerInfoModel(
@@ -36,7 +36,7 @@ class WeekTrackerInfoViewModel : ViewModel() {
     suspend fun loadData() {
         val a = viewModelScope.launch {
             _weekTrackerInfoState.value =
-                dashBoardRepository.getWeekProgressData(Calendar.getInstance().time)
+                dashBoardRepository.getProgressData()
         }
 
         a.join()
