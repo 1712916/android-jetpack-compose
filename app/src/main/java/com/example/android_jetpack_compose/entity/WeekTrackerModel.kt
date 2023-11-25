@@ -8,7 +8,7 @@ data class WeekTrackerInfoModel(
     val differenceNumber: Double = 0.0,
     val differentEnum: DifferentEnum = DifferentEnum.BALANCE,
     val weekTackers: Array<WeekTrackerModel>? = null,
-    val dayBudget: Long = 0,
+    val budget: Long = 0,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

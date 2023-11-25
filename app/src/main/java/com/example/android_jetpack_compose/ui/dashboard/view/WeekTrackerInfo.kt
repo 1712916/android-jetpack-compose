@@ -10,9 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
-import androidx.compose.ui.graphics.*
 import androidx.compose.ui.platform.*
-import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.unit.*
 import androidx.lifecycle.*
@@ -20,69 +18,10 @@ import androidx.lifecycle.viewmodel.compose.*
 import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.ui.dashboard.view_model.*
 import com.example.android_jetpack_compose.ui.theme.*
-import com.example.android_jetpack_compose.ui.view.*
 import com.example.android_jetpack_compose.util.*
 import java.text.*
 import java.util.*
 
-@Composable
-fun MonthBudgetProgress() {
-    Column(
-        modifier = Modifier
-            .padding(PaddingValues(16.dp))
-            .shadow(
-                elevation = 8.dp, shape = RoundedCornerShape(8.dp)
-            )
-            .background(color = Color.White)
-            .padding(PaddingValues(16.dp))
-            .height(IntrinsicSize.Min)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Text(
-                "Budget for this month",
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 18.sp,
-                color = textBlackColor,
-            )
-            Text(
-                "$2.400",
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 18.sp,
-                color = accentColor,
-            )
-        }
-        //                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth().height(height = 8.dp).clip(RoundedCornerShape(borderRadius8)),
-        //                        color = orangeColor,
-        //                        trackColor = grayColor,
-        //                        progress = 0.7f,
-        //                    )
-        HeightBox(12.0)
-        CustomLinearIndicator(progress = 0.7f)
-        HeightBox(6.0)
-        Text(
-            buildAnnotatedString {
-                withStyle(style = SpanStyle(color = textGrayColor)) {
-                    append("Spent ")
-                }
-                withStyle(
-                    style = SpanStyle(
-                        color = textBlackColor,
-                        fontWeight = FontWeight.Bold
-                    )
-                ) {
-                    append("$1.800")
-                }
-
-                withStyle(style = SpanStyle(color = textGrayColor)) {
-                    append(" of $2.400")
-                }
-            }
-        )
-    }
-}
 @Composable
 fun CustomLinearIndicator(progress: Float) {
     val borderRadius = 8.0
@@ -160,7 +99,7 @@ fun WeekTrackerInfo(
             weekTrackerInfoState.weekTackers?.let {
                 WeekTracker(
                     weekTrackerData = it,
-                    dayBudget = weekTrackerInfoState.dayBudget,
+                    dayBudget = weekTrackerInfoState.budget,
                     onTrackColumnTap = onTrackColumnTap,
                 )
             }

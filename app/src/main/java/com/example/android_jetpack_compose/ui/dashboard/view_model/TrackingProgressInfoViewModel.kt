@@ -25,7 +25,7 @@ class WeekTrackerInfoViewModel : ViewModel() {
                     dateSpend = 0,
                 )
             }.toTypedArray(),
-            dayBudget = 200000,
+            budget = 200000,
         )
 
         viewModelScope.launch {

@@ -5,17 +5,14 @@ import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.util.*
 import java.util.*
 
-abstract class WeekExpenseRepository(val date: Date) : GetDateExpenses, GetTotalExpense,
-    GetProgressData {
-}
-
+abstract class WeekExpenseRepository(val date: Date) : ProgressExpenseRepository
 class WeekExpenseRepositoryImpl(date: Date) : WeekExpenseRepository(date) {
     private val budgetRepository: BudgetRepository = BudgetRepositoryImpl()
     override suspend fun getDateExpenses(): List<DateExpense> {
         val days = WeekByDate(date).getWeekDates()
-        val getExpenseRepository: GetExpenseRepository = GetExpenseRepositoryImpl()
+        val getDateExpenseRepository: GetDateExpenseRepository = GetDateExpenseRepositoryImpl()
 
-        return days.map { day -> getExpenseRepository.getExpense(day) }
+        return days.map { day -> getDateExpenseRepository.getExpense(day) }
     }
 
     override suspend fun getTotalExpense(): Long {
@@ -47,7 +44,7 @@ class WeekExpenseRepositoryImpl(date: Date) : WeekExpenseRepository(date) {
                     dateSpend = dateData.money,
                 )
             }.toTypedArray(),
-            dayBudget = budget?.day ?: 0,
+            budget = budget?.day ?: 0,
         )
     }
 }

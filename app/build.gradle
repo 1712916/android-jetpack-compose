@@ -108,4 +108,6 @@ dependencies {
     implementation "io.github.boguszpawlowski.composecalendar:kotlinx-datetime:1.1.0"
 
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0-alpha02")
+
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.2.1'
 }
