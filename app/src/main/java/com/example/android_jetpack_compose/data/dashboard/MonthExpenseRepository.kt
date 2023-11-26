@@ -5,6 +5,7 @@ import com.example.android_jetpack_compose.data.user.*
 import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.firebase_util.*
 import com.example.android_jetpack_compose.util.*
+import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.*
 import org.threeten.bp.*
 import java.text.*
@@ -31,9 +32,13 @@ class MonthExpenseRepositoryImpl(date: Date) : MonthExpenseRepository(date), Fir
             calendar.add(Calendar.DATE, 1);
         }
         val getDateExpenseRepository: GetDateExpenseRepository = GetDateExpenseRepositoryImpl()
+        val deferredResults: List<Deferred<DateExpense>> = days.map { day ->
+            GlobalScope.async {
+                getDateExpenseRepository.getExpense(day)
+            }
+        }
 
-
-        return days.map { day -> getDateExpenseRepository.getExpense(day) }
+        return deferredResults.awaitAll()
     }
 
     override suspend fun getTotalExpense(): Long {
@@ -44,21 +49,11 @@ class MonthExpenseRepositoryImpl(date: Date) : MonthExpenseRepository(date), Fir
         //list of total expense each date
         val expenses = getDateExpenses()
         val totalSpend = getTotalExpense()
-        //get list of period week
-        //        val previousWeekExpenseRepository: WeekExpenseRepository =
-        //            WeekExpenseRepositoryImpl(Date(date.time - 7 * 86400 * 1000))
-        //        val totalPeriodSpend = previousWeekExpenseRepository.getTotalExpense()
-        //        val differentExpenseUtil: DifferentExpenseUtil = DifferentExpenseUtil(
-        //            totalPeriodSpend,
-        //            totalSpend
-        //        )
         val budget = budgetRepository.read("").getOrNull()
 
 
         return DatesTrackerInfoModel(
             totalSpend = totalSpend,
-            //            differenceNumber = differentExpenseUtil.differenceNumber(),
-            //            differentEnum = differentExpenseUtil.differentEnum(),
             weekTackers = expenses.map { dateData ->
                 WeekTrackerModel(
                     date = dateData.date,
