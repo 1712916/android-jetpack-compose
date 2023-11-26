@@ -15,16 +15,26 @@ import com.example.android_jetpack_compose.ui.dashboard.view_model.*
 import com.example.android_jetpack_compose.ui.theme.*
 import com.example.android_jetpack_compose.ui.view.*
 import androidx.lifecycle.viewmodel.compose.*
+import com.example.android_jetpack_compose.util.*
 
 @Composable
 fun MonthBudgetProgress(viewModel: MonthProgressInfoViewModel = viewModel()) {
     val monthTackerInfoState by viewModel.monthTackerInfoState.collectAsState()
-    fun getMonthBudget(): Long {
-        return monthTackerInfoState.budget
+    fun getMonthBudget(): String {
+        return monthTackerInfoState.budget.money() + "VND"
     }
 
-    fun getMonthTotalSpend(): Long {
-        return monthTackerInfoState.totalSpend
+    fun getMonthTotalSpend(): String {
+        return monthTackerInfoState.totalSpend.money() + "VND"
+    }
+
+    fun getPercentProgress(): Float {
+        if (monthTackerInfoState.budget == 0L) {
+            return 0f
+        }
+
+        return (monthTackerInfoState.totalSpend * 1f) / monthTackerInfoState.budget
+
     }
     Column(
         modifier = Modifier
@@ -51,13 +61,8 @@ fun MonthBudgetProgress(viewModel: MonthProgressInfoViewModel = viewModel()) {
                 color = accentColor,
             )
         }
-        //                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth().height(height = 8.dp).clip(RoundedCornerShape(borderRadius8)),
-        //                        color = orangeColor,
-        //                        trackColor = grayColor,
-        //                        progress = 0.7f,
-        //                    )
         HeightBox(12.0)
-        CustomLinearIndicator(progress = (getMonthTotalSpend() * 1f / (if (getMonthBudget() == 0L) 1 else getMonthBudget())).toFloat())
+        CustomLinearIndicator(progress = getPercentProgress())
         HeightBox(6.0)
         Text(
             buildAnnotatedString {

@@ -13,3 +13,5 @@ interface GetTotalExpense {
 interface GetProgressData {
     suspend fun getProgressData(): WeekTrackerInfoModel
 }
+
+interface ProgressExpenseRepository : GetDateExpenses, GetTotalExpense, GetProgressData
