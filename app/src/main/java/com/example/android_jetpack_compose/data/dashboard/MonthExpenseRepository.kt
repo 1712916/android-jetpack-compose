@@ -40,7 +40,7 @@ class MonthExpenseRepositoryImpl(date: Date) : MonthExpenseRepository(date), Fir
         return getDateExpenses().fold(0) { sum, element -> sum + element.money }
     }
 
-    override suspend fun getProgressData(): WeekTrackerInfoModel {
+    override suspend fun getProgressData(): DatesTrackerInfoModel {
         //list of total expense each date
         val expenses = getDateExpenses()
         val totalSpend = getTotalExpense()
@@ -55,7 +55,7 @@ class MonthExpenseRepositoryImpl(date: Date) : MonthExpenseRepository(date), Fir
         val budget = budgetRepository.read("").getOrNull()
 
 
-        return WeekTrackerInfoModel(
+        return DatesTrackerInfoModel(
             totalSpend = totalSpend,
             //            differenceNumber = differentExpenseUtil.differenceNumber(),
             //            differentEnum = differentExpenseUtil.differentEnum(),

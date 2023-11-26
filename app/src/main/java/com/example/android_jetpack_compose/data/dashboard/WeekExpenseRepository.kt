@@ -3,6 +3,7 @@ package com.example.android_jetpack_compose.data.dashboard
 import com.example.android_jetpack_compose.data.budget.*
 import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.util.*
+import kotlinx.coroutines.*
 import java.util.*
 
 abstract class WeekExpenseRepository(val date: Date) : ProgressExpenseRepository
@@ -11,33 +12,29 @@ class WeekExpenseRepositoryImpl(date: Date) : WeekExpenseRepository(date) {
     override suspend fun getDateExpenses(): List<DateExpense> {
         val days = WeekByDate(date).getWeekDates()
         val getDateExpenseRepository: GetDateExpenseRepository = GetDateExpenseRepositoryImpl()
+        val deferredResults: List<Deferred<DateExpense>> = days.map { day ->
+            // Use async to execute each function concurrently
+            GlobalScope.async {
+                getDateExpenseRepository.getExpense(day)
+            }
+        }
 
-        return days.map { day -> getDateExpenseRepository.getExpense(day) }
+        return deferredResults.awaitAll()
     }
 
     override suspend fun getTotalExpense(): Long {
         return getDateExpenses().fold(0) { sum, element -> sum + element.money }
     }
 
-    override suspend fun getProgressData(): WeekTrackerInfoModel {
+    override suspend fun getProgressData(): DatesTrackerInfoModel {
         //list of total expense each date
         val expenses = getDateExpenses()
         val totalSpend = getTotalExpense()
-        //get list of period week
-        val previousWeekExpenseRepository: WeekExpenseRepository =
-            WeekExpenseRepositoryImpl(Date(date.time - 7 * 86400 * 1000))
-        val totalPeriodSpend = previousWeekExpenseRepository.getTotalExpense()
-        val differentExpenseUtil: DifferentExpenseUtil = DifferentExpenseUtil(
-            totalPeriodSpend,
-            totalSpend
-        )
         val budget = budgetRepository.read("").getOrNull()
 
 
-        return WeekTrackerInfoModel(
+        return DatesTrackerInfoModel(
             totalSpend = totalSpend,
-            differenceNumber = differentExpenseUtil.differenceNumber(),
-            differentEnum = differentExpenseUtil.differentEnum(),
             weekTackers = expenses.map { dateData ->
                 WeekTrackerModel(
                     date = dateData.date,

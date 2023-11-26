@@ -16,6 +16,8 @@ class WeekTrackerInfoViewModel : ViewModel() {
     private val _weekTrackerInfoState = MutableStateFlow(WeekTrackerInfoModel())
     val weekTrackerInfoState: StateFlow<WeekTrackerInfoModel> = _weekTrackerInfoState.asStateFlow()
     private val dashBoardRepository: DashBoardRepository = DashBoardRepositoryImpl(Date())
+    private val preWeekDashBoardRepository: DashBoardRepository =
+        DashBoardRepositoryImpl(Date(Date().time - 7 * 86400 * 1000))
 
     init {
         _weekTrackerInfoState.value = WeekTrackerInfoModel(
@@ -34,14 +36,31 @@ class WeekTrackerInfoViewModel : ViewModel() {
     }
 
     suspend fun loadData() {
-        val a = viewModelScope.launch {
-            _weekTrackerInfoState.value =
+        val deferredResults: List<Deferred<DatesTrackerInfoModel>> = listOf(
+            GlobalScope.async {
                 dashBoardRepository.getProgressData()
-        }
+            },
+            GlobalScope.async {
+                preWeekDashBoardRepository.getProgressData()
+            }
+        )
+        val results = deferredResults.awaitAll()
+        val currentWeekExpense = results.first()
+        val previousWeekExpense = results.last()
+        val differentExpenseUtil: DifferentExpenseUtil = DifferentExpenseUtil(
+            previousWeekExpense.totalSpend,
+            currentWeekExpense.totalSpend,
+        )
 
-        a.join()
+        _weekTrackerInfoState.value = WeekTrackerInfoModel(
+            weekTackers = currentWeekExpense.weekTackers,
+            budget = currentWeekExpense.budget,
+            totalSpend = currentWeekExpense.totalSpend,
+            differentEnum = differentExpenseUtil.differentEnum(),
+            differenceNumber = differentExpenseUtil.differenceNumber(),
+        )
+
 
         _isLoading.value = false
-
     }
 }

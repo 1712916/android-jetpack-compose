@@ -33,6 +33,32 @@ data class WeekTrackerInfoModel(
     }
 }
 
+data class DatesTrackerInfoModel(
+    val totalSpend: Long = 0,
+    val weekTackers: Array<WeekTrackerModel>? = null,
+    val budget: Long = 0,
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as WeekTrackerInfoModel
+
+        if (totalSpend != other.totalSpend) return false
+
+        if (!weekTackers.contentEquals(other.weekTackers)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = totalSpend.hashCode()
+
+        result = 31 * result + weekTackers.contentHashCode()
+        return result
+    }
+}
+
 enum class DifferentEnum {
     INCREASE, DECREASE, BALANCE
 }
