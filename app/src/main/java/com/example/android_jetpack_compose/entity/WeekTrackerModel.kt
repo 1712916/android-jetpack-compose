@@ -1,5 +1,11 @@
 package com.example.android_jetpack_compose.entity
 
+import android.graphics.drawable.Icon
+import androidx.compose.material.icons.*
+import androidx.compose.material.icons.filled.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.*
+import com.example.android_jetpack_compose.ui.theme.*
 import java.util.Date
 
 data class WeekTrackerModel(val date: Date, val dateSpend: Long)
@@ -60,5 +66,21 @@ data class DatesTrackerInfoModel(
 }
 
 enum class DifferentEnum {
-    INCREASE, DECREASE, BALANCE
+    INCREASE, DECREASE, BALANCE;
+
+    fun getColor(): Color {
+        return when (this) {
+            INCREASE -> redColor
+            DECREASE -> textGreenColor
+            BALANCE -> grayColor
+        }
+    }
+
+    fun getIcon(): ImageVector {
+        return when (this) {
+            INCREASE -> Icons.Filled.KeyboardArrowUp
+            DECREASE -> Icons.Filled.KeyboardArrowDown
+            BALANCE -> Icons.Filled.Star
+        }
+    }
 }

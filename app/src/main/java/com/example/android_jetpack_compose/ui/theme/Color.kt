@@ -16,5 +16,5 @@ val textGrayColor = Color(0xFF61626d)
 val textGreenColor = Color(0xFF4dae15)
 val textBlackColor = Color(0xFF101226)
 val orangeColor = Color(0xFFfdaa4a)
-val redColor = Color(0xFF9a3b3f)
+val redColor = Color(0xFFff3232)
 val borderRadius8 = 8.dp

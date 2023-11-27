@@ -83,14 +83,14 @@ fun WeekTrackerInfo(
                 color = textGrayColor,
             )
             Icon(
-                imageVector = Icons.Filled.ArrowDropDown,
+                imageVector = weekTrackerInfoState.differentEnum.getIcon(),
                 contentDescription = "",
-                tint = textGreenColor,
+                tint = weekTrackerInfoState.differentEnum.getColor(),
             )
             Text(
-                text = "${weekTrackerInfoState.differenceNumber}%",
+                text = "${String.format("%.2f", weekTrackerInfoState.differenceNumber)}%",
                 fontWeight = FontWeight.ExtraBold,
-                color = textGreenColor,
+                color = weekTrackerInfoState.differentEnum.getColor(),
             )
         }
         Spacer(modifier = Modifier.height(10.dp))
