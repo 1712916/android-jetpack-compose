@@ -3,43 +3,30 @@
 package com.example.android_jetpack_compose.ui.main_screen
 
 import android.os.*
-import android.util.Log
+import android.util.*
 import androidx.annotation.*
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.*
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material.icons.*
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.material3.*
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.vector.*
+import androidx.compose.ui.res.*
+import androidx.compose.ui.unit.*
 import androidx.navigation.*
 import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.Calendar
-import com.example.android_jetpack_compose.bottomNavScreens
-import com.example.android_jetpack_compose.ui.dashboard.view.DashBoardView
+import com.example.android_jetpack_compose.ui.dashboard.view.*
 import com.example.android_jetpack_compose.ui.theme.*
-import kotlinx.coroutines.launch
+import com.example.android_jetpack_compose.util.*
+import kotlinx.coroutines.*
 import java.time.*
 import java.util.*
 
@@ -59,6 +46,11 @@ fun MainView(navController: NavController) {
             else -> {}
         }
     }
+
+    LaunchedEffect(Unit) {
+        InitAppRoute.instance.navToInitRoute(navController)
+    }
+
 
     LaunchedEffect(pagerState) {
         // Collect from the a snapshotFlow reading the currentPage

@@ -2,33 +2,28 @@ package com.example.android_jetpack_compose
 
 import android.os.*
 import androidx.annotation.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
 import androidx.lifecycle.viewmodel.compose.*
 import androidx.navigation.*
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import androidx.navigation.compose.*
 import com.example.android_jetpack_compose.ui.daily_expense.view.*
-import com.example.android_jetpack_compose.ui.daily_expense.view.InputDailyExpenseView
 import com.example.android_jetpack_compose.ui.daily_expense.view_model.*
-import com.example.android_jetpack_compose.ui.main_screen.CalendarHistoryView
-import com.example.android_jetpack_compose.ui.main_screen.ChartView
-import com.example.android_jetpack_compose.ui.dashboard.view.DashBoardView
+import com.example.android_jetpack_compose.ui.dashboard.view.*
 import com.example.android_jetpack_compose.ui.expense.view.*
-import com.example.android_jetpack_compose.ui.main_screen.MainView
-import com.example.android_jetpack_compose.ui.main_screen.NotificationView
-import com.example.android_jetpack_compose.ui.main_screen.SettingView
+import com.example.android_jetpack_compose.ui.main_screen.*
 import com.example.android_jetpack_compose.ui.method.view.*
 import com.example.android_jetpack_compose.ui.setting_budget.*
 import com.example.android_jetpack_compose.ui.setting_budget.view.*
 import com.example.android_jetpack_compose.ui.setting_default_expense.view.*
+import com.example.android_jetpack_compose.ui.setting_remind_input.view.*
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavHost(
     navController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     NavHost(
         navController,
@@ -57,7 +52,14 @@ fun AppNavHost(
             DailyExpense.route,
             arguments = listOf(navArgument("date") { defaultValue = "" })
         ) { backStackEntry ->
-            val date = Date(backStackEntry.arguments?.getString("date")!!.toLong())
+            var date: Date = Date()
+
+            if (backStackEntry.arguments?.getString("date")?.isNotEmpty() ?: false) {
+                try {
+                    date = Date(backStackEntry.arguments?.getString("date")!!.toLong())
+                } catch (e: Exception) {
+                }
+            }
             val viewModel: DailyExpenseListViewModel =
                 viewModel(factory = DailyExpenseListViewModelFactory(date))
             //                DailyExpenseListViewModelImpl(date = date)
@@ -108,6 +110,11 @@ fun AppNavHost(
             SettingBudgetExpense.route,
         ) {
             SettingBudgetView(navController)
+        }
+        composable(
+            SettingRemindEnterDailyExpense.route,
+        ) {
+            RemindEnterDailyExpenseView(navController)
         }
     }
 }

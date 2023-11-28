@@ -1,7 +1,6 @@
 package com.example.android_jetpack_compose
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
+import androidx.annotation.*
 
 interface AppDestination {
     val route: String
@@ -80,4 +79,8 @@ object SettingInputDefaultExpense : AppDestination {
 
 object SettingBudgetExpense : AppDestination {
     override val route = "setting/budget"
+}
+
+object SettingRemindEnterDailyExpense : AppDestination {
+    override val route = "setting/remind-enter-daily"
 }

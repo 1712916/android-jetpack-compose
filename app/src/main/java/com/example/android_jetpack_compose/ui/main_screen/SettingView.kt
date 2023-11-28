@@ -4,7 +4,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.unit.*
 import androidx.navigation.*
@@ -44,6 +44,14 @@ fun SettingView(navController: NavController) {
                 item {
                     SettingCard(title = "Budget", onClick = {
                         navController.navigate(SettingBudgetExpense.route)
+                    })
+                }
+                item {
+                    HeightBox(height = 16.0)
+                }
+                item {
+                    SettingCard(title = "Schedule Remind Enter Data", onClick = {
+                        navController.navigate(SettingRemindEnterDailyExpense.route)
                     })
                 }
             }
