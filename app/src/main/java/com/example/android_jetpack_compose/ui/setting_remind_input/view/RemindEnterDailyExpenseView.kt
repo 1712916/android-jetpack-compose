@@ -113,7 +113,7 @@ fun RemindEnterDailyExpenseView(navController: NavController) {
                     .with(LocalTime.of(timePickerState.hour, timePickerState.minute))
 
                 AlarmItem(
-                    alarmTime = LocalDateTime.now().plusSeconds(10),
+                    alarmTime = dateTimeWithHourAndMinute,
                     message = "Đến giờ nhập chi tiêu rồi!"
                 ).let(alarmScheduler::schedule)
             }) {
