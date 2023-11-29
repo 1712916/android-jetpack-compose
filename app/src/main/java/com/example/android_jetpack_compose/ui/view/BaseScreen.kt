@@ -10,7 +10,9 @@ import androidx.compose.ui.platform.*
 
 @Composable
 fun BaseScreen(
-     body: @Composable () -> Unit,
+    topBar: @Composable () -> Unit = {},
+
+    body: @Composable () -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -20,9 +22,14 @@ fun BaseScreen(
                 focusManager.clearFocus()
             })
         },
-
+        topBar = topBar,
     ) {
-        Box(modifier = Modifier.fillMaxWidth().fillMaxHeight().padding(it)) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .padding(it)
+        ) {
             body()
         }
     }

@@ -6,6 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.tooling.preview.*
+import androidx.compose.ui.unit.*
 
 @Preview
 @Composable
@@ -31,10 +32,13 @@ fun LoadingButton(
                 onClick()
             }
         },
+        colors = ButtonDefaults.buttonColors( containerColor = if (isLoading)  MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.primary)
     ) {
         if (isLoading)
             CircularProgressIndicator(
-                color = Color.White
+                modifier = Modifier.width(20.dp).height(20.dp),
+                color = Color.White,
+                strokeWidth = 2.dp
             )
         else content()
     }

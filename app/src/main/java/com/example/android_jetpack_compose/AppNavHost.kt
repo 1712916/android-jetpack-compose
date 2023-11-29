@@ -34,6 +34,9 @@ fun AppNavHost(
         composable(Login.route) {
             LoginPage(navController)
         }
+        composable(ForgotPassword.route) {
+            ForgotPasswordPage(navController)
+        }
         composable(Main.route) {
             MainView(navController)
         }

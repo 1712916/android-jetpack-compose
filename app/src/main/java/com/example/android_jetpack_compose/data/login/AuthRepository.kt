@@ -10,6 +10,8 @@ abstract class AuthRepository {
     abstract suspend fun login(email: String, password: String): Result<User>
     abstract suspend fun register(email: String, password: String): Result<User>
     abstract suspend fun logout()
+
+    abstract suspend fun onRequestNewPassword(email: String): Result<Any>
 }
 
 class AuthRepositoryImpl : AuthRepository() {
@@ -47,5 +49,14 @@ class AuthRepositoryImpl : AuthRepository() {
     override suspend fun logout() {
         auth.signOut()
         AppUser.getInstance().clear()
+    }
+
+    override suspend fun onRequestNewPassword(email: String): Result<Any> {
+        try {
+            auth.sendPasswordResetEmail(email)
+            return Result.success("")
+        } catch (e: Exception) {
+            return Result.failure(e)
+        }
     }
 }
