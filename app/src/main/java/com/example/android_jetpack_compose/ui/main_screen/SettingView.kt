@@ -9,13 +9,18 @@ import androidx.compose.ui.*
 import androidx.compose.ui.unit.*
 import androidx.navigation.*
 import com.example.android_jetpack_compose.*
+import com.example.android_jetpack_compose.data.login.*
 import com.example.android_jetpack_compose.ui.dashboard.*
 import com.example.android_jetpack_compose.ui.dashboard.view.*
 import com.example.android_jetpack_compose.ui.view.*
+import kotlinx.coroutines.*
+import kotlin.coroutines.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingView(navController: NavController) {
+    val composableScope = rememberCoroutineScope()
+
     Scaffold(
         topBar = {
             AppBar(
@@ -52,6 +57,20 @@ fun SettingView(navController: NavController) {
                 item {
                     SettingCard(title = "Schedule Remind Enter Data", onClick = {
                         navController.navigate(SettingRemindEnterDailyExpense.route)
+                    })
+                }
+                item {
+                    HeightBox(height = 16.0)
+                }
+                item {
+                    SettingCard(title = "Logout", onClick = {
+                        val logoutRepository: AuthRepository = AuthRepositoryImpl()
+                        composableScope.launch {
+                            logoutRepository.logout()
+                            navController.navigate(Login.route) {
+                                popUpTo(0)
+                            }
+                        }
                     })
                 }
             }

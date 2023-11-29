@@ -15,6 +15,10 @@ interface BottomNavigationItem {
 /**
  * App navigation destinations
  */
+object Login : AppDestination {
+    override val route = "login"
+}
+
 object Main : AppDestination {
     override val route = "main"
 }

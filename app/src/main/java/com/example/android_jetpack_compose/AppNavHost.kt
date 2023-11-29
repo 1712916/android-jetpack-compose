@@ -11,6 +11,7 @@ import com.example.android_jetpack_compose.ui.daily_expense.view.*
 import com.example.android_jetpack_compose.ui.daily_expense.view_model.*
 import com.example.android_jetpack_compose.ui.dashboard.view.*
 import com.example.android_jetpack_compose.ui.expense.view.*
+import com.example.android_jetpack_compose.ui.login.view.*
 import com.example.android_jetpack_compose.ui.main_screen.*
 import com.example.android_jetpack_compose.ui.method.view.*
 import com.example.android_jetpack_compose.ui.setting_budget.*
@@ -27,9 +28,12 @@ fun AppNavHost(
 ) {
     NavHost(
         navController,
-        startDestination = Main.route,
+        startDestination = Login.route,
         modifier = modifier,
     ) {
+        composable(Login.route) {
+            LoginPage(navController)
+        }
         composable(Main.route) {
             MainView(navController)
         }

@@ -1,8 +1,8 @@
-package com.example.android_jetpack_compose.data.user
+package com.example.android_jetpack_compose.entity
 
-class User(val email: String) {}
+data class User(val email: String)
 class AppUser private constructor() {
-    private var user: User? = User(email = "smile.vinhnt@gmail.com")
+    private var user: User? = null
 
     private object Holder {
         val INSTANCE = AppUser()
@@ -17,5 +17,13 @@ class AppUser private constructor() {
 
     fun getEmail(): String {
         return user!!.email
+    }
+
+    fun setUser(user: User) {
+        this.user = user
+    }
+
+    fun clear() {
+        user = null
     }
 }
