@@ -42,7 +42,8 @@ class AuthRepositoryImpl : AuthRepository() {
 
             Result.success(User(email))
         } catch (e: Exception) {
-            Result.failure(Exception("Register failure! Please check your email or password!"))
+            Result.failure(e)
+            //    Result.failure(Exception("Register failure! Please check your email or password!"))
         }
     }
 

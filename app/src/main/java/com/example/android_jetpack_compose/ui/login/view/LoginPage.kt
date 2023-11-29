@@ -136,7 +136,9 @@ fun LoginPage(navController: NavController, viewModel: LoginViewModel = viewMode
                         "Register now!",
                         modifier = Modifier
                             .clickable {
-
+                                navController.navigate(Register.route) {
+                                    popUpTo(0)
+                                }
                             },
                         style = textTheme.labelMedium.copy(
                             color = colorScheme.primary

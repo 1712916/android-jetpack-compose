@@ -19,6 +19,10 @@ object Login : AppDestination {
     override val route = "login"
 }
 
+object Register : AppDestination {
+    override val route = "register"
+}
+
 object ForgotPassword : AppDestination {
     override val route = "forgot-password"
 }

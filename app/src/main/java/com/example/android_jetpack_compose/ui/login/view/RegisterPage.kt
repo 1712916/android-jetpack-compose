@@ -51,71 +51,73 @@ fun RegisterPage(navController: NavController, viewModel: RegisterViewModel = vi
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text("Login")
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+
+                ) {
+                Text(
+                    "Register",
+                    style = textTheme.displayMedium
+                )
                 Box {
                     HeightBox(height = 100.0)
                     InvalidMessageView(errorMessageState)
                 }
 
-                Text("Email")
-                TextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .onKeyEvent {
-                            if (it.nativeKeyEvent.keyCode == NativeKeyEvent.KEYCODE_ENTER) {
-                                focusManager.moveFocus(FocusDirection.Next)
-                                true
-                            }
-                            false
-                        },
-                    value = emailState.text,
-                    isError = !emailState.invalidMessage.isNullOrEmpty(),
-                    singleLine = true,
+                InputFieldView(
+                    title = "Email",
+                    text = emailState.text,
                     onValueChange = {
                         viewModel.setEmail(it)
+                    },
+                    message = emailState.invalidMessage,
+                    onKeyEvent = {
+                        if (it.nativeKeyEvent.keyCode == NativeKeyEvent.KEYCODE_ENTER) {
+                            focusManager.moveFocus(FocusDirection.Next)
+
+                        }
+                        false
                     },
                     keyboardActions = KeyboardActions(
                         onDone = { focusManager.moveFocus(FocusDirection.Next) }
                     ),
                 )
-                InvalidMessageView(emailState.invalidMessage)
-                Text("Password")
-                TextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .onKeyEvent {
-                            if (it.nativeKeyEvent.keyCode == NativeKeyEvent.KEYCODE_ENTER) {
-                                focusManager.clearFocus(true)
-                                viewModel.onLogin()
-                            }
-                            false
-                        },
-                    value = passwordState.text,
-                    isError = !passwordState.invalidMessage.isNullOrEmpty(),
-                    singleLine = true,
+                InputFieldView(
+                    title = "Password",
+                    text = passwordState.text,
                     onValueChange = {
                         viewModel.setPassword(it)
                     },
+                    message = passwordState.invalidMessage,
+                    onKeyEvent = {
+                        if (it.nativeKeyEvent.keyCode == NativeKeyEvent.KEYCODE_ENTER) {
+                            focusManager.clearFocus(true)
+                            viewModel.onLogin()
+                        }
+                        false
+                    },
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            focusManager.clearFocus(true)
+                            viewModel.onLogin()
+                        }
+                    ),
+                    isVisibleText = false,
+                    toggleVisibleText = true,
                 )
-                InvalidMessageView(passwordState.invalidMessage)
-                Text("Confirm Password")
-                TextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .onKeyEvent {
-                            if (it.nativeKeyEvent.keyCode == NativeKeyEvent.KEYCODE_ENTER) {
-                                focusManager.clearFocus(true)
-                                viewModel.onLogin()
-                            }
-                            false
-                        },
-                    value = confirmPasswordState.text,
-                    isError = !confirmPasswordState.invalidMessage.isNullOrEmpty(),
-                    singleLine = true,
+                InputFieldView(
+                    title = "Confirm Password",
+                    text = confirmPasswordState.text,
                     onValueChange = {
                         viewModel.setConfirmPassword(it)
+                    },
+                    message = confirmPasswordState.invalidMessage,
+                    onKeyEvent = {
+                        if (it.nativeKeyEvent.keyCode == NativeKeyEvent.KEYCODE_ENTER) {
+                            focusManager.clearFocus(true)
+                            viewModel.onRegister()
+                        }
+                        false
                     },
                     keyboardActions = KeyboardActions(
                         onDone = {
@@ -123,15 +125,32 @@ fun RegisterPage(navController: NavController, viewModel: RegisterViewModel = vi
                             viewModel.onRegister()
                         }
                     ),
+                    isVisibleText = false,
+                    toggleVisibleText = true,
                 )
-                InvalidMessageView(confirmPasswordState.invalidMessage)
                 HeightBox(height = 20.0)
                 LoadingButton(
                     isLoading = loadingState,
                     onClick = {
-                        viewModel.onLogin()
+                        viewModel.onRegister()
                     }) {
                     Text("Register")
+                }
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    Text(
+                        "Login now!",
+                        modifier = Modifier
+                            .clickable {
+                                navController.navigate(Login.route) {
+                                    popUpTo(0)
+                                }
+                            },
+                        style = textTheme.labelMedium.copy(
+                            color = colorScheme.primary
+                        )
+                    )
                 }
             }
         }
