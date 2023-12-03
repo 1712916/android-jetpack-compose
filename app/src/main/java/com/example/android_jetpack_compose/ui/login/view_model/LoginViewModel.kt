@@ -2,12 +2,14 @@ package com.example.android_jetpack_compose.ui.login.view_model
 
 import androidx.lifecycle.*
 import com.example.android_jetpack_compose.data.login.*
+import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.util.*
 import com.example.android_jetpack_compose.util.text_field.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
-open class LoginViewModel : BaseViewModel() {
+open class
+LoginViewModel : BaseViewModel() {
     val repository: AuthRepository = AuthRepositoryImpl()
 
     private val _emailStateFlow = MutableStateFlow(TextFieldState())
@@ -15,12 +17,10 @@ open class LoginViewModel : BaseViewModel() {
     val _loginEvent = MutableSharedFlow<LoginEvent>()
     val _errorMessageStateFlow = MutableStateFlow<String?>(null)
 
-
     val emailStateFlow = _emailStateFlow.asStateFlow()
     val passwordStateFlow = _passwordStateFlow.asStateFlow()
     val loginEvent = _loginEvent.asSharedFlow()
     val errorMessageStateFlow = _errorMessageStateFlow.asStateFlow()
-
 
     private val emailValidator: TextValidator<TextFieldState> = EmailValidator()
     val passwordValidator: TextValidator<TextFieldState> = PasswordValidator()
@@ -72,6 +72,7 @@ open class LoginViewModel : BaseViewModel() {
             repository.login(
                 _emailStateFlow.value.text.trim(), _passwordStateFlow.value.text,
             ).onSuccess {
+                AppUser.getInstance().setUser(User(_emailStateFlow.value.text.trim()))
                 _loginEvent.emit(LoginEvent.Success)
             }.onFailure {
                 emitToast(FailureToastMessage(it.message ?: "Login Failed"))
@@ -79,5 +80,9 @@ open class LoginViewModel : BaseViewModel() {
             }
             _loadingStateFlow.emit(false)
         }
+    }
+
+    fun isLogin(): Boolean {
+        return AppUser.getInstance().isLogin()
     }
 }

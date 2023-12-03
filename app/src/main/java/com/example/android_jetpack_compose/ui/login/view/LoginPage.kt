@@ -28,21 +28,31 @@ fun LoginPagePreview() {
 }
 @Composable
 fun LoginPage(navController: NavController, viewModel: LoginViewModel = viewModel()) {
+    val context = LocalContext.current
     val emailState by viewModel.emailStateFlow.collectAsState()
     val passwordState by viewModel.passwordStateFlow.collectAsState()
     val errorMessageState by viewModel.errorMessageStateFlow.collectAsState()
     val loadingState by viewModel.loadingStateFlow.collectAsState()
-    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val colorScheme = MaterialTheme.colorScheme
     val textTheme = MaterialTheme.typography
 
+    fun gotoMainScreen() {
+        navController.navigate(Main.route) {
+            popUpTo(0)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        if (viewModel.isLogin()) {
+            gotoMainScreen()
+        }
+    }
+
     LaunchedEffect(Unit) {
         viewModel.loginEvent.collect {
             when (it) {
-                LoginEvent.Success -> navController.navigate(Main.route) {
-                    popUpTo(0)
-                }
+                LoginEvent.Success -> gotoMainScreen()
             }
         }
     }

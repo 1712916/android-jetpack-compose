@@ -1,6 +1,7 @@
 package com.example.android_jetpack_compose.ui.login.view_model
 
 import androidx.lifecycle.*
+import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.util.*
 import com.example.android_jetpack_compose.util.text_field.*
 import kotlinx.coroutines.*
@@ -48,6 +49,7 @@ class RegisterViewModel : LoginViewModel() {
                 emailStateFlow.value.text.trim(), passwordStateFlow.value.text,
             ).onSuccess {
                 _loginEvent.emit(LoginEvent.Success)
+                AppUser.getInstance().setUser(User(emailStateFlow.value.text.trim()))
             }.onFailure {
                 emitToast(FailureToastMessage(it.message ?: "Register Failed"))
                 _errorMessageStateFlow.emit(it.message ?: "Register Failed")

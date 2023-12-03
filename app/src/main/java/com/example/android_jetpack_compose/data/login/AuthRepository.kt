@@ -23,8 +23,6 @@ class AuthRepositoryImpl : AuthRepository() {
                 throw Exception("Login failed")
             }
 
-            AppUser.getInstance().setUser(User(email))
-
             Result.success(User(email))
         } catch (e: Exception) {
             Result.failure(Exception("Login failure! Please check your email or password!"))
@@ -38,8 +36,6 @@ class AuthRepositoryImpl : AuthRepository() {
                 throw Exception("Register failed")
             }
 
-            AppUser.getInstance().setUser(User(email))
-
             Result.success(User(email))
         } catch (e: Exception) {
             Result.failure(e)
@@ -49,7 +45,6 @@ class AuthRepositoryImpl : AuthRepository() {
 
     override suspend fun logout() {
         auth.signOut()
-        AppUser.getInstance().clear()
     }
 
     override suspend fun onRequestNewPassword(email: String): Result<Any> {

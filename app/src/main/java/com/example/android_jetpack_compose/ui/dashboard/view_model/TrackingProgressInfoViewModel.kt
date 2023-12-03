@@ -1,14 +1,12 @@
 package com.example.android_jetpack_compose.ui.dashboard.view_model
 
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.lifecycle.*
 import com.example.android_jetpack_compose.data.dashboard.*
 import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.util.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import java.util.*
 
 class WeekTrackerInfoViewModel : ViewModel() {
@@ -21,7 +19,7 @@ class WeekTrackerInfoViewModel : ViewModel() {
 
     init {
         _weekTrackerInfoState.value = WeekTrackerInfoModel(
-            weekTackers = WeekByDate(Date()).getWeekDates().map {
+            weekTackers = GetWeekDate(Date()).getDates().map {
                 WeekTrackerModel(
                     date = it,
                     dateSpend = 0,

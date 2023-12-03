@@ -10,7 +10,7 @@ abstract class WeekExpenseRepository(val date: Date) : ProgressExpenseRepository
 class WeekExpenseRepositoryImpl(date: Date) : WeekExpenseRepository(date) {
     private val budgetRepository: BudgetRepository = BudgetRepositoryImpl()
     override suspend fun getDateExpenses(): List<DateExpense> {
-        val days = WeekByDate(date).getWeekDates()
+        val days = GetWeekDate(date).getDates()
         val getDateExpenseRepository: GetDateExpenseRepository = GetDateExpenseRepositoryImpl()
         val deferredResults: List<Deferred<DateExpense>> = days.map { day ->
             // Use async to execute each function concurrently

@@ -17,6 +17,7 @@ import androidx.navigation.*
 import androidx.navigation.compose.*
 import com.example.android_jetpack_compose.data.category.*
 import com.example.android_jetpack_compose.data.method.*
+import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.ui.setting_remind_input.view.*
 import com.example.android_jetpack_compose.ui.theme.*
 import com.example.android_jetpack_compose.util.*
@@ -27,6 +28,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val route: String? = intent.getStringExtra("route")
         InitAppRoute.instance.setInitRoute(route)
+
+        AppUser.getInstance().preferencesManager =
+            EncryptedSharedPreferencesManager(context = this)
         setContent {
             val navController = rememberNavController()
             AndroidjetpackcomposeTheme {

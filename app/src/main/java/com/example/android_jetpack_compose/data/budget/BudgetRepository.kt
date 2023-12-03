@@ -1,7 +1,6 @@
 package com.example.android_jetpack_compose.data.budget
 
 import com.example.android_jetpack_compose.data.*
-import com.example.android_jetpack_compose.data.user.*
 import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.firebase_util.*
 import com.example.android_jetpack_compose.ui.setting_budget.view_model.*

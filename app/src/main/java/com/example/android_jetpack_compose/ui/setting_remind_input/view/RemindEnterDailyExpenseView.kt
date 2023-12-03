@@ -82,7 +82,7 @@ class AlarmSchedulerImpl(
 @Composable
 fun RemindEnterDailyExpenseView(navController: NavController) {
     val context = LocalContext.current
-    val preferencesManager = remember { PreferencesManager(context) }
+    val preferencesManager = remember { SharedPreferencesManager(context) }
     val data = preferencesManager.getData(scheduleKey, "0-0")
     val hour = data.toString().split("-").first().toInt()
     val minute = data.toString().split("-").last().toInt()

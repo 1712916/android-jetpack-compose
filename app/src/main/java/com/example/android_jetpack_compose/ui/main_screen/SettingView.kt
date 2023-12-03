@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.*
 import androidx.navigation.*
 import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.data.login.*
+import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.ui.dashboard.*
 import com.example.android_jetpack_compose.ui.dashboard.view.*
 import com.example.android_jetpack_compose.ui.view.*
@@ -67,6 +68,7 @@ fun SettingView(navController: NavController) {
                         val logoutRepository: AuthRepository = AuthRepositoryImpl()
                         composableScope.launch {
                             logoutRepository.logout()
+                            AppUser.getInstance().clear()
                             navController.navigate(Login.route) {
                                 popUpTo(0)
                             }

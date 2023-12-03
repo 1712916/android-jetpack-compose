@@ -2,7 +2,6 @@ package com.example.android_jetpack_compose.data.expense
 
 import androidx.lifecycle.*
 import com.example.android_jetpack_compose.data.*
-import com.example.android_jetpack_compose.data.user.*
 import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.firebase_util.*
 import com.google.firebase.firestore.*
