@@ -1,39 +1,33 @@
 package com.example.android_jetpack_compose.ui.daily_expense.view
 
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FilterChip
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.*
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.*
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.PointerEventPass
-import androidx.compose.ui.input.pointer.PointerInputChange
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.*
+import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.platform.*
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.unit.*
+import androidx.lifecycle.viewmodel.compose.*
 import androidx.navigation.*
 import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.data.share_data.*
-import com.example.android_jetpack_compose.entity.ExpenseCategory
-import com.example.android_jetpack_compose.entity.ExpenseMethod
+import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.ui.daily_expense.view_model.*
-import com.example.android_jetpack_compose.ui.dashboard.view.*
 import com.example.android_jetpack_compose.ui.view.*
 import com.example.android_jetpack_compose.util.*
 import java.util.*
@@ -190,7 +184,7 @@ fun InputDailyExpenseView(navController: NavController, date: Date) {
                                                             contentDescription = ""
                                                         )
                                                     }, content = {
-                                                        Text(item.name)
+                                                        Text(item.value)
                                                     })
                                                     WidthBox(width = 8.0)
                                                 }
@@ -236,7 +230,7 @@ fun InputDailyExpenseView(navController: NavController, date: Date) {
                                                             contentDescription = ""
                                                         )
                                                     }, content = {
-                                                        Text(item.name)
+                                                        Text(item.value)
                                                     })
                                                     WidthBox(width = 8.0)
                                                 }

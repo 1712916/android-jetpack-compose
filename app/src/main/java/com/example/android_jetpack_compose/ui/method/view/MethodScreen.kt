@@ -87,7 +87,7 @@ fun MethodScreen(navController: NavController) {
                                             contentDescription = ""
                                         )
                                     }, label = {
-                                        Text(item.name)
+                                        Text(item.value)
                                     })
                                     WidthBox(width = 8.0)
                                 }

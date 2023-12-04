@@ -1,16 +1,11 @@
 package com.example.android_jetpack_compose.ui.daily_expense.view_model
 
-import android.content.*
-import android.widget.*
 import androidx.lifecycle.*
 import com.example.android_jetpack_compose.data.expense.*
-import com.example.android_jetpack_compose.entity.ExpenseCategory
-import com.example.android_jetpack_compose.entity.ExpenseMethod
 import com.example.android_jetpack_compose.entity.MoneyModel
 import com.example.android_jetpack_compose.util.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import java.security.*
 import java.util.*
 
 open class InputDailyExpenseViewModel(date: Date) :
@@ -23,8 +18,8 @@ open class InputDailyExpenseViewModel(date: Date) :
             val model = MoneyModel(
                 id = "",
                 money = it.money!!.toLong(),
-                expenseMethod = it.method!!,
-                expenseCategory = it.category!!,
+                method = it.method!!,
+                category = it.category!!,
                 note = it.note,
                 createDate = Date(),
                 updateDate = Date()
@@ -66,8 +61,8 @@ class UpdateDailyExpenseViewModel(date: Date, id: String?) :
                         currentState.copy(
                             money = currentExpense!!.money.toString(),
                             note = currentExpense!!.note,
-                            method = currentExpense!!.expenseMethod,
-                            category = currentExpense!!.expenseCategory,
+                            method = currentExpense!!.method,
+                            category = currentExpense!!.category,
                         )
                     }
                 }
@@ -86,8 +81,8 @@ class UpdateDailyExpenseViewModel(date: Date, id: String?) :
             }
             val model = currentExpense!!.copy(
                 money = it.money!!.toLong(),
-                expenseMethod = it.method!!,
-                expenseCategory = it.category!!,
+                method = it.method!!,
+                category = it.category!!,
                 note = it.note,
                 updateDate = Date()
             )

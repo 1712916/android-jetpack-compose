@@ -27,7 +27,7 @@ class ChartRepository(val date: Date) : ListRepository<MoneyModel> {
 
     suspend fun getCategories(): Map<String, Long> {
         val list = getList().getOrDefault(listOf())
-        return list.groupBy { it.expenseCategory?.name ?: "" }
+        return list.groupBy { it.category?.value ?: "" }
             .mapValues { it -> it.value.map { it.money } }
             .mapValues { it.value.sum() }
     }

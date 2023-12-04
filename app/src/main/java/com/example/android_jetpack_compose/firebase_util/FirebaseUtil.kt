@@ -1,15 +1,22 @@
 package com.example.android_jetpack_compose.firebase_util
 
-import com.example.android_jetpack_compose.entity.ExpenseMethod
+import com.example.android_jetpack_compose.entity.*
 import com.google.firebase.firestore.*
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.tasks.await
-import kotlinx.serialization.json.Json
+import com.google.firebase.firestore.ktx.*
+import com.google.firebase.ktx.*
+import kotlinx.coroutines.tasks.*
+import kotlinx.serialization.json.*
 
 open interface FirebaseUtil {
     val fireStore: FirebaseFirestore
         get() = Firebase.firestore
+}
+
+open interface AppAuthFirebaseUtil : FirebaseUtil {
+    val authCollection: CollectionReference
+        get() = fireStore.collection(AppUser.getInstance().getEmail())
+
+    val collection: CollectionReference
 }
 
 interface GetData<T> {

@@ -19,8 +19,8 @@ class SettingDefaultInputExpenseViewModel :
             val model = MoneyModel(
                 id = "",
                 money = it.money!!.toLong(),
-                expenseMethod = it.method!!,
-                expenseCategory = it.category!!,
+                method = it.method!!,
+                category = it.category!!,
                 note = it.note,
                 createDate = Date(),
                 updateDate = Date()

@@ -2,18 +2,18 @@ package com.example.android_jetpack_compose.data.method
 
 import androidx.lifecycle.*
 import com.example.android_jetpack_compose.data.*
-import com.example.android_jetpack_compose.data.category.*
 import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.firebase_util.*
 import com.google.firebase.firestore.*
 import kotlinx.coroutines.tasks.*
 
-abstract class MethodRepository : CRUDRepository<ExpenseMethod, Int>,
+abstract class MethodRepository : CRUDRepository<ExpenseMethod, String>,
     LiveDataList<ExpenseMethod>
 
-class MethodRepositoryImpl : MethodRepository(), FirebaseUtil {
-    private var collection: CollectionReference =
-        fireStore.collection("method")
+class MethodRepositoryImpl : MethodRepository(), AppAuthFirebaseUtil {
+    override var collection: CollectionReference =
+        authCollection.document("method")
+            .collection("method_list")
 
     override suspend fun create(item: ExpenseMethod): Result<ExpenseMethod> {
         try {
@@ -25,15 +25,12 @@ class MethodRepositoryImpl : MethodRepository(), FirebaseUtil {
         }
     }
 
-    override suspend fun read(id: Int): Result<ExpenseMethod?> {
+    override suspend fun read(id: String): Result<ExpenseMethod?> {
         val rs = collection.whereEqualTo("id", id).limit(1).get().await()
 
         if (rs != null && !rs.isEmpty) {
             return Result.success(
-                ExpenseMethod(
-                    id = rs.first().data["id"] as Int,
-                    name = rs.first().data["name"] as String,
-                ),
+                rs.first().toObject()
             )
         }
 
@@ -41,7 +38,7 @@ class MethodRepositoryImpl : MethodRepository(), FirebaseUtil {
 
     }
 
-    override suspend fun update(id: Int, newItem: ExpenseMethod): Result<ExpenseMethod> {
+    override suspend fun update(id: String, newItem: ExpenseMethod): Result<ExpenseMethod> {
         val rs = collection.whereEqualTo("id", id).limit(1).get().await()
 
 
@@ -56,13 +53,10 @@ class MethodRepositoryImpl : MethodRepository(), FirebaseUtil {
         return Result.failure(exception = Exception("Not found item"))
     }
 
-    override suspend fun delete(id: Int): Result<ExpenseMethod?> {
+    override suspend fun delete(id: String): Result<ExpenseMethod?> {
         val rs = collection.whereEqualTo("id", id).limit(1).get().await()
         if (rs != null && !rs.isEmpty) {
-            val item = ExpenseMethod(
-                id = rs.first().data["id"] as Int,
-                name = rs.first().data["name"] as String,
-            )
+            val item: ExpenseMethod = rs.first().toObject()
             rs.first().reference.delete()
 
             return Result.success(
@@ -94,13 +88,8 @@ class ListMethodLiveData(private val collectionReference: CollectionReference) :
             val categories: MutableList<ExpenseMethod> = mutableListOf()
 
             snapshot.forEach {
-                val data = it.data
-
                 categories.add(
-                    ExpenseMethod(
-                        id = (data.getValue("id") as Long).toInt(),
-                        name = data.getValue("name") as String,
-                    )
+                    it.toObject()
                 )
             }
 

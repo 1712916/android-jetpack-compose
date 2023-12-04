@@ -25,7 +25,6 @@ import com.example.android_jetpack_compose.util.*
 import java.text.*
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
 fun CategoryScreen(navController: NavController) {
     val viewModel: CategoryViewModel = viewModel()
@@ -93,7 +92,7 @@ fun CategoryScreen(navController: NavController) {
                                                 contentDescription = ""
                                             )
                                         }, label = {
-                                            Text(item.name)
+                                            Text(item.value)
                                         },
                                             trailingIcon = {
                                                 IconButton(onClick = {
@@ -118,7 +117,7 @@ fun CategoryScreen(navController: NavController) {
         if (openAlertDialog.value)
             AlertDialogExample(
                 dialogTitle = "Remove Category",
-                dialogText = "Are you want to remove ${selectedCategory.value!!.name}",
+                dialogText = "Are you want to remove ${selectedCategory.value!!.value}",
                 onConfirmation = {
                     openAlertDialog.value = false
                     viewModel.deleteCategory(selectedCategory.value!!)

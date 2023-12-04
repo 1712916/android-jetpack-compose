@@ -1,19 +1,14 @@
 package com.example.android_jetpack_compose.data.expense
 
 import androidx.lifecycle.*
-import com.example.android_jetpack_compose.data.*
 import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.firebase_util.*
 import com.google.firebase.firestore.*
 import kotlinx.coroutines.tasks.*
-import java.text.*
-import java.util.*
 
-class SettingDefaultExpenseRepositoryImpl : DailyExpenseRepository(), FirebaseUtil {
-    private var collection: CollectionReference =
-        fireStore.collection(AppUser.getInstance().getEmail())
-            .document("setting")
-            .collection("default_expense")
+class SettingDefaultExpenseRepositoryImpl : DailyExpenseRepository(), AppAuthFirebaseUtil {
+    override val collection: CollectionReference
+        get() = authCollection.document("setting").collection("default_expense")
 
     override suspend fun create(item: MoneyModel): Result<MoneyModel> {
         val ref = collection.document()
@@ -31,26 +26,8 @@ class SettingDefaultExpenseRepositoryImpl : DailyExpenseRepository(), FirebaseUt
         if (it == null || !it.exists()) {
             throw Exception("Unable to get expense by id")
         }
-        val data = it.data!!
 
-        return Result.success(
-            MoneyModel(
-                id = data.getValue("id") as String,
-                note = data.getValue("note") as String?,
-                expenseCategory = ExpenseCategory(
-                    id = ((data.getValue("expenseCategory") as Map<*, *>)["id"] as Long).toInt(),
-                    name = (data.getValue("expenseCategory") as Map<*, *>)["name"] as String
-                ),
-                money = data.getValue("money") as Long,
-                updateDate = Date(),
-                createDate = Date(),
-                expenseMethod = ExpenseMethod(
-                    id = ((data.getValue("expenseMethod") as Map<*, *>)["id"] as Long).toInt(),
-                    name = (data.getValue("expenseMethod") as Map<*, *>)["name"] as String
-                ),
-            )
-        )
-
+        return Result.success(it.toObject())
     }
 
     override suspend fun update(id: String, newItem: MoneyModel): Result<MoneyModel> {
@@ -68,22 +45,7 @@ class SettingDefaultExpenseRepositoryImpl : DailyExpenseRepository(), FirebaseUt
         val rs = collection.whereEqualTo("id", id).limit(1).get().await()
 
         if (rs != null && !rs.isEmpty) {
-            val data = rs.first().data
-            val item = MoneyModel(
-                id = data.getValue("id") as String,
-                note = data.getValue("note") as String?,
-                expenseCategory = ExpenseCategory(
-                    id = ((data.getValue("expenseCategory") as Map<*, *>)["id"] as Long).toInt(),
-                    name = (data.getValue("expenseCategory") as Map<*, *>)["name"] as String
-                ),
-                money = data.getValue("money") as Long,
-                updateDate = Date(),
-                createDate = Date(),
-                expenseMethod = ExpenseMethod(
-                    id = ((data.getValue("expenseMethod") as Map<*, *>)["id"] as Long).toInt(),
-                    name = (data.getValue("expenseMethod") as Map<*, *>)["name"] as String
-                ),
-            )
+            val item: MoneyModel = rs.first().toObject()
 
             rs.first().reference.delete().await()
 
@@ -91,8 +53,6 @@ class SettingDefaultExpenseRepositoryImpl : DailyExpenseRepository(), FirebaseUt
                 item
             )
         }
-
-
 
         return Result.failure(Exception("Not found expense"))
     }
@@ -110,30 +70,15 @@ class SettingDefaultExpenseRepositoryImpl : DailyExpenseRepository(), FirebaseUt
             val list = mutableListOf<MoneyModel>()
 
             response.documents.forEach { document ->
-                val data = document.data!!
                 list.add(
-                    MoneyModel(
-                        id = data.getValue("id") as String,
-                        note = data.getValue("note") as String?,
-                        money = data.getValue("money") as Long,
-                        updateDate = document.getTimestamp("updateDate")?.toDate(),
-                        createDate = document.getTimestamp("createDate")?.toDate(),
-                        expenseCategory = ExpenseCategory(
-                            id = ((data.getValue("expenseCategory") as Map<*, *>)["id"] as Long).toInt(),
-                            name = (data.getValue("expenseCategory") as Map<*, *>)["name"] as String
-                        ),
-                        expenseMethod = ExpenseMethod(
-                            id = ((data.getValue("expenseMethod") as Map<*, *>)["id"] as Long).toInt(),
-                            name = (data.getValue("expenseMethod") as Map<*, *>)["name"] as String
-                        ),
-                    )
+                    document.toObject()!!
                 )
             }
 
             return Result.success(list)
         }
 
-
         return Result.success(emptyList())
     }
+
 }

@@ -2,7 +2,6 @@ package com.example.android_jetpack_compose.ui.expense.view_model
 
 import androidx.lifecycle.*
 import com.example.android_jetpack_compose.data.category.*
-import com.example.android_jetpack_compose.data.method.*
 import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.util.*
 import kotlinx.coroutines.*
@@ -26,8 +25,7 @@ class CategoryViewModel : BaseViewModel() {
         viewModelScope.launch {
             categoryRepository.create(
                 ExpenseCategory(
-                    name = _inputState.value,
-                    id = -1,
+                    value = _inputState.value,
                 )
             ).onSuccess {
                 _inputState.value = ""
@@ -44,7 +42,7 @@ class CategoryViewModel : BaseViewModel() {
             categoryRepository.delete(
                 selectedCategory.id
             ).onSuccess {
-                 emitToast(SuccessToastMessage("Delete category successfully"))
+                emitToast(SuccessToastMessage("Delete category successfully"))
             }.onFailure {
                 emitToast(FailureToastMessage("Delete category failed"))
             }

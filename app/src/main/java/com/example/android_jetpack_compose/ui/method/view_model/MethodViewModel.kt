@@ -1,7 +1,6 @@
 package com.example.android_jetpack_compose.ui.method.view_model
 
 import androidx.lifecycle.*
-import com.example.android_jetpack_compose.data.category.*
 import com.example.android_jetpack_compose.data.method.*
 import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.util.*
@@ -20,8 +19,8 @@ class MethodViewModel : BaseViewModel() {
         viewModelScope.launch {
             methodRepository.create(
                 ExpenseMethod(
-                    name = _inputState.value,
-                    id = -1,
+                    value = _inputState.value,
+                    id = "",
                 )
             ).onSuccess {
                 _inputState.value = ""

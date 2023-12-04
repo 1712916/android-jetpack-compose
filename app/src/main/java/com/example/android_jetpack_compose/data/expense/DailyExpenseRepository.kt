@@ -1,22 +1,22 @@
 package com.example.android_jetpack_compose.data.expense
 
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.*
 import com.example.android_jetpack_compose.data.*
 import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.firebase_util.*
-import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.*
 import kotlinx.coroutines.tasks.*
 import java.text.*
-import java.util.Date
+import java.util.*
 
 abstract class DailyExpenseRepository() :
     CRUDRepository<MoneyModel, String>,
     LiveDataList<MoneyModel>,
     ListRepository<MoneyModel>
 
-class InputDailyExpenseRepositoryImpl(date: Date) : DailyExpenseRepository(), FirebaseUtil {
-    private var collection: CollectionReference =
-        fireStore.collection(AppUser.getInstance().getEmail())
+class InputDailyExpenseRepositoryImpl(date: Date) : DailyExpenseRepository(), AppAuthFirebaseUtil {
+    override val collection: CollectionReference =
+        authCollection
             .document(SimpleDateFormat("MM-yyyy").format(date))
             .collection(SimpleDateFormat("dd-MM-yyyy").format(date))
 
@@ -33,23 +33,8 @@ class InputDailyExpenseRepositoryImpl(date: Date) : DailyExpenseRepository(), Fi
             val list = mutableListOf<MoneyModel>()
 
             response.documents.forEach { document ->
-                val data = document.data!!
                 list.add(
-                    MoneyModel(
-                        id = data.getValue("id") as String,
-                        note = data.getValue("note") as String?,
-                        money = data.getValue("money") as Long,
-                        updateDate = document.getTimestamp("updateDate")?.toDate(),
-                        createDate = document.getTimestamp("createDate")?.toDate(),
-                        expenseCategory = ExpenseCategory(
-                            id = ((data.getValue("expenseCategory") as Map<*, *>)["id"] as Long).toInt(),
-                            name = (data.getValue("expenseCategory") as Map<*, *>)["name"] as String
-                        ),
-                        expenseMethod = ExpenseMethod(
-                            id = ((data.getValue("expenseMethod") as Map<*, *>)["id"] as Long).toInt(),
-                            name = (data.getValue("expenseMethod") as Map<*, *>)["name"] as String
-                        ),
-                    )
+                    document.toObject()!!
                 )
             }
 
@@ -76,24 +61,8 @@ class InputDailyExpenseRepositoryImpl(date: Date) : DailyExpenseRepository(), Fi
         if (it == null || !it.exists()) {
             throw Exception("Unable to get expense by id")
         }
-        val data = it.data!!
-
         return Result.success(
-            MoneyModel(
-                id = data.getValue("id") as String,
-                note = data.getValue("note") as String?,
-                expenseCategory = ExpenseCategory(
-                    id = ((data.getValue("expenseCategory") as Map<*, *>)["id"] as Long).toInt(),
-                    name = (data.getValue("expenseCategory") as Map<*, *>)["name"] as String
-                ),
-                money = data.getValue("money") as Long,
-                updateDate = Date(),
-                createDate = Date(),
-                expenseMethod = ExpenseMethod(
-                    id = ((data.getValue("expenseMethod") as Map<*, *>)["id"] as Long).toInt(),
-                    name = (data.getValue("expenseMethod") as Map<*, *>)["name"] as String
-                ),
-            )
+            it.toObject()!!
         )
 
     }
@@ -113,22 +82,7 @@ class InputDailyExpenseRepositoryImpl(date: Date) : DailyExpenseRepository(), Fi
         val rs = collection.whereEqualTo("id", id).limit(1).get().await()
 
         if (rs != null && !rs.isEmpty) {
-            val data = rs.first().data
-            val item = MoneyModel(
-                id = data.getValue("id") as String,
-                note = data.getValue("note") as String?,
-                expenseCategory = ExpenseCategory(
-                    id = ((data.getValue("expenseCategory") as Map<*, *>)["id"] as Long).toInt(),
-                    name = (data.getValue("expenseCategory") as Map<*, *>)["name"] as String
-                ),
-                money = data.getValue("money") as Long,
-                updateDate = Date(),
-                createDate = Date(),
-                expenseMethod = ExpenseMethod(
-                    id = ((data.getValue("expenseMethod") as Map<*, *>)["id"] as Long).toInt(),
-                    name = (data.getValue("expenseMethod") as Map<*, *>)["name"] as String
-                ),
-            )
+            val item: MoneyModel = rs.first().toObject()
 
             rs.first().reference.delete().await()
 

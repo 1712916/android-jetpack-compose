@@ -163,7 +163,7 @@ fun InputDefaultDailyExpenseView(navController: NavController) {
                                                             contentDescription = ""
                                                         )
                                                     }, content = {
-                                                        Text(item.name)
+                                                        Text(item.value)
                                                     })
                                                     WidthBox(width = 8.0)
                                                 }
@@ -209,7 +209,7 @@ fun InputDefaultDailyExpenseView(navController: NavController) {
                                                             contentDescription = ""
                                                         )
                                                     }, content = {
-                                                        Text(item.name)
+                                                        Text(item.value)
                                                     })
                                                     WidthBox(width = 8.0)
                                                 }

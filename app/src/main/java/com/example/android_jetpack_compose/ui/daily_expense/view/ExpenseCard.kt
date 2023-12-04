@@ -7,7 +7,6 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.graphics.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import com.example.android_jetpack_compose.entity.*
@@ -33,7 +32,7 @@ fun ExpenseCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = (expense.expenseCategory?.name ?: "").uppercase(Locale.ROOT),
+                    text = (expense.category?.value ?: "").uppercase(Locale.ROOT),
                     style = MaterialTheme.typography.bodySmall
                 )
                 Spacer(modifier = Modifier.weight(1f))
@@ -71,8 +70,8 @@ fun ExpenseCardPreview() {
     ExpenseCard(
         expense = MoneyModel(
             id = "",
-            expenseMethod = ExpenseMethod(id = 1, name = ""),
-            expenseCategory = ExpenseCategory(id = 1, name = "Ăn sáng"),
+            method = ExpenseMethod("", ""),
+            category = ExpenseCategory(id = "1", value = "Ăn sáng"),
             money = 35000,
             note = "",
             createDate = Date(),
