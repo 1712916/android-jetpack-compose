@@ -28,10 +28,10 @@ class CategoryRepositoryImpl : CategoryRepository(), AppAuthFirebaseUtil {
     }
 
     override suspend fun read(id: String): Result<ExpenseCategory?> {
-        val rs = collection.whereEqualTo("value", id).limit(1).get().await()
+        val rs = collection.document(id).get().await()
 
-        if (rs != null && !rs.isEmpty) {
-            return Result.success(rs.first().toObject())
+        if (rs != null) {
+            return Result.success(rs.toObject())
         }
 
         return Result.failure(exception = Exception("Not found item"))
@@ -39,11 +39,11 @@ class CategoryRepositoryImpl : CategoryRepository(), AppAuthFirebaseUtil {
     }
 
     override suspend fun update(id: String, newItem: ExpenseCategory): Result<ExpenseCategory> {
-        val rs = collection.whereEqualTo("value", id).limit(1).get().await()
+        val rs = collection.document(id).get().await()
 
 
-        if (rs != null && !rs.isEmpty) {
-            rs.first().reference.set(newItem.copy(id = id)).await()
+        if (rs != null) {
+            rs.reference.set(newItem.copy(id = id)).await()
 
             return Result.success(
                 newItem.copy(id = id)
@@ -54,11 +54,11 @@ class CategoryRepositoryImpl : CategoryRepository(), AppAuthFirebaseUtil {
     }
 
     override suspend fun delete(id: String): Result<ExpenseCategory?> {
-        val rs = collection.whereEqualTo("id", id).limit(1).get().await()
-        if (rs != null && !rs.isEmpty) {
-            val item: ExpenseCategory = rs.first().toObject()
+        val rs = collection.document(id).get().await()
+        if (rs != null) {
+            val item: ExpenseCategory? = rs.toObject()
 
-            rs.first().reference.delete()
+            rs.reference.delete()
 
             return Result.success(
                 item

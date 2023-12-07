@@ -17,7 +17,9 @@ class MethodRepositoryImpl : MethodRepository(), AppAuthFirebaseUtil {
 
     override suspend fun create(item: ExpenseMethod): Result<ExpenseMethod> {
         try {
-            collection.document().set(item).await()
+            val doc = collection.document()
+
+            doc.set(item.copy(id = doc.id)).await()
 
             return Result.success(item)
         } catch (e: Exception) {
@@ -26,11 +28,11 @@ class MethodRepositoryImpl : MethodRepository(), AppAuthFirebaseUtil {
     }
 
     override suspend fun read(id: String): Result<ExpenseMethod?> {
-        val rs = collection.whereEqualTo("id", id).limit(1).get().await()
+        val rs = collection.document(id).get().await()
 
-        if (rs != null && !rs.isEmpty) {
+        if (rs != null) {
             return Result.success(
-                rs.first().toObject()
+                rs.toObject()
             )
         }
 
@@ -39,11 +41,11 @@ class MethodRepositoryImpl : MethodRepository(), AppAuthFirebaseUtil {
     }
 
     override suspend fun update(id: String, newItem: ExpenseMethod): Result<ExpenseMethod> {
-        val rs = collection.whereEqualTo("id", id).limit(1).get().await()
+        val rs = collection.document(id).get().await()
 
 
-        if (rs != null && !rs.isEmpty) {
-            rs.first().reference.set(newItem.copy(id = id)).await()
+        if (rs != null) {
+            rs.reference.set(newItem.copy(id = id)).await()
 
             return Result.success(
                 newItem.copy(id = id)
@@ -54,10 +56,12 @@ class MethodRepositoryImpl : MethodRepository(), AppAuthFirebaseUtil {
     }
 
     override suspend fun delete(id: String): Result<ExpenseMethod?> {
-        val rs = collection.whereEqualTo("id", id).limit(1).get().await()
-        if (rs != null && !rs.isEmpty) {
-            val item: ExpenseMethod = rs.first().toObject()
-            rs.first().reference.delete()
+        val rs = collection.document(id).get().await()
+
+        if (rs != null) {
+            val item: ExpenseMethod? = rs.toObject()
+
+            rs.reference.delete()
 
             return Result.success(
                 item

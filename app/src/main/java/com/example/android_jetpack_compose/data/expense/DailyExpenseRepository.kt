@@ -2,6 +2,7 @@ package com.example.android_jetpack_compose.data.expense
 
 import androidx.lifecycle.*
 import com.example.android_jetpack_compose.data.*
+import com.example.android_jetpack_compose.data.mapping_firebase_object.*
 import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.firebase_util.*
 import com.google.firebase.firestore.*
@@ -20,6 +21,9 @@ class InputDailyExpenseRepositoryImpl(date: Date) : DailyExpenseRepository(), Ap
             .document(SimpleDateFormat("MM-yyyy").format(date))
             .collection(SimpleDateFormat("dd-MM-yyyy").format(date))
 
+    private val mappingObject: MappingFirebaseObject<MoneyModel, MoneySaveObject> =
+        MappingSavingMoneyModel()
+
     override fun getLiveDataList(): LiveData<List<MoneyModel>> {
         return ListExpenseLiveData(
             collection
@@ -34,7 +38,7 @@ class InputDailyExpenseRepositoryImpl(date: Date) : DailyExpenseRepository(), Ap
 
             response.documents.forEach { document ->
                 list.add(
-                    document.toObject()!!
+                    mappingObject.getting(document)
                 )
             }
 
@@ -48,7 +52,7 @@ class InputDailyExpenseRepositoryImpl(date: Date) : DailyExpenseRepository(), Ap
     override suspend fun create(item: MoneyModel): Result<MoneyModel> {
         val ref = collection.document()
         val storageItem = item.copy(id = ref.id)
-        ref.set(storageItem).addOnSuccessListener { }.addOnFailureListener {
+        ref.set(mappingObject.saving(storageItem)).addOnSuccessListener { }.addOnFailureListener {
             throw Exception("Could not create item")
         }
 
@@ -62,7 +66,7 @@ class InputDailyExpenseRepositoryImpl(date: Date) : DailyExpenseRepository(), Ap
             throw Exception("Unable to get expense by id")
         }
         return Result.success(
-            it.toObject()!!
+            mappingObject.getting(it)
         )
 
     }
@@ -71,7 +75,7 @@ class InputDailyExpenseRepositoryImpl(date: Date) : DailyExpenseRepository(), Ap
         val ref = collection.document(id)
         val storageItem = newItem.copy(id = ref.id)
 
-        ref.set(storageItem).addOnFailureListener {
+        ref.set(storageItem.toSaveObject()).addOnFailureListener {
             throw Exception("Could not update item")
         }
 
