@@ -15,25 +15,15 @@ class MappingSavingMoneyModel : MappingFirebaseObject<MoneyModel, MoneySaveObjec
     }
 
     override suspend fun getting(sourceObject: DocumentSnapshot): MoneyModel {
-        //        val scope = CoroutineScope(Dispatchers.Default) // Use the dispatcher that fits your use case
-        //
-        //        // Launch a coroutine within the created scope
-        //        val a = scope.launch {
-        //
-        //        }
-
         return MoneyModel(
             id = sourceObject["id"].toString(),
             money = sourceObject["money"] as Long,
             note = sourceObject["note"]?.toString(),
-            category = categoryRepository.read(sourceObject["category"].toString()).getOrNull(),
-            //            category = categoryRepository.gsourceObject["category"].toString(),
-            method = methodRepository.read(sourceObject["method"].toString()).getOrNull(),
             createDate = sourceObject.getDate("createDate"),
             updateDate = sourceObject.getDate("updateDate"),
+            category = categoryRepository.read(sourceObject["category"].toString()).getOrNull(),
+            method = methodRepository.read(sourceObject["method"].toString()).getOrNull(),
         )
-
-        //        return sourceObject.toObject<MoneySaveObject>()!!.toMoneyModel()
     }
 }
 

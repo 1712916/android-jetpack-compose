@@ -28,12 +28,15 @@ class MethodRepositoryImpl : MethodRepository(), AppAuthFirebaseUtil {
     }
 
     override suspend fun read(id: String): Result<ExpenseMethod?> {
-        val rs = collection.document(id).get().await()
+        try {
+            val rs = collection.document(id).get().await()
 
-        if (rs != null) {
-            return Result.success(
-                rs.toObject()
-            )
+            if (rs != null) {
+                return Result.success(
+                    rs.toObject()
+                )
+            }
+        } catch (_: Exception) {
         }
 
         return Result.failure(exception = Exception("Not found item"))
