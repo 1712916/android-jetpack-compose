@@ -83,19 +83,16 @@ class InputDailyExpenseRepositoryImpl(date: Date) : DailyExpenseRepository(), Ap
     }
 
     override suspend fun delete(id: String): Result<MoneyModel?> {
-        val rs = collection.whereEqualTo("id", id).limit(1).get().await()
+        val rs = collection.document(id).get().await()
 
-        if (rs != null && !rs.isEmpty) {
-            val item: MoneyModel = rs.first().toObject()
-
-            rs.first().reference.delete().await()
+        if (rs != null) {
+            val item: MoneyModel = mappingObject.getting(rs)
+            rs.reference.delete().await()
 
             return Result.success(
                 item
             )
         }
-
-
 
         return Result.failure(Exception("Not found expense"))
     }
