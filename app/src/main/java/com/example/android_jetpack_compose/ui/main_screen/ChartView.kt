@@ -1,6 +1,7 @@
 package com.example.android_jetpack_compose.ui.main_screen
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -19,13 +20,13 @@ fun ChartView(navController: NavController) {
             )
         },
     ) { contentPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .padding(contentPadding)
-                .fillMaxWidth()
-                .fillMaxHeight(),
         ) {
-            MonthChart()
+            item {
+                MonthChart()
+            }
         }
     }
 }
