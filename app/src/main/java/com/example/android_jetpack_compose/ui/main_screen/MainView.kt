@@ -18,12 +18,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.vector.*
+import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.unit.*
 import androidx.navigation.*
 import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.Calendar
 import com.example.android_jetpack_compose.ui.dashboard.view.*
+import com.example.android_jetpack_compose.ui.setting_remind_input.view_model.*
 import com.example.android_jetpack_compose.ui.theme.*
 import com.example.android_jetpack_compose.util.*
 import kotlinx.coroutines.*
@@ -34,6 +36,7 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainView(navController: NavController) {
+    val context = LocalContext.current
     val pagerState = rememberPagerState(pageCount = { 4 })
     // scroll to page
     val coroutineScope = rememberCoroutineScope()
@@ -59,6 +62,24 @@ fun MainView(navController: NavController) {
             // viewModel.sendPageSelectedEvent(page)
             Log.d("Page change", "Page changed to $page")
         }
+    }
+
+    LaunchedEffect(Unit) {
+        //Retrieve the reminder time:
+
+        val preferencesManager = SharedPreferencesManager(context)
+        val data = preferencesManager.getData(scheduleKey, "0-0")
+        val hour = data.toString().split("-").first().toInt()
+        val minute = data.toString().split("-").last().toInt()
+
+        val dateTimeWithHourAndMinute = LocalDateTime.now()
+            .with(LocalTime.of(hour, minute))
+        val alarmScheduler: AlarmScheduler = AlarmSchedulerImpl(context)
+
+        AlarmItem(
+            alarmTime = dateTimeWithHourAndMinute,
+            message = "Đến giờ nhập chi tiêu rồi!"
+        ).let(alarmScheduler::schedule)
     }
 
 
