@@ -17,7 +17,7 @@ class MappingSavingMoneyModel : MappingFirebaseObject<MoneyModel, MoneySaveObjec
     override suspend fun getting(sourceObject: DocumentSnapshot): MoneyModel {
         return MoneyModel(
             id = sourceObject["id"].toString(),
-            money = sourceObject["money"] as Long,
+            money = if (sourceObject["money"] != null) sourceObject["money"] as Long else 0,
             note = sourceObject["note"]?.toString(),
             createDate = sourceObject.getDate("createDate"),
             updateDate = sourceObject.getDate("updateDate"),
