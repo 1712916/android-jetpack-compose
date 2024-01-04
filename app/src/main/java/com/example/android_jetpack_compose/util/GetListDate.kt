@@ -1,7 +1,5 @@
 package com.example.android_jetpack_compose.util
 
-import org.threeten.bp.*
-import java.text.*
 import java.util.*
 
 abstract class GetListDate(val date: Date) {
@@ -35,20 +33,42 @@ class GetWeekDate(date: Date) : GetListDate(date) {
 
 class GetMonthDate(date: Date) : GetListDate(date) {
     override fun getDates(): List<Date> {
-        val days = mutableListOf<Date>()
-        val calendar = Calendar.getInstance() // this takes current date
+        //        val days = mutableListOf<Date>()
+        //        val calendar = Calendar.getInstance() // this takes current date
+        //
+        //        calendar[Calendar.DAY_OF_MONTH] = 1
+        //
+        //        var dateFormat = SimpleDateFormat("yyyy-MM-dd").format(date)
+        //        var date = LocalDate.parse(dateFormat)
+        //        //        val date = LocalDate.of(date.year, Month.of(date.month), date.day)
+        //        val lengthOfMonth = date.lengthOfMonth()
+        //
+        //        while (days.count() < lengthOfMonth) {
+        //            days.add(calendar.time)
+        //            calendar.add(Calendar.DATE, 1);
+        //        }
+        return getAllDatesOfMonth(date.year, date.month)
+    }
 
-        calendar[Calendar.DAY_OF_MONTH] = 1
+    fun getAllDatesOfMonth(year: Int, month: Int): List<Date> {
+        val datesList = mutableListOf<Date>()
 
-        var dateFormat = SimpleDateFormat("yyyy-MM-dd").format(date)
-        var date = LocalDate.parse(dateFormat)
-        //        val date = LocalDate.of(date.year, Month.of(date.month), date.day)
-        val lengthOfMonth = date.lengthOfMonth()
-
-        while (days.count() < lengthOfMonth - 1) {
-            days.add(calendar.time)
-            calendar.add(Calendar.DATE, 1);
+        // Create a calendar instance and set it to the first day of the month
+        val calendar = Calendar.getInstance().apply {
+            set(Calendar.YEAR, year)
+            set(Calendar.MONTH, month)
+            set(Calendar.DAY_OF_MONTH, 1)
         }
-        return days
+
+        // Get the maximum day of the month
+        val lastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+
+        // Iterate through the days of the month and format each date
+        for (dayOfMonth in 1..lastDay) {
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            datesList.add(calendar.time)
+        }
+
+        return datesList
     }
 }

@@ -1,23 +1,17 @@
 package com.example.android_jetpack_compose.ui.main_screen
 
 import android.os.*
-import android.util.*
 import androidx.annotation.*
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.viewinterop.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
 import androidx.navigation.*
 import com.example.android_jetpack_compose.*
- import com.example.android_jetpack_compose.ui.view.*
+import com.example.android_jetpack_compose.ui.calendar.*
+import com.example.android_jetpack_compose.ui.view.*
 import io.github.boguszpawlowski.composecalendar.*
 import io.github.boguszpawlowski.composecalendar.selection.*
-import kotlinx.datetime.*
 import java.time.*
 import java.util.*
 
@@ -59,9 +53,10 @@ fun CalendarHistoryView(navController: NavController) {
                 .fillMaxWidth()
                 .fillMaxHeight(),
         ) {
-            SelectableCalendar(
-                calendarState = calendarState,
-            )
+            CalendarView()
+            //            SelectableCalendar(
+            //                calendarState = calendarState,
+            //            )
         }
     }
 }
