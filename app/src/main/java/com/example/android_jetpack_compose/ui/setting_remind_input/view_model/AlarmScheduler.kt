@@ -2,10 +2,11 @@ package com.example.android_jetpack_compose.ui.setting_remind_input.view_model
 
 import android.app.*
 import android.content.*
-import com.example.android_jetpack_compose.ui.setting_remind_input.view.*
+import com.example.android_jetpack_compose.ui.setting_remind_input.alarm.*
 import java.util.*
 
 const val scheduleKey: String = "scheduleKey"
+private const val requestCode = 1512
 //value: "hour-minute"
 data class AlarmItem(
     var hour: Int,
@@ -15,7 +16,7 @@ data class AlarmItem(
 
 interface AlarmScheduler {
     fun schedule(alarmItem: AlarmItem)
-    fun cancel(alarmItem: AlarmItem)
+    fun cancel()
 }
 
 class AlarmSchedulerImpl(
@@ -46,18 +47,18 @@ class AlarmSchedulerImpl(
             AlarmManager.INTERVAL_DAY,
             PendingIntent.getBroadcast(
                 context,
-                1512,
+                requestCode,
                 intent,
                 PendingIntent.FLAG_IMMUTABLE
             )
         )
     }
 
-    override fun cancel(alarmItem: AlarmItem) {
+    override fun cancel() {
         alarmManager.cancel(
             PendingIntent.getBroadcast(
                 context,
-                alarmItem.hashCode(),
+                requestCode,
                 Intent(context, AlarmReceiver::class.java),
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )

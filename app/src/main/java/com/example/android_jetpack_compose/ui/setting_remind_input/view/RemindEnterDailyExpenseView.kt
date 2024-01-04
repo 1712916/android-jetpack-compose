@@ -9,6 +9,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.platform.*
 import androidx.navigation.*
 import com.example.android_jetpack_compose.ui.setting_remind_input.view_model.*
+import com.example.android_jetpack_compose.ui.view.*
 import com.example.android_jetpack_compose.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -36,24 +37,37 @@ fun RemindEnterDailyExpenseView(navController: NavController) {
             TimePicker(state = timePickerState)
 
             Text(text = "Selected H:M = ${timePickerState.hour} : ${timePickerState.minute}")
-            Button(onClick = {
-                val alarmScheduler: AlarmScheduler = AlarmSchedulerImpl(context)
+            Row {
+                Button(onClick = {
+                    val alarmScheduler: AlarmScheduler = AlarmSchedulerImpl(context)
 
-                preferencesManager.saveData(
-                    scheduleKey,
-                    "${timePickerState.hour}-${timePickerState.minute}"
-                )
-                
-                AlarmItem(
-                    timePickerState.hour, timePickerState.minute,
-                    message = "Đến giờ nhập chi tiêu rồi!"
-                ).let(alarmScheduler::schedule)
+                    preferencesManager.saveData(
+                        scheduleKey,
+                        "${timePickerState.hour}-${timePickerState.minute}"
+                    )
 
-                ShowToastMessage("Setup remind time successfully").show(context)
+                    AlarmItem(
+                        timePickerState.hour, timePickerState.minute,
+                        message = "Đến giờ nhập chi tiêu rồi!"
+                    ).let(alarmScheduler::schedule)
 
-                navController.popBackStack()
-            }) {
-                Text(text = "Save")
+                    ShowToastMessage("Setup remind time successfully").show(context)
+
+                    navController.popBackStack()
+                }) {
+                    Text(text = "Save")
+                }
+                SizedBox(width = 8.0)
+                Button(onClick = {
+                    val alarmScheduler: AlarmScheduler = AlarmSchedulerImpl(context)
+
+                    alarmScheduler.cancel()
+
+                    ShowToastMessage("Cancel current schedule successfully").show(context)
+
+                }) {
+                    Text(text = "Cancel")
+                }
             }
         }
     }

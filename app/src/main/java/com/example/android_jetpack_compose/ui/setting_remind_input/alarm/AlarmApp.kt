@@ -1,4 +1,4 @@
-package com.example.android_jetpack_compose.ui.setting_remind_input.view
+package com.example.android_jetpack_compose.ui.setting_remind_input.alarm
 
 import android.app.*
 import android.content.*
