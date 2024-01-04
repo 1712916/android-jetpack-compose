@@ -2,6 +2,9 @@
 
 package com.example.android_jetpack_compose.ui.main_screen
 
+import android.Manifest
+import android.app.*
+import android.content.pm.*
 import android.os.*
 import android.util.*
 import androidx.annotation.*
@@ -21,15 +24,15 @@ import androidx.compose.ui.graphics.vector.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.unit.*
+import androidx.core.app.*
+import androidx.core.content.*
 import androidx.navigation.*
 import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.Calendar
 import com.example.android_jetpack_compose.ui.dashboard.view.*
-import com.example.android_jetpack_compose.ui.setting_remind_input.view_model.*
 import com.example.android_jetpack_compose.ui.theme.*
 import com.example.android_jetpack_compose.util.*
 import kotlinx.coroutines.*
-import java.time.*
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -51,6 +54,20 @@ fun MainView(navController: NavController) {
     }
 
     LaunchedEffect(Unit) {
+        val permissionState =
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+        // If the permission is not granted, request it.
+        // If the permission is not granted, request it.
+        if (permissionState == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(
+                context as Activity,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                1
+            )
+        }
+    }
+
+    LaunchedEffect(Unit) {
         InitAppRoute.instance.navToInitRoute(navController)
     }
 
@@ -63,26 +80,7 @@ fun MainView(navController: NavController) {
             Log.d("Page change", "Page changed to $page")
         }
     }
-
-    LaunchedEffect(Unit) {
-        //Retrieve the reminder time:
-
-        val preferencesManager = SharedPreferencesManager(context)
-        val data = preferencesManager.getData(scheduleKey, "0-0")
-        val hour = data.toString().split("-").first().toInt()
-        val minute = data.toString().split("-").last().toInt()
-
-        val dateTimeWithHourAndMinute = LocalDateTime.now()
-            .with(LocalTime.of(hour, minute))
-        val alarmScheduler: AlarmScheduler = AlarmSchedulerImpl(context)
-
-        AlarmItem(
-            alarmTime = dateTimeWithHourAndMinute,
-            message = "Đến giờ nhập chi tiêu rồi!"
-        ).let(alarmScheduler::schedule)
-    }
-
-
+    
     Scaffold(
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {

@@ -10,7 +10,6 @@ import androidx.compose.ui.platform.*
 import androidx.navigation.*
 import com.example.android_jetpack_compose.ui.setting_remind_input.view_model.*
 import com.example.android_jetpack_compose.util.*
-import java.time.*
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,11 +43,9 @@ fun RemindEnterDailyExpenseView(navController: NavController) {
                     scheduleKey,
                     "${timePickerState.hour}-${timePickerState.minute}"
                 )
-                val dateTimeWithHourAndMinute = LocalDateTime.now()
-                    .with(LocalTime.of(timePickerState.hour, timePickerState.minute))
-
+                
                 AlarmItem(
-                    alarmTime = dateTimeWithHourAndMinute,
+                    timePickerState.hour, timePickerState.minute,
                     message = "Đến giờ nhập chi tiêu rồi!"
                 ).let(alarmScheduler::schedule)
 
