@@ -1,6 +1,5 @@
 package com.example.android_jetpack_compose.ui.calendar
 
-import android.util.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
@@ -14,7 +13,6 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import com.example.android_jetpack_compose.util.*
-import kotlinx.coroutines.*
 import java.text.*
 import java.util.*
 
@@ -25,46 +23,47 @@ fun CalendarView() {
     var date by remember { mutableStateOf(Calendar.getInstance().time) }
     val textTheme = MaterialTheme.typography
 
-    Row {
-        IconButton(onClick = {
-            val c = Calendar.getInstance()
-            c.apply {
-                set(Calendar.YEAR, getYearFromDate(date))
-                set(Calendar.MONTH, date.month)
-                add(Calendar.MONTH, -1)
-            }
-            date = c.time
-            Log.i("LOLLL", date.toString())
-        }) {
-            androidx.compose.material3.Icon(
-                imageVector = Icons.Filled.ArrowBack,
-                contentDescription = "<"
-            )
+    Column {
+        Row {
+            IconButton(onClick = {
+                val c = Calendar.getInstance()
+                c.apply {
+                    set(Calendar.YEAR, getYearFromDate(date))
+                    set(Calendar.MONTH, date.month)
+                    add(Calendar.MONTH, -1)
+                }
+                date = c.time
+            }) {
+                androidx.compose.material3.Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "<"
+                )
 
+            }
+            Text(
+                SimpleDateFormat("M-yyyy").format(date),
+                style = textTheme.displaySmall
+            )
+            IconButton(onClick = {
+                val c = Calendar.getInstance()
+                c.apply {
+                    set(Calendar.YEAR, getYearFromDate(date))
+                    set(Calendar.MONTH, date.month)
+                    add(Calendar.MONTH, 1)
+                }
+                date = c.time
+            }) {
+                androidx.compose.material3.Icon(
+                    imageVector = Icons.Filled.ArrowForward,
+                    contentDescription = "<"
+                )
+
+            }
         }
-        Text(
-            SimpleDateFormat("M-yyyy").format(date),
-            style = textTheme.displaySmall
+        MonthView(
+            date
         )
-        IconButton(onClick = {
-            val c = Calendar.getInstance()
-            c.apply {
-                set(Calendar.YEAR, getYearFromDate(date))
-                set(Calendar.MONTH, date.month)
-                add(Calendar.MONTH, 1)
-            }
-            date = c.time
-        }) {
-            androidx.compose.material3.Icon(
-                imageVector = Icons.Filled.ArrowForward,
-                contentDescription = "<"
-            )
-
-        }
     }
-    MonthView(
-        date
-    )
 }
 
 fun getYearFromDate(date: Date): Int {
@@ -75,18 +74,7 @@ fun getYearFromDate(date: Date): Int {
 @Composable
 private fun MonthView(date: Date) {
 
-    var dates by remember { mutableStateOf(listOf<Date>()) }
-
-    LaunchedEffect(date) {
-        // Perform an asynchronous operation
-        val result = withContext(Dispatchers.IO) {
-            // This will be executed on a background thread
-            GetMonthDate(date).getDates()
-        }
-
-        // Update the UI with the result
-        dates = result
-    }
+    var dates  =  GetMonthDate(date).getDates()
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(7),
