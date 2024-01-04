@@ -2,6 +2,9 @@
 
 package com.example.android_jetpack_compose.ui.main_screen
 
+import android.Manifest
+import android.app.*
+import android.content.pm.*
 import android.os.*
 import android.util.*
 import androidx.annotation.*
@@ -18,8 +21,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.vector.*
+import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.unit.*
+import androidx.core.app.*
+import androidx.core.content.*
 import androidx.navigation.*
 import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.Calendar
@@ -27,13 +33,13 @@ import com.example.android_jetpack_compose.ui.dashboard.view.*
 import com.example.android_jetpack_compose.ui.theme.*
 import com.example.android_jetpack_compose.util.*
 import kotlinx.coroutines.*
-import java.time.*
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainView(navController: NavController) {
+    val context = LocalContext.current
     val pagerState = rememberPagerState(pageCount = { 4 })
     // scroll to page
     val coroutineScope = rememberCoroutineScope()
@@ -44,6 +50,20 @@ fun MainView(navController: NavController) {
             Chart -> pagerState.scrollToPage(2)
             Setting -> pagerState.scrollToPage(3)
             else -> {}
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        val permissionState =
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+        // If the permission is not granted, request it.
+        // If the permission is not granted, request it.
+        if (permissionState == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(
+                context as Activity,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                1
+            )
         }
     }
 
@@ -60,8 +80,7 @@ fun MainView(navController: NavController) {
             Log.d("Page change", "Page changed to $page")
         }
     }
-
-
+    
     Scaffold(
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
