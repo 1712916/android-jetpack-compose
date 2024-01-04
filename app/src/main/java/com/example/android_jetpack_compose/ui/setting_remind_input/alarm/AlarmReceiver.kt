@@ -15,8 +15,6 @@ class AlarmReceiver : BroadcastReceiver() {
             }
 
             else -> {
-                val toastText = "Alarm Received"
-
                 val message = intent.getStringExtra("EXTRA_MESSAGE") ?: return
                 val channelId = "alarm_id"
                 context?.let { ctx ->
@@ -31,15 +29,16 @@ class AlarmReceiver : BroadcastReceiver() {
                     )
                     val notificationManager =
                         ctx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
                     val builder = NotificationCompat.Builder(ctx, channelId)
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
                         .setContentTitle("Money Tracking App")
                         .setContentText("$message")
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setContentIntent(pendingIntent)
+                        .setAutoCancel(true)
 
                     notificationManager.notify(1, builder.build())
-
                 }
 
             }
