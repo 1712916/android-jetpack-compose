@@ -1,5 +1,8 @@
 package com.example.android_jetpack_compose.util
 
+import com.example.android_jetpack_compose.util.date.*
+import org.threeten.bp.*
+import java.text.*
 import java.util.*
 
 abstract class GetListDate(val date: Date) {
@@ -33,21 +36,23 @@ class GetWeekDate(date: Date) : GetListDate(date) {
 
 class GetMonthDate(date: Date) : GetListDate(date) {
     override fun getDates(): List<Date> {
-        //        val days = mutableListOf<Date>()
-        //        val calendar = Calendar.getInstance() // this takes current date
-        //
-        //        calendar[Calendar.DAY_OF_MONTH] = 1
-        //
-        //        var dateFormat = SimpleDateFormat("yyyy-MM-dd").format(date)
-        //        var date = LocalDate.parse(dateFormat)
-        //        //        val date = LocalDate.of(date.year, Month.of(date.month), date.day)
-        //        val lengthOfMonth = date.lengthOfMonth()
-        //
-        //        while (days.count() < lengthOfMonth) {
-        //            days.add(calendar.time)
-        //            calendar.add(Calendar.DATE, 1);
-        //        }
-        return getAllDatesOfMonth(date.year, date.month)
+
+        val days = mutableListOf<Date>()
+        val calendar = Calendar.getInstance() // this takes current date
+
+        calendar[Calendar.DAY_OF_MONTH] = 1
+        calendar[Calendar.MONTH] = CDate(date).month()
+
+        var dateFormat = SimpleDateFormat("yyyy-MM-dd").format(date)
+        var date = LocalDate.parse(dateFormat)
+        val lengthOfMonth = date.lengthOfMonth()
+
+        while (days.count() < lengthOfMonth) {
+            days.add(calendar.time)
+            calendar.add(Calendar.DATE, 1)
+        }
+        return days
+
     }
 
     fun getAllDatesOfMonth(year: Int, month: Int): List<Date> {
