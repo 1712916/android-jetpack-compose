@@ -6,9 +6,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.lifecycle.viewmodel.compose.*
 import androidx.navigation.*
 import com.example.android_jetpack_compose.*
-import com.example.android_jetpack_compose.ui.calendar.*
+import com.example.android_jetpack_compose.ui.calendar.view.*
 import com.example.android_jetpack_compose.ui.view.*
 import io.github.boguszpawlowski.composecalendar.*
 import io.github.boguszpawlowski.composecalendar.selection.*
@@ -53,7 +54,7 @@ fun CalendarHistoryView(navController: NavController) {
                 .fillMaxWidth()
                 .fillMaxHeight(),
         ) {
-            CalendarView()
+            CalendarView(viewModel = viewModel())
             //            SelectableCalendar(
             //                calendarState = calendarState,
             //            )
