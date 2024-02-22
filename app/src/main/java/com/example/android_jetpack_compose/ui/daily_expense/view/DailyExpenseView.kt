@@ -1,26 +1,25 @@
 package com.example.android_jetpack_compose.ui.daily_expense.view
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
+import androidx.compose.foundation.lazy.*
+import androidx.compose.material.icons.*
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.livedata.*
+import androidx.compose.ui.*
+import androidx.compose.ui.draw.*
+import androidx.compose.ui.geometry.*
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.text.style.*
+import androidx.compose.ui.unit.*
 import androidx.navigation.*
 import com.example.android_jetpack_compose.*
+import com.example.android_jetpack_compose.data.expense.*
 import com.example.android_jetpack_compose.ui.daily_expense.view_model.*
 import com.example.android_jetpack_compose.ui.view.*
 import com.example.android_jetpack_compose.util.*
-import kotlinx.coroutines.flow.*
+import kotlinx.datetime.*
 import java.text.*
 import java.util.*
 
@@ -28,13 +27,13 @@ import java.util.*
 @Composable
 fun DailyExpenseView(
     navController: NavController,
-    date: Date,
+    date: LocalDate,
     viewModel: DailyExpenseListViewModel
 ) {
     val expenseListState = viewModel.expenseList.observeAsState()
     val totalExpenseState = viewModel.totalMoney.observeAsState()
     val now = Date()
-    val title = SimpleDateFormat("dd-MM-yyyy").format(date)
+    val title = formatDayNMonthNYear(date)
     val deleteMode = viewModel.deleteMode.observeAsState()
 
     Scaffold(
@@ -60,7 +59,7 @@ fun DailyExpenseView(
                 navController.navigate(
                     InputDailyExpense.route.replace(
                         oldValue = "{date}",
-                        newValue = date.time.toString(),
+                        newValue = date.toString(),
                     )
                 )
             }) {
@@ -89,7 +88,7 @@ fun DailyExpenseView(
                                         newValue = it.id,
                                     ).replace(
                                         oldValue = "{date}",
-                                        newValue = date.time.toString(),
+                                        newValue = date.toString(),
                                     )
                                 )
                             },

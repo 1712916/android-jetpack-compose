@@ -1,13 +1,17 @@
 package com.example.android_jetpack_compose.data.dashboard
 
+import android.os.*
+import androidx.annotation.*
 import com.example.android_jetpack_compose.data.budget.*
 import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.util.*
 import kotlinx.coroutines.*
-import java.util.*
+import kotlinx.datetime.*
 
-abstract class WeekExpenseRepository(val date: Date) : ProgressExpenseRepository
-class WeekExpenseRepositoryImpl(date: Date) : WeekExpenseRepository(date) {
+abstract class WeekExpenseRepository(val date: LocalDate) : ProgressExpenseRepository
+
+@RequiresApi(Build.VERSION_CODES.O)
+class WeekExpenseRepositoryImpl(date: LocalDate) : WeekExpenseRepository(date) {
     private val budgetRepository: BudgetRepository = BudgetRepositoryImpl()
     override suspend fun getDateExpenses(): List<DateExpense> {
         val days = GetWeekDate(date).getDates()

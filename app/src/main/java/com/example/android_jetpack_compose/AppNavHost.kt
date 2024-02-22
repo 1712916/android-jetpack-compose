@@ -14,11 +14,11 @@ import com.example.android_jetpack_compose.ui.expense.view.*
 import com.example.android_jetpack_compose.ui.login.view.*
 import com.example.android_jetpack_compose.ui.main_screen.*
 import com.example.android_jetpack_compose.ui.method.view.*
-import com.example.android_jetpack_compose.ui.setting_budget.*
 import com.example.android_jetpack_compose.ui.setting_budget.view.*
 import com.example.android_jetpack_compose.ui.setting_default_expense.view.*
 import com.example.android_jetpack_compose.ui.setting_remind_input.view.*
-import java.util.*
+import io.github.boguszpawlowski.composecalendar.kotlinxDateTime.*
+import kotlinx.datetime.*
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -62,11 +62,12 @@ fun AppNavHost(
             DailyExpense.route,
             arguments = listOf(navArgument("date") { defaultValue = "" })
         ) { backStackEntry ->
-            var date: Date = Date()
+            var date: LocalDate = LocalDate.now()
 
             if (backStackEntry.arguments?.getString("date")?.isNotEmpty() ?: false) {
                 try {
-                    date = Date(backStackEntry.arguments?.getString("date")!!.toLong())
+                    //todo: vinhnt check check
+                    //                    date = Date(backStackEntry.arguments?.getString("date")!!.toLong())
                 } catch (e: Exception) {
                 }
             }
@@ -81,7 +82,8 @@ fun AppNavHost(
         ) { backStackEntry ->
             InputDailyExpenseView(
                 navController,
-                Date(backStackEntry.arguments?.getString("date")!!.toLong())
+                LocalDate.now(),
+                //                Date(backStackEntry.arguments?.getString("date")!!.toLong())
             )
         }
         composable(
@@ -93,7 +95,8 @@ fun AppNavHost(
             UpdateDailyExpenseView(
                 navController,
                 backStackEntry.arguments?.getString("id"),
-                Date(backStackEntry.arguments?.getString("date")!!.toLong())
+                LocalDate.now(),
+                //                Date(backStackEntry.arguments?.getString("date")!!.toLong())
             )
         }
         composable(

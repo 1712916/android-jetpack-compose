@@ -69,16 +69,10 @@ fun MonthBudgetProgress(viewModel: MonthProgressInfoViewModel = viewModel()) {
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                "Budget for this month",
+                "Month Budget",
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 18.sp,
                 color = textBlackColor,
-            )
-            Text(
-                "${getMonthBudget()}",
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 18.sp,
-                color = accentColor,
             )
         }
         HeightBox(12.0)
@@ -98,7 +92,12 @@ fun MonthBudgetProgress(viewModel: MonthProgressInfoViewModel = viewModel()) {
                     append("${getMonthTotalSpend()}")
                 }
 
-                withStyle(style = SpanStyle(color = textGrayColor)) {
+                withStyle(
+                    style = SpanStyle(
+                        color = accentColor, fontWeight = FontWeight.ExtraBold,
+                        fontSize = 18.sp,
+                    )
+                ) {
                     append(" of ${getMonthBudget()}")
                 }
             }

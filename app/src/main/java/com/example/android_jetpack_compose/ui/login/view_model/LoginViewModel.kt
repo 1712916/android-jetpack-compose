@@ -12,8 +12,8 @@ open class
 LoginViewModel : BaseViewModel() {
     val repository: AuthRepository = AuthRepositoryImpl()
 
-    private val _emailStateFlow = MutableStateFlow(TextFieldState())
-    private val _passwordStateFlow = MutableStateFlow(TextFieldState())
+    private val _emailStateFlow = MutableStateFlow(TextFieldState(text = "smile.vinhnt@gmail.com"))
+    private val _passwordStateFlow = MutableStateFlow(TextFieldState(text = "123123qweqwe"))
     val _loginEvent = MutableSharedFlow<LoginEvent>()
     val _errorMessageStateFlow = MutableStateFlow<String?>(null)
 

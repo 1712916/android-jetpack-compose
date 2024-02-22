@@ -13,10 +13,8 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.unit.*
 import com.example.android_jetpack_compose.entity.*
-import com.example.android_jetpack_compose.resouce.*
 import com.example.android_jetpack_compose.ui.calendar.view_model.*
 import com.example.android_jetpack_compose.util.*
-import com.example.android_jetpack_compose.util.date.*
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -39,7 +37,7 @@ fun CalendarView(viewModel: CalendarViewModel) {
                 )
             }
             Text(
-                date.format(DateFormatResource.monthAndYearFormat),
+                date.toString(),
                 style = textTheme.displaySmall
             )
             IconButton(onClick = {
@@ -96,7 +94,7 @@ private fun DateView(dateExpense: DateExpense) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            dateExpense.date.format("d"),
+            dateExpense.date.dayOfMonth.toString(),
             style = textTheme.labelSmall.copy(
                 color = Color.Gray
             )

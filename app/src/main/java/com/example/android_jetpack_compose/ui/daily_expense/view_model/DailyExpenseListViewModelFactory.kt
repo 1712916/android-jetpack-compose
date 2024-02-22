@@ -2,9 +2,9 @@ package com.example.android_jetpack_compose.ui.daily_expense.view_model
 
 import androidx.lifecycle.*
 import com.example.android_jetpack_compose.ui.setting_default_expense.view_model.*
-import java.util.*
+import kotlinx.datetime.*
 
-class DailyExpenseListViewModelFactory(val date: Date) : ViewModelProvider.Factory {
+class DailyExpenseListViewModelFactory(val date: LocalDate) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(DailyExpenseListViewModelImpl::class.java)) {
             @Suppress("UNCHECKED_CAST")

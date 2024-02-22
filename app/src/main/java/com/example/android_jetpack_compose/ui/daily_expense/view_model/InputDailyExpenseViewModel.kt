@@ -2,13 +2,14 @@ package com.example.android_jetpack_compose.ui.daily_expense.view_model
 
 import androidx.lifecycle.*
 import com.example.android_jetpack_compose.data.expense.*
-import com.example.android_jetpack_compose.entity.MoneyModel
+import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.util.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import kotlinx.datetime.*
 import java.util.*
 
-open class InputDailyExpenseViewModel(date: Date) :
+open class InputDailyExpenseViewModel(date: LocalDate) :
     DailyExpenseViewModel(InputDailyExpenseRepositoryImpl(date)) {
     override fun onSave(saveAnBack: Boolean) {
         _uiState.value.let {
@@ -49,7 +50,7 @@ open class InputDailyExpenseViewModel(date: Date) :
 
 }
 
-class UpdateDailyExpenseViewModel(date: Date, id: String?) :
+class UpdateDailyExpenseViewModel(date: LocalDate, id: String?) :
     DailyExpenseViewModel(InputDailyExpenseRepositoryImpl(date)) {
     init {
         viewModelScope.launch {

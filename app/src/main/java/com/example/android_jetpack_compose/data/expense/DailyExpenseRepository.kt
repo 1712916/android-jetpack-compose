@@ -7,19 +7,28 @@ import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.firebase_util.*
 import com.google.firebase.firestore.*
 import kotlinx.coroutines.tasks.*
-import java.text.*
-import java.util.*
+import kotlinx.datetime.*
+
+fun formatMonthNYear(date: LocalDate): String {
+    return "${if (date.monthNumber < 10) "0" else ""}${date.monthNumber}-${date.year}"
+}
+
+fun formatDayNMonthNYear(date: LocalDate): String {
+    return "${if (date.dayOfMonth < 10) "0" else ""}${date.dayOfMonth}-${if (date.monthNumber < 10) "0" else ""}${date.monthNumber}-${date.year}"
+}
 
 abstract class DailyExpenseRepository() :
     CRUDRepository<MoneyModel, String>,
     LiveDataList<MoneyModel>,
     ListRepository<MoneyModel>
 
-class InputDailyExpenseRepositoryImpl(date: Date) : DailyExpenseRepository(), AppAuthFirebaseUtil {
+class InputDailyExpenseRepositoryImpl(date: LocalDate) : DailyExpenseRepository(),
+    AppAuthFirebaseUtil {
+
     override val collection: CollectionReference =
         authCollection
-            .document(SimpleDateFormat("MM-yyyy").format(date))
-            .collection(SimpleDateFormat("dd-MM-yyyy").format(date))
+            .document(formatMonthNYear(date))
+            .collection(formatDayNMonthNYear(date))
 
     private val mappingObject: MappingFirebaseObject<MoneyModel, MoneySaveObject> =
         MappingSavingMoneyModel()

@@ -1,6 +1,7 @@
 package com.example.android_jetpack_compose.ui.dashboard.view
 
 import android.os.*
+import androidx.annotation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.*
@@ -17,8 +18,7 @@ import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.ui.dashboard.view_model.*
 import com.example.android_jetpack_compose.ui.theme.*
 import com.example.android_jetpack_compose.util.*
-import java.text.*
-import java.util.*
+import kotlinx.datetime.*
 
 @Composable
 fun CustomLinearIndicator(progress: Float) {
@@ -40,11 +40,15 @@ fun CustomLinearIndicator(progress: Float) {
         )
     }
 }
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun WeekTrackerInfo(
-    viewModel: WeekTrackerInfoViewModel = viewModel(),
-    onTrackColumnTap: (Date) -> Unit,
+    date: LocalDate,
+    onTrackColumnTap: (LocalDate) -> Unit,
 ) {
+    val viewModel: WeekTrackerInfoViewModel =
+        viewModel(factory = WeekTrackerInfoViewModelViewModelFactory(date = date)) //todo pass date to here
+
     val weekTrackerInfoState by viewModel.weekTrackerInfoState.collectAsState()
     val lifecycleOwner = LocalLifecycleOwner.current
     val lifecycleState by lifecycleOwner.lifecycle.currentStateFlow.collectAsState()
@@ -108,7 +112,7 @@ fun WeekTrackerInfo(
 @Composable
 fun WeekTracker(
     weekTrackerData: Array<WeekTrackerModel>, dayBudget: Long,
-    onTrackColumnTap: (Date) -> Unit,
+    onTrackColumnTap: (LocalDate) -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -124,7 +128,10 @@ fun WeekTracker(
             ) {
                 TrackingColum(
                     percent = (item.dateSpend * 1.0 / dayBudget),
-                    title = SimpleDateFormat("EEE", Locale.getDefault()).format(item.date)
+                    title = item.date.dayOfWeek.name.substring(
+                        0,
+                        minOf(3, item.date.dayOfWeek.name.length)
+                    )
                 )
             }
         }

@@ -1,5 +1,7 @@
 package com.example.android_jetpack_compose.ui.dashboard.view_model
 
+import android.os.*
+import androidx.annotation.*
 import androidx.compose.runtime.*
 import androidx.lifecycle.*
 import com.example.android_jetpack_compose.data.dashboard.*
@@ -7,19 +9,20 @@ import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.util.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import java.util.*
+import kotlinx.datetime.*
 
-class WeekTrackerInfoViewModel : ViewModel() {
+@RequiresApi(Build.VERSION_CODES.O)
+class WeekTrackerInfoViewModel(date: LocalDate) : ViewModel() {
     private val _isLoading = mutableStateOf(true)
     private val _weekTrackerInfoState = MutableStateFlow(WeekTrackerInfoModel())
     val weekTrackerInfoState: StateFlow<WeekTrackerInfoModel> = _weekTrackerInfoState.asStateFlow()
-    private val dashBoardRepository: DashBoardRepository = DashBoardRepositoryImpl(Date())
+    private val dashBoardRepository: DashBoardRepository = DashBoardRepositoryImpl(date)
     private val preWeekDashBoardRepository: DashBoardRepository =
-        DashBoardRepositoryImpl(Date(Date().time - 7 * 86400 * 1000))
+        DashBoardRepositoryImpl(date)
 
     init {
         _weekTrackerInfoState.value = WeekTrackerInfoModel(
-            weekTackers = GetWeekDate(Date()).getDates().map {
+            weekTackers = GetWeekDate(date).getDates().map {
                 WeekTrackerModel(
                     date = it,
                     dateSpend = 0,
@@ -61,4 +64,18 @@ class WeekTrackerInfoViewModel : ViewModel() {
 
         _isLoading.value = false
     }
+}
+
+class WeekTrackerInfoViewModelViewModelFactory(
+    private val date: LocalDate,
+) : ViewModelProvider.Factory {
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(WeekTrackerInfoViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return WeekTrackerInfoViewModel(date) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel Class")
+    }
+
 }

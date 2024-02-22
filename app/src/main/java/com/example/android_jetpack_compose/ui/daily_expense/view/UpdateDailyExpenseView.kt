@@ -29,11 +29,11 @@ import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.ui.daily_expense.view_model.*
 import com.example.android_jetpack_compose.ui.view.*
 import com.example.android_jetpack_compose.util.*
-import java.util.*
+import kotlinx.datetime.*
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun UpdateDailyExpenseView(navController: NavController, id: String?, date: Date) {
+fun UpdateDailyExpenseView(navController: NavController, id: String?, date: LocalDate) {
     val scope = rememberCoroutineScope()
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)

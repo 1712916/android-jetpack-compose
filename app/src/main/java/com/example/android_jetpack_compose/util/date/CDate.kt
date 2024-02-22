@@ -34,4 +34,6 @@ class CDate(val date: Date) {
         val dateFormat = SimpleDateFormat("yyyy")
         return dateFormat.format(date).toInt()
     }
+
+
 }

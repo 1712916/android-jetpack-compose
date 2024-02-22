@@ -1,14 +1,13 @@
 package com.example.android_jetpack_compose.entity
 
-import android.graphics.drawable.Icon
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.filled.*
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.vector.*
 import com.example.android_jetpack_compose.ui.theme.*
-import java.util.Date
+import kotlinx.datetime.*
 
-data class WeekTrackerModel(val date: Date, val dateSpend: Long)
+data class WeekTrackerModel(val date: LocalDate, val dateSpend: Long)
 data class WeekTrackerInfoModel(
     val totalSpend: Long = 0,
     val differenceNumber: Double = 0.0,

@@ -1,19 +1,17 @@
 package com.example.android_jetpack_compose.ui.daily_expense.view_model
 
 import android.util.*
-import androidx.compose.runtime.*
 import androidx.lifecycle.*
 import com.example.android_jetpack_compose.data.expense.*
 import com.example.android_jetpack_compose.entity.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
-import java.util.Date
+import kotlinx.datetime.*
 
 /*
 * Total:
 * List: MoneyModel
 * */
-class DailyExpenseListViewModelImpl(val date: Date) :
+class DailyExpenseListViewModelImpl(val date: LocalDate) :
     DailyExpenseListViewModel(InputDailyExpenseRepositoryImpl(date)) {
 
     init {

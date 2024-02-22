@@ -5,13 +5,13 @@ import androidx.lifecycle.*
 import com.example.android_jetpack_compose.data.dashboard.*
 import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.util.*
-import com.example.android_jetpack_compose.util.date.*
+import io.github.boguszpawlowski.composecalendar.kotlinxDateTime.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import java.util.*
+import kotlinx.datetime.*
 
 class CalendarViewModel : BaseViewModel() {
-    var _dateStateFlow = MutableStateFlow(CDate.now())
+    var _dateStateFlow = MutableStateFlow(LocalDate.now())
     var dateStateFlow = _dateStateFlow.asStateFlow()
 
     private var _dateExpenseMutableStateFlow = MutableStateFlow<List<DateExpense>>(listOf())
@@ -22,14 +22,14 @@ class CalendarViewModel : BaseViewModel() {
 
         viewModelScope.launch {
             _dateStateFlow.collect {
-                Log.i("Date change", it.format())
+                Log.i("Date change", it.toString())
                 loadData(dateStateFlow.value)
             }
         }
 
     }
 
-    fun loadData(date: Date) {
+    fun loadData(date: LocalDate) {
         val monthExpenseRepository: MonthExpenseRepository = MonthExpenseRepositoryImpl(date)
         viewModelScope.launch {
             _dateExpenseMutableStateFlow.value = monthExpenseRepository.getDateExpenses()
@@ -45,28 +45,10 @@ class CalendarViewModel : BaseViewModel() {
     }
 }
 
-fun nextMonth(date: Date): Date {
-    val calendar = Calendar.getInstance()
-    val cDate = CDate(date)
-    calendar.apply {
-        set(Calendar.YEAR, cDate.year())
-        set(Calendar.MONTH, cDate.month())
-        set(Calendar.DAY_OF_MONTH, 1)
-        calendar.add(Calendar.MONTH, 1)
-    }
-
-    return calendar.time
+fun nextMonth(date: LocalDate): LocalDate {
+    return date.plus(DatePeriod(months = 1))
 }
 
-fun previousMonth(date: Date): Date {
-    val calendar = Calendar.getInstance()
-    val cDate = CDate(date)
-    calendar.apply {
-        set(Calendar.YEAR, cDate.year())
-        set(Calendar.MONTH, cDate.month())
-        set(Calendar.DAY_OF_MONTH, 1)
-        calendar.add(Calendar.MONTH, -1)
-    }
-
-    return calendar.time
+fun previousMonth(date: LocalDate): LocalDate {
+    return date.minus(DatePeriod(months = 1))
 }

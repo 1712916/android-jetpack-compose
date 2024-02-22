@@ -30,7 +30,7 @@ import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.ui.daily_expense.view_model.*
 import com.example.android_jetpack_compose.ui.view.*
 import com.example.android_jetpack_compose.util.*
-import java.util.*
+import kotlinx.datetime.*
 
 fun Modifier.gesturesDisabled(disabled: Boolean = true) = if (disabled) {
     pointerInput(Unit) {
@@ -48,7 +48,7 @@ fun Modifier.gesturesDisabled(disabled: Boolean = true) = if (disabled) {
 }
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun InputDailyExpenseView(navController: NavController, date: Date) {
+fun InputDailyExpenseView(navController: NavController, date: LocalDate) {
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val viewModel: DailyExpenseViewModel =

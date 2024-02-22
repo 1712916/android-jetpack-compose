@@ -1,12 +1,14 @@
 package com.example.android_jetpack_compose.util
 
-import com.example.android_jetpack_compose.util.date.*
-import org.threeten.bp.*
-import java.text.*
+import android.os.*
+import androidx.annotation.*
+import com.example.android_jetpack_compose.ui.view.*
+import io.github.boguszpawlowski.composecalendar.kotlinxDateTime.*
+import kotlinx.datetime.*
 import java.util.*
 
-abstract class GetListDate(val date: Date) {
-    abstract fun getDates(): List<Date>
+abstract class GetListDate(val date: LocalDate) {
+    abstract fun getDates(): List<LocalDate>
 
     //    fun dateOfWeek(): Int {
     //        val calendar = Calendar.getInstance()
@@ -15,48 +17,37 @@ abstract class GetListDate(val date: Date) {
     //    }
 }
 
-class GetWeekDate(date: Date) : GetListDate(date) {
-    override fun getDates(): List<Date> {
-        val calendar = Calendar.getInstance().apply {
-            time = date
-            firstDayOfWeek = Calendar.MONDAY
-        }
+class GetWeekDate(date: LocalDate) : GetListDate(date) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun getDates(): List<LocalDate> {
+        var monday = getMondayFromDate(date)
 
-        calendar[Calendar.DAY_OF_WEEK] = Calendar.MONDAY
-        val days = mutableListOf<Date>()
+        val days = mutableListOf<LocalDate>()
 
         for (i in 0..6) {
-            days.add(calendar.time)
-            calendar.add(Calendar.DAY_OF_MONTH, 1)
+            days.add(monday.plus(DatePeriod(days = i)))
         }
 
         return days
     }
 }
 
-class GetMonthDate(date: Date) : GetListDate(date) {
-    override fun getDates(): List<Date> {
+class GetMonthDate(date: LocalDate) : GetListDate(date) {
+    override fun getDates(): List<LocalDate> {
 
-        val days = mutableListOf<Date>()
-        val calendar = Calendar.getInstance() // this takes current date
+        val days = mutableListOf<LocalDate>()
 
-        calendar[Calendar.DAY_OF_MONTH] = 1
-        calendar[Calendar.MONTH] = CDate(date).month()
+        val firstDay = getFirstDayOfMonth(date = date)
 
-        var dateFormat = SimpleDateFormat("yyyy-MM-dd").format(date)
-        var date = LocalDate.parse(dateFormat)
-        val lengthOfMonth = date.lengthOfMonth()
-
-        while (days.count() < lengthOfMonth) {
-            days.add(calendar.time)
-            calendar.add(Calendar.DATE, 1)
+        for (i in 0..<numberDays(date.monthNumber, isLeapYear(date.year))) {
+            days.add(firstDay.plus(DatePeriod(days = i)))
         }
-        return days
 
+        return days
     }
 
-    fun getAllDatesOfMonth(year: Int, month: Int): List<Date> {
-        val datesList = mutableListOf<Date>()
+    fun getAllDatesOfMonth(year: Int, month: Int): List<LocalDate> {
+        val datesList = mutableListOf<LocalDate>()
 
         // Create a calendar instance and set it to the first day of the month
         val calendar = Calendar.getInstance().apply {
@@ -69,11 +60,37 @@ class GetMonthDate(date: Date) : GetListDate(date) {
         val lastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
 
         // Iterate through the days of the month and format each date
-        for (dayOfMonth in 1..lastDay) {
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            datesList.add(calendar.time)
-        }
+        //        for (dayOfMonth in 1..lastDay) {
+        //            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        //            datesList.add(calendar.time)
+        //        }
 
         return datesList
     }
+}
+
+fun numberDays(month: Int, leapYear: Boolean): Int {
+    return when (month) {
+        1, 3, 5, 7, 8, 10, 12 -> 31
+        2 -> if (leapYear) 29 else 28
+        else -> 30
+    }
+}
+
+fun isLeapYear(year: Int): Boolean {
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)
+}
+
+fun getFirstDayOfMonth(date: LocalDate): LocalDate {
+    return LocalDate(dayOfMonth = 1, month = date.month, year = date.year)
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun main() {
+    println(isLeapYear(2024))
+    println(getFirstDayOfMonth(LocalDate.now()))
+    println(LocalDate.now().monthNumber)
+    println(LocalDate.now().monthNumber)
+    println(GetWeekDate(LocalDate.now()).getDates())
+    println(GetMonthDate(LocalDate.now()).getDates())
 }

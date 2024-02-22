@@ -5,9 +5,9 @@ import com.example.android_jetpack_compose.data.expense.*
 import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.util.*
 import kotlinx.coroutines.*
-import java.util.*
+import kotlinx.datetime.*
 
-class ChartRepository(val date: Date) : ListRepository<MoneyModel> {
+class ChartRepository(val date: LocalDate) : ListRepository<MoneyModel> {
     override suspend fun getList(): Result<List<MoneyModel>> {
         val days = GetMonthDate(date).getDates()
 

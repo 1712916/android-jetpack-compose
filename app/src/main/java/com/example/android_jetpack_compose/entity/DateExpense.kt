@@ -1,5 +1,5 @@
 package com.example.android_jetpack_compose.entity
 
-import java.util.Date
+import kotlinx.datetime.*
 
-data class DateExpense(val date: Date, val money: Long)
+data class DateExpense(val date: LocalDate, val money: Long)

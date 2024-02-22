@@ -1,20 +1,16 @@
 package com.example.android_jetpack_compose.ui.dashboard.view_model
 
-import android.view.View
 import androidx.lifecycle.*
-import com.example.android_jetpack_compose.data.budget.*
 import com.example.android_jetpack_compose.data.dashboard.*
-import com.example.android_jetpack_compose.entity.*
+import io.github.boguszpawlowski.composecalendar.kotlinxDateTime.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import java.time.*
-import java.time.format.*
-import java.util.*
+import kotlinx.datetime.*
 
 data class MonthProgress(val budget: Long = 0, val totalSpend: Long = 0)
 class MonthProgressInfoViewModel : ViewModel() {
     val monthTackerInfoState = MutableStateFlow(MonthProgress())
-    val monthExpenseRepository: MonthExpenseRepository = MonthExpenseRepositoryImpl(Date())
+    val monthExpenseRepository: MonthExpenseRepository = MonthExpenseRepositoryImpl(LocalDate.now())
 
     init {
         viewModelScope.launch {
