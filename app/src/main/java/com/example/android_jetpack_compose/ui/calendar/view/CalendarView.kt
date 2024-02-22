@@ -10,10 +10,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.text.style.*
 import androidx.compose.ui.unit.*
 import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.resouce.*
 import com.example.android_jetpack_compose.ui.calendar.view_model.*
+import com.example.android_jetpack_compose.util.*
 import com.example.android_jetpack_compose.util.date.*
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -37,7 +39,7 @@ fun CalendarView(viewModel: CalendarViewModel) {
                 )
             }
             Text(
-                date.format(DateFormatResource.monthAndYearFormat) ,
+                date.format(DateFormatResource.monthAndYearFormat),
                 style = textTheme.displaySmall
             )
             IconButton(onClick = {
@@ -101,8 +103,30 @@ private fun DateView(dateExpense: DateExpense) {
 
         )
         Text(
-            dateExpense.money.toString(),
-            style = textTheme.headlineSmall
+            dateExpense.money.reduceMoneyFormat(),
+            style = textTheme.headlineSmall,
+            maxLines = 1,
+            overflow = TextOverflow.Visible,
         )
     }
+}
+
+@Composable
+fun AutosizeText(text: String) {
+
+    var multiplier by remember { mutableStateOf(1f) }
+
+    Text(
+        text,
+        maxLines = 1, // modify to fit your need
+        overflow = TextOverflow.Visible,
+        style = LocalTextStyle.current.copy(
+            fontSize = LocalTextStyle.current.fontSize * multiplier
+        ),
+        onTextLayout = {
+            if (it.hasVisualOverflow) {
+                multiplier *= 0.99f // you can tune this constant
+            }
+        }
+    )
 }

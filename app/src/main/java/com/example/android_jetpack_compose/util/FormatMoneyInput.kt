@@ -21,3 +21,15 @@ class FormatMoneyInput(private val number: String) {
 fun Long.money(): String {
     return moneyFormat.format(this).replace(",", ".")
 }
+
+fun Long.reduceMoneyFormat(): String {
+    return when {
+        this >= 1_000_000_000 -> "${
+            String.format("%.1f", this / 1_000_000_000.0).replace(".0", "")
+        }b"
+
+        this >= 1_000_000 -> "${String.format("%.1f", this / 1_000_000.0).replace(".0", "")}m"
+        this >= 1_000 -> "${String.format("%.1f", this / 1_000.0).replace(".0", "")}k"
+        else -> "$this"
+    }
+}

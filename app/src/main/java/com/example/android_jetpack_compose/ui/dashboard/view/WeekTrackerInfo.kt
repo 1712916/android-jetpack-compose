@@ -4,8 +4,6 @@ import android.os.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.*
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -76,6 +74,7 @@ fun WeekTrackerInfo(
             fontWeight = FontWeight.ExtraBold,
             fontSize = 34.sp,
             color = accentColor,
+            maxLines = 1,
         )
         Row {
             Text(
