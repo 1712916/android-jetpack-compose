@@ -2,6 +2,7 @@ package com.example.android_jetpack_compose.ui.dashboard.view
 
 import android.os.*
 import androidx.annotation.*
+import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.*
@@ -36,6 +37,7 @@ fun CustomLinearIndicator(progress: Float) {
                 .background(color = orangeColor, shape = RoundedCornerShape(borderRadius.dp))
                 .height(8.dp)
                 .clip(RoundedCornerShape(borderRadius.dp))
+                .animateContentSize()
                 .fillMaxWidth(fraction = progress)
         )
     }
@@ -73,7 +75,7 @@ fun WeekTrackerInfo(
             .height(IntrinsicSize.Min),
     ) {
         Text(
-            text = weekTrackerInfoState.totalSpend.money(),
+            text = weekTrackerInfoState.totalSpend.money() + "VND",
             fontWeight = FontWeight.ExtraBold,
             fontSize = 34.sp,
             color = accentColor,
@@ -145,6 +147,7 @@ private fun TrackingColum(
             Box(
                 modifier = Modifier
                     .background(color = if (percent > 1.0) redColor else primaryColor)
+                    .animateContentSize()
                     .height((finalHeight * percent).dp)
                     .width(finalWidth.dp)
                     .align(alignment = Alignment.BottomCenter),

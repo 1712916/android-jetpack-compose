@@ -21,21 +21,22 @@ fun TrackingProgressInfo(
 ) {
     var date by remember { mutableStateOf(LocalDate.now()) }
 
-    Column {
-        Column(
-            modifier = Modifier
-                .padding(PaddingValues(16.dp))
-                .background(color = Color(0xFFe6e7ee), shape = RoundedCornerShape(8.dp))
-        ) {
-            // week tracking
-            WeekTrackerInfo(
-                date = date,
-                onTrackColumnTap = onTrackColumnTap,
-                viewModel = WeekTrackerInfoViewModel(date = date),
-            )
-            WeekPaginationView(onChanged = { start, end ->
-                date = start
-            })
-        }
+    Column(
+        modifier = Modifier
+            .padding(PaddingValues(16.dp))
+            .background(color = Color(0xFFe6e7ee), shape = RoundedCornerShape(8.dp)),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        // week tracking
+        WeekTrackerInfo(
+            date = date,
+            onTrackColumnTap = onTrackColumnTap,
+            viewModel = WeekTrackerInfoViewModel(date = date),
+        )
+        WeekPaginationView(onChanged = { start, end ->
+            date = start
+        })
+        SizedBox(height = 8.0)
     }
 }
