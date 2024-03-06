@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.*
 import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.ui.calendar.view_model.*
 import com.example.android_jetpack_compose.util.*
+import com.example.android_jetpack_compose.util.date.*
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -37,7 +38,7 @@ fun CalendarView(viewModel: CalendarViewModel) {
                 )
             }
             Text(
-                date.toString(),
+                date.formatMonth(),
                 style = textTheme.displaySmall
             )
             IconButton(onClick = {

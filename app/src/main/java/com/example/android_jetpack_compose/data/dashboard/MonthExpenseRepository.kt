@@ -1,5 +1,7 @@
 package com.example.android_jetpack_compose.data.dashboard
 
+import android.os.*
+import androidx.annotation.*
 import com.example.android_jetpack_compose.data.budget.*
 import com.example.android_jetpack_compose.entity.*
 import com.example.android_jetpack_compose.firebase_util.*
@@ -10,6 +12,7 @@ import kotlinx.datetime.*
 abstract class MonthExpenseRepository(val date: LocalDate) : ProgressExpenseRepository
 class MonthExpenseRepositoryImpl(date: LocalDate) : MonthExpenseRepository(date), FirebaseUtil {
     private val budgetRepository: BudgetRepository = BudgetRepositoryImpl()
+    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getDateExpenses(): List<DateExpense> {
         val days = GetMonthDate(date).getDates()
         val getDateExpenseRepository: GetDateExpenseRepository = GetDateExpenseRepositoryImpl()

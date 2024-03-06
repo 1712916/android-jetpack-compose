@@ -9,6 +9,7 @@ import androidx.compose.ui.*
 import androidx.navigation.*
 import com.example.android_jetpack_compose.*
 import com.example.android_jetpack_compose.ui.view.*
+import com.example.android_jetpack_compose.util.date.*
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +52,7 @@ fun DashBoardView(
                         navController.navigate(
                             DailyExpense.route.replace(
                                 oldValue = "{date}",
-                                newValue = date.toString(),
+                                newValue = date.formatDayParam(),
                             )
                         )
                     }

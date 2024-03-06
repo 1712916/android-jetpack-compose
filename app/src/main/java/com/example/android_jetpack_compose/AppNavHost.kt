@@ -63,17 +63,15 @@ fun AppNavHost(
             arguments = listOf(navArgument("date") { defaultValue = "" })
         ) { backStackEntry ->
             var date: LocalDate = LocalDate.now()
-
-            if (backStackEntry.arguments?.getString("date")?.isNotEmpty() ?: false) {
+            val dateString = backStackEntry.arguments?.getString("date")
+            if (dateString?.isNotEmpty() == true) {
                 try {
-                    //todo: vinhnt check check
-                    //                    date = Date(backStackEntry.arguments?.getString("date")!!.toLong())
+                    date = LocalDate.parse(dateString)
                 } catch (e: Exception) {
                 }
             }
             val viewModel: DailyExpenseListViewModel =
                 viewModel(factory = DailyExpenseListViewModelFactory(date))
-            //                DailyExpenseListViewModelImpl(date = date)
             DailyExpenseView(navController, date, viewModel)
         }
         composable(
