@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.unit.*
+import com.example.android_jetpack_compose.ui.dashboard.view_model.*
 import com.example.android_jetpack_compose.ui.view.*
 import io.github.boguszpawlowski.composecalendar.kotlinxDateTime.*
 import kotlinx.datetime.*
@@ -29,10 +30,10 @@ fun TrackingProgressInfo(
             // week tracking
             WeekTrackerInfo(
                 date = date,
-                onTrackColumnTap = onTrackColumnTap
+                onTrackColumnTap = onTrackColumnTap,
+                viewModel = WeekTrackerInfoViewModel(date = date),
             )
             WeekPaginationView(onChanged = { start, end ->
-
                 date = start
             })
         }

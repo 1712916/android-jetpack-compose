@@ -45,10 +45,9 @@ fun CustomLinearIndicator(progress: Float) {
 fun WeekTrackerInfo(
     date: LocalDate,
     onTrackColumnTap: (LocalDate) -> Unit,
+    viewModel: WeekTrackerInfoViewModel =
+        viewModel(factory = WeekTrackerInfoViewModelViewModelFactory(date = date))
 ) {
-    val viewModel: WeekTrackerInfoViewModel =
-        viewModel(factory = WeekTrackerInfoViewModelViewModelFactory(date = date)) //todo pass date to here
-
     val weekTrackerInfoState by viewModel.weekTrackerInfoState.collectAsState()
     val lifecycleOwner = LocalLifecycleOwner.current
     val lifecycleState by lifecycleOwner.lifecycle.currentStateFlow.collectAsState()
@@ -80,22 +79,6 @@ fun WeekTrackerInfo(
             color = accentColor,
             maxLines = 1,
         )
-        Row {
-            Text(
-                text = "Total spent this week",
-                color = textGrayColor,
-            )
-            Icon(
-                imageVector = weekTrackerInfoState.differentEnum.getIcon(),
-                contentDescription = "",
-                tint = weekTrackerInfoState.differentEnum.getColor(),
-            )
-            Text(
-                text = "${String.format("%.2f", weekTrackerInfoState.differenceNumber)}%",
-                fontWeight = FontWeight.ExtraBold,
-                color = weekTrackerInfoState.differentEnum.getColor(),
-            )
-        }
         Spacer(modifier = Modifier.height(10.dp))
         //Cần tìm cách lấy thời gian cho mọi SDK
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

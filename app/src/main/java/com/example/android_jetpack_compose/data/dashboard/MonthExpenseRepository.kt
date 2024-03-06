@@ -27,7 +27,7 @@ class MonthExpenseRepositoryImpl(date: LocalDate) : MonthExpenseRepository(date)
     }
 
     override suspend fun getProgressData(): DatesTrackerInfoModel {
-        //list of total expense each date
+        //list of item.name())expense each date
         val expenses = getDateExpenses()
         val totalSpend = getTotalExpense()
         val budget = budgetRepository.read("").getOrNull()

@@ -5,6 +5,8 @@ import androidx.annotation.*
 import com.example.android_jetpack_compose.ui.view.*
 import io.github.boguszpawlowski.composecalendar.kotlinxDateTime.*
 import kotlinx.datetime.*
+import kotlinx.datetime.LocalDate
+import java.time.*
 import java.util.*
 
 abstract class GetListDate(val date: LocalDate) {
@@ -33,13 +35,14 @@ class GetWeekDate(date: LocalDate) : GetListDate(date) {
 }
 
 class GetMonthDate(date: LocalDate) : GetListDate(date) {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun getDates(): List<LocalDate> {
 
         val days = mutableListOf<LocalDate>()
 
         val firstDay = getFirstDayOfMonth(date = date)
 
-        for (i in 0..<numberDays(date.monthNumber, isLeapYear(date.year))) {
+        for (i in 0..<numberDays(date.monthNumber, Year.of(date.year).isLeap)) {
             days.add(firstDay.plus(DatePeriod(days = i)))
         }
 
@@ -77,17 +80,12 @@ fun numberDays(month: Int, leapYear: Boolean): Int {
     }
 }
 
-fun isLeapYear(year: Int): Boolean {
-    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)
-}
-
 fun getFirstDayOfMonth(date: LocalDate): LocalDate {
     return LocalDate(dayOfMonth = 1, month = date.month, year = date.year)
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun main() {
-    println(isLeapYear(2024))
     println(getFirstDayOfMonth(LocalDate.now()))
     println(LocalDate.now().monthNumber)
     println(LocalDate.now().monthNumber)
